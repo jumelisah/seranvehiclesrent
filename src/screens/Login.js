@@ -29,7 +29,11 @@ const Login = ({navigation}) => {
                 onPress={() => navigation.navigate('ResetPassword')}>
                 <Text style={styles.link}>Forgot password?</Text>
               </TouchableOpacity>
-              <Button variant={'blue'}>Login</Button>
+              <Button
+                variant={'blue'}
+                onPress={() => navigation.navigate('Home')}>
+                Login
+              </Button>
               <Button>
                 <Image
                   source={require('../assets/googleIcon.png')}
