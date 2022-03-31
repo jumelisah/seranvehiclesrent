@@ -13,6 +13,7 @@ import {useState} from 'react/cjs/react.development';
 import Button from '../components/Button';
 import Counter from '../components/Counter';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import ModalDelete from '../components/ModalDelete';
 
 const EditVehicle = ({navigation}) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -22,8 +23,8 @@ const EditVehicle = ({navigation}) => {
   };
   return (
     <SafeAreaView>
-      <ScrollView>
-        <View style={styles.pages}>
+      <View style={styles.pages}>
+        <ScrollView>
           <View style={styles.topWrapper}>
             <Image source={defaultImage} style={styles.imgStyle} />
             <TouchableOpacity
@@ -69,23 +70,17 @@ const EditVehicle = ({navigation}) => {
             </View>
             <Button variant={'dark'}>Update Changes</Button>
           </View>
-          {confirmDelete && (
-            <View style={styles.modalFull}>
-              <View style={styles.modalDelete}>
-                <Text style={styles.warning}>
-                  Are you sure want to delete this item?
-                </Text>
-                <View>
-                  <Button onPress={() => setConfirmDelete(false)}>
-                    Cancel
-                  </Button>
-                  <Button variant={'blue'}>Delete</Button>
-                </View>
-              </View>
-            </View>
-          )}
-        </View>
-      </ScrollView>
+        </ScrollView>
+        {confirmDelete && (
+          <View style={styles.modalFull}>
+            <ModalDelete
+              question={'Are you sure want to delete this item?'}
+              deleteAction={() => setConfirmDelete(false)}
+              cancelAction={() => setConfirmDelete(false)}
+            />
+          </View>
+        )}
+      </View>
     </SafeAreaView>
   );
 };
@@ -132,18 +127,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  modalDelete: {
-    width: '100%',
-    backgroundColor: '#EFDAD7',
-    maxWidth: 300,
-    padding: 20,
-    borderRadius: 10,
-  },
-  warning: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
   },
   inlineGroup: {
     flexDirection: 'row',
