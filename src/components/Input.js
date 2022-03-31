@@ -7,10 +7,21 @@ const Input = ({
   keyboardType,
   value,
   secureTextEntry,
+  variant,
+  searchBar,
+  type,
 }) => {
   return (
     <TextInput
-      style={styles.input}
+      style={[
+        type === 'line' ? styles.lineInput : styles.input,
+        variant === 'blue'
+          ? styles.blue
+          : variant === 'pink'
+          ? styles.pink
+          : '',
+        searchBar ? styles.search : '',
+      ]}
       onChangeText={onChangeText}
       value={value}
       placeholder={placeholder}
@@ -21,11 +32,27 @@ const Input = ({
 };
 
 const styles = StyleSheet.create({
+  lineInput: {
+    paddingBottom: 10,
+    marginVertical: 10,
+    border: 0,
+    borderBottomWidth: 1,
+    backgroundColor: 'rgba(255,255,255,0)',
+  },
   input: {
-    backgroundColor: 'rgba(227, 190, 198, 0.9)',
     padding: 15,
     marginBottom: 12,
     borderRadius: 10,
+  },
+  search: {
+    paddingHorizontal: 50,
+  },
+  blue: {
+    backgroundColor: 'rgba(154, 208, 236, 0.3)',
+    color: 'black',
+  },
+  pink: {
+    backgroundColor: 'rgba(227, 190, 198, 0.9)',
     color: 'white',
   },
 });

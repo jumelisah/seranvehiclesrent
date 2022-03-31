@@ -1,19 +1,24 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useNavigation} from '@react-navigation/native';
 
 const Navbar = () => {
+  const navigation = useNavigation();
   const dataNav = [
-    {title: 'home', icon: 'home', link: ''},
-    {title: 'search', icon: 'search', link: ''},
-    {title: 'notification', icon: 'sticky-note-o', link: ''},
-    {title: 'profile', icon: 'user', link: ''},
+    {title: 'home', icon: 'home', screen: 'Home'},
+    {title: 'search', icon: 'search', screen: 'DetailSearch'},
+    {title: 'notification', icon: 'sticky-note-o', screen: 'Home'},
+    {title: 'profile', icon: 'user', screen: 'Home'},
   ];
   return (
     <View style={styles.nav}>
       {dataNav.map(item => {
         return (
-          <TouchableOpacity key={item.title} style={styles.menuBar}>
+          <TouchableOpacity
+            key={item.title}
+            style={styles.menuBar}
+            onPress={() => navigation.navigate(item.screen)}>
             <Text
               style={[
                 styles.menuList,
@@ -39,7 +44,8 @@ const styles = StyleSheet.create({
   menuBar: {
     width: '25%',
     textAlign: 'center',
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   menuList: {
     // flex: 1,

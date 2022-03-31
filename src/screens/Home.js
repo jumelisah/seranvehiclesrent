@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   // ImageBackground,
   Image,
@@ -10,10 +9,12 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import {useState} from 'react/cjs/react.development';
 import Navbar from '../components/Navbar';
 import TitleHeader from '../components/TitleHeader';
 
 const Home = ({navigation}) => {
+  const [user, setUser] = useState('Admin');
   const data = [
     {id: 1, image: require('../assets/pic1.png')},
     {id: 2, image: require('../assets/pic2.png')},
@@ -23,7 +24,9 @@ const Home = ({navigation}) => {
   const renderItem = ({item}) => {
     //the app will represent each list item via a Text component
     return (
-      <TouchableOpacity style={styles.coverImage}>
+      <TouchableOpacity
+        style={styles.coverImage}
+        onPress={() => navigation.navigate('EditVehicle')}>
         <Image source={item.image} style={styles.listImage} />
       </TouchableOpacity>
     );
@@ -39,6 +42,20 @@ const Home = ({navigation}) => {
           <TitleHeader
             child={'Recommended'}
             resChild={'View more'}
+            user={user}
+            onPress={() => navigation.navigate('DetailSearch')}
+            onAdd={() => navigation.navigate('AddVehicles')}
+          />
+          <FlatList
+            data={data} //pass in our data array
+            renderItem={renderItem}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          />
+          <TitleHeader
+            child={'Hot Deals'}
+            user={user}
+            resChild={'View more'}
             onPress={() => navigation.navigate('DetailSearch')}
           />
           <FlatList
@@ -47,28 +64,37 @@ const Home = ({navigation}) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           />
-          <TitleHeader child={'Hot Deals'} resChild={'View more'} />
+          <TitleHeader
+            child={'Cars'}
+            resChild={'View more'}
+            user={user}
+            onPress={() => navigation.navigate('DetailSearch')}
+          />
           <FlatList
             data={data} //pass in our data array
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           />
-          <TitleHeader child={'Cars'} resChild={'View more'} />
+          <TitleHeader
+            child={'Bike'}
+            resChild={'View more'}
+            user={user}
+            onPress={() => navigation.navigate('DetailSearch')}
+          />
           <FlatList
             data={data} //pass in our data array
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           />
-          <TitleHeader child={'Bike'} resChild={'View more'} />
-          <FlatList
-            data={data} //pass in our data array
-            renderItem={renderItem}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
+          <TitleHeader
+            child={'Motorbike'}
+            resChild={'View more'}
+            user={user}
+            onPress={() => navigation.navigate('DetailSearch')}
+            onAdd={() => navigation.navigate('AddVehicles')}
           />
-          <TitleHeader child={'Motorbike'} resChild={'View more'} />
           <FlatList
             data={data} //pass in our data array
             renderItem={renderItem}

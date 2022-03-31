@@ -22,9 +22,13 @@ const Signup = ({navigation}) => {
           <View style={styles.fullPage}>
             <Text style={styles.textHeader}>LET’S HAVE SOME RIDE</Text>
             <View style={styles.formInput}>
-              <Input placeholder={'Username'} />
-              <Input placeholder={'Mobile phone'} />
-              <Input placeholder={'Password'} secureTextEntry={true} />
+              <Input placeholder={'Username'} variant={'pink'} />
+              <Input placeholder={'Mobile phone'} variant={'pink'} />
+              <Input
+                placeholder={'Password'}
+                secureTextEntry={true}
+                variant={'pink'}
+              />
               <Button variant={'blue'}>Signup</Button>
               <Button>
                 <Image

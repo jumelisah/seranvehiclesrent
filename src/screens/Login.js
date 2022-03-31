@@ -23,8 +23,12 @@ const Login = ({navigation}) => {
           <View style={styles.fullPage}>
             <Text style={styles.textHeader}>LET’S EXPLORE THE WORLD</Text>
             <View style={styles.formInput}>
-              <Input placeholder={'Username'} />
-              <Input placeholder={'Password'} secureTextEntry={true} />
+              <Input placeholder={'Username'} variant={'pink'} />
+              <Input
+                placeholder={'Password'}
+                secureTextEntry={true}
+                variant={'pink'}
+              />
               <TouchableOpacity
                 onPress={() => navigation.navigate('ResetPassword')}>
                 <Text style={styles.link}>Forgot password?</Text>

@@ -16,7 +16,7 @@ const ForgotPassword = () => {
             <Text style={styles.textWhite}>
               Enter your email to get reset password code
             </Text>
-            <Input placeholder={'Enter your email adress'} />
+            <Input placeholder={'Enter your email adress'} variant={'pink'} />
             <Button variant={'blue'}>Send Code</Button>
             <Button>Resend Code</Button>
           </View>
