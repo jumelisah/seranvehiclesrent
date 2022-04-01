@@ -9,6 +9,15 @@ const History = () => {
     {id: 3, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
     {id: 4, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
   ];
+  const [choosenId, setChoosenId] = React.useState([]);
+  const getSelectedId = () => {
+    if (choosenId.length === 0){
+      return '';
+    } else {
+      let arrayString = choosenId.reduce((accumulator, currentValue) => accumulator + ", " + currentValue);
+      return "[" + arrayString + "]";
+    }
+  }
   const Example = () => {
     const [groupValue, setGroupValue] = React.useState([]);
   
