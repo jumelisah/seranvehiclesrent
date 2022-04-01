@@ -19,6 +19,8 @@ const Input = ({
           ? styles.blue
           : variant === 'pink'
           ? styles.pink
+          : variant === 'transparent'
+          ? styles.white
           : '',
         searchBar ? styles.search : '',
       ]}
@@ -35,7 +37,6 @@ const styles = StyleSheet.create({
   lineInput: {
     paddingBottom: 10,
     marginVertical: 10,
-    border: 0,
     borderBottomWidth: 1,
     backgroundColor: 'rgba(255,255,255,0)',
   },
@@ -54,6 +55,12 @@ const styles = StyleSheet.create({
   pink: {
     backgroundColor: 'rgba(227, 190, 198, 0.9)',
     color: 'white',
+  },
+  white: {
+    backgroundColor: 'rgba(255,255,255,0)',
+    color: 'black',
+    borderWidth: 1,
+    borderRadius: 10,
   },
 });
 

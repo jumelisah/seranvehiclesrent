@@ -8,6 +8,8 @@ import Home from './src/screens/Home';
 import DetailSearch from './src/screens/DetailSearch';
 import AddVehicles from './src/screens/AddVehicles';
 import EditVehicle from './src/screens/EditVehicle';
+import EditProfile from './src/screens/EditProfile';
+import History from './src/screens/History';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -61,6 +63,16 @@ const MyStack = () => {
         <Stack.Screen
           name="EditVehicle"
           component={EditVehicle}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="History"
+          component={History}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

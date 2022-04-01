@@ -8,8 +8,8 @@ const Navbar = () => {
   const dataNav = [
     {title: 'home', icon: 'home', screen: 'Home'},
     {title: 'search', icon: 'search', screen: 'DetailSearch'},
-    {title: 'notification', icon: 'sticky-note-o', screen: 'Home'},
-    {title: 'profile', icon: 'user', screen: 'Home'},
+    {title: 'notification', icon: 'sticky-note-o', screen: 'History'},
+    {title: 'profile', icon: 'user', screen: 'EditProfile'},
   ];
   return (
     <View style={styles.nav}>
