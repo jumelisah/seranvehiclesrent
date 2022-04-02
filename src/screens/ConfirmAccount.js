@@ -12,21 +12,17 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import {onRegister} from '../redux/actions/auth';
+import {accountConfirmation} from '../redux/actions/auth';
 
 const ConfirmAccount = ({navigation}) => {
   const {auth} = useSelector(state => state);
   const [code, setCode] = useState();
   const [email, setEmail] = useState();
   const dispatch = useDispatch();
-  // const register = () => {
-  //   const data = {username, email, password, confirmPassword: password};
-  //   // if (username === null || email === null || password === null) {
-  //   //   setErrRegister(true);
-  //   //   setRegisterMsg('Please fill in all the fields');
-  //   // }
-  //   dispatch(onRegister(data));
-  // };
+  const confirmAccount = () => {
+    const data = {email, code};
+    dispatch(accountConfirmation(data));
+  }
   return (
     <NativeBaseProvider>
       <SafeAreaView>
@@ -57,9 +53,7 @@ const ConfirmAccount = ({navigation}) => {
                   variant={'pink'}
                   onChangeText={setCode}
                 />
-                <Button variant={'blue'}>
-                  confirm Account
-                </Button>
+                <Button variant={'blue'} onPress={() => confirmAccount()}>confirm Account</Button>
                 <Button>
                   <Image
                     source={require('../assets/googleIcon.png')}

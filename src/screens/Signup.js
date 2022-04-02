@@ -59,12 +59,13 @@ const Signup = ({navigation}) => {
                       <Text fontSize={'md'} color={'danger.800'}>
                         {auth.message}
                       </Text>
-                      <Text
+                      
+                    </Center>
+                  )}
+                  <Text
                         onPress={() => navigation.navigate('ConfirmAccount')}>
                         ConfirmAccount
                       </Text>
-                    </Center>
-                  )}
                 </VStack>
                 <Input
                   placeholder={'Username'}

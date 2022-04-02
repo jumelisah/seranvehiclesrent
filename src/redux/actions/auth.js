@@ -48,13 +48,13 @@ export const onRegister = dataRegister => {
     } catch (e) {
       dispatch({
         type: 'AUTH_ERROR',
-        payload: e.response.message,
+        payload: e.response.data.message,
       });
     }
   };
 };
 
-export const AccountConfirmation = confirmData => {
+export const accountConfirmation = confirmData => {
   return async dispatch => {
     try {
       const {data} = await http().post(
@@ -69,7 +69,7 @@ export const AccountConfirmation = confirmData => {
     } catch (e) {
       dispatch({
         type: 'AUTH_ERROR',
-        payload: e.response.message,
+        payload: e.response.data.message,
       });
     }
   };
