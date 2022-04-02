@@ -11,6 +11,7 @@ import EditVehicle from './EditVehicle';
 import EditProfile from './EditProfile';
 import History from './History';
 import {useSelector} from 'react-redux';
+import ConfirmAccount from './ConfirmAccount';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -27,6 +28,11 @@ const AuthStackScreen = () => {
       <AuthStack.Screen
         name="Signup"
         component={Signup}
+        options={{headerShown: false}}
+      />
+      <AuthStack.Screen
+        name="ConfirmAccount"
+        component={ConfirmAccount}
         options={{headerShown: false}}
       />
       <AuthStack.Screen

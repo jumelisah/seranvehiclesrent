@@ -29,6 +29,11 @@ const Signup = ({navigation}) => {
     //   setRegisterMsg('Please fill in all the fields');
     // }
     dispatch(onRegister(data));
+    // setTimeout(() => {
+    //   if (!auth.isError) {
+    //     navigation.navigate('ConfirmAccount');
+    //   }
+    // }, 5000);
   };
   return (
     <NativeBaseProvider>
@@ -46,6 +51,17 @@ const Signup = ({navigation}) => {
                     <Center h={39} bg={'rose.100'} rounded={'md'}>
                       <Text fontSize={'md'} color={'danger.700'}>
                         {auth.errMsg}
+                      </Text>
+                    </Center>
+                  )}
+                  {!auth.isError && auth.message && (
+                    <Center h={39} bg={'rose.100'} runded={'md'}>
+                      <Text fontSize={'md'} color={'danger.800'}>
+                        {auth.message}
+                      </Text>
+                      <Text
+                        onPress={() => navigation.navigate('ConfirmAccount')}>
+                        ConfirmAccount
                       </Text>
                     </Center>
                   )}

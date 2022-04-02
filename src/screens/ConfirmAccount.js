@@ -16,20 +16,17 @@ import {onRegister} from '../redux/actions/auth';
 
 const ConfirmAccount = ({navigation}) => {
   const {auth} = useSelector(state => state);
-  const [username, setUsername] = useState();
+  const [code, setCode] = useState();
   const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  // const [errRegister, setErrRegister] = useState(false);
-  // const [registerMsg, setRegisterMsg] = useState();
   const dispatch = useDispatch();
-  const register = () => {
-    const data = {username, email, password, confirmPassword: password};
-    // if (username === null || email === null || password === null) {
-    //   setErrRegister(true);
-    //   setRegisterMsg('Please fill in all the fields');
-    // }
-    dispatch(onRegister(data));
-  };
+  // const register = () => {
+  //   const data = {username, email, password, confirmPassword: password};
+  //   // if (username === null || email === null || password === null) {
+  //   //   setErrRegister(true);
+  //   //   setRegisterMsg('Please fill in all the fields');
+  //   // }
+  //   dispatch(onRegister(data));
+  // };
   return (
     <NativeBaseProvider>
       <SafeAreaView>
@@ -51,23 +48,17 @@ const ConfirmAccount = ({navigation}) => {
                   )}
                 </VStack>
                 <Input
-                  placeholder={'Username'}
-                  variant={'pink'}
-                  onChangeText={setUsername}
-                />
-                <Input
-                  placeholder={'Mobile phone'}
+                  placeholder={'Email'}
                   variant={'pink'}
                   onChangeText={setEmail}
                 />
                 <Input
-                  placeholder={'Password'}
-                  secureTextEntry={true}
+                  placeholder={'Confirmation Code'}
                   variant={'pink'}
-                  onChangeText={setPassword}
+                  onChangeText={setCode}
                 />
-                <Button variant={'blue'} onPress={() => register()}>
-                  Signup
+                <Button variant={'blue'}>
+                  confirm Account
                 </Button>
                 <Button>
                   <Image

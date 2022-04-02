@@ -48,7 +48,28 @@ export const onRegister = dataRegister => {
     } catch (e) {
       dispatch({
         type: 'AUTH_ERROR',
-        payload: e.response.data.message,
+        payload: e.response.message,
+      });
+    }
+  };
+};
+
+export const AccountConfirmation = confirmData => {
+  return async dispatch => {
+    try {
+      const {data} = await http().post(
+        '/auth/account-confirmation',
+        qs.stringify(confirmData),
+      );
+      console.log(data);
+      dispatch({
+        type: 'AUTH_CONFIRM_ACCOUNT',
+        payload: data,
+      });
+    } catch (e) {
+      dispatch({
+        type: 'AUTH_ERROR',
+        payload: e.response.message,
       });
     }
   };

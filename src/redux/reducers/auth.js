@@ -19,6 +19,10 @@ const auth = (state = initialState, action) => {
       state.message = action.payload.message;
       return {...state};
     }
+    case 'AUTH_CONFIRM_ACCOUNT': {
+      state.message = action.payload.message;
+      return {...state};
+    }
     case 'AUTH_ERROR': {
       state.token = null;
       state.message = null;
