@@ -9,15 +9,17 @@ const History = () => {
     {id: 3, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
     {id: 4, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
   ];
-  const [choosenId, setChoosenId] = React.useState([]);
+  const [choosenId, setChoosenId] = React.useState([1, 3]);
   const getSelectedId = () => {
-    if (choosenId.length === 0){
+    if (choosenId.length === 0) {
       return '';
     } else {
-      let arrayString = choosenId.reduce((accumulator, currentValue) => accumulator + ", " + currentValue);
-      return "[" + arrayString + "]";
+      let arrayString = choosenId.reduce(
+        (accumulator, currentValue) => accumulator + ', ' + currentValue,
+      );
+      return `[ + ${arrayString} + ]`;
     }
-  }
+  };
   const Example = () => {
     const [groupValue, setGroupValue] = React.useState([]);
   
@@ -72,13 +74,17 @@ const History = () => {
           </View>
         </View>
           <View>
+          <Checkbox.Group colorScheme="green" defaultValue={choosenId} onChange={values => {
+            getSelectedId(values || []);
+          }}>
             {data.map((item) => {
               return (
                 <Box
                   key={item.id}
                   display="flex"
                   flexDirection="row"
-                  justifyContent="space-between">
+                  justifyContent="space-between"
+                  w={100}>
                   <Image
                     source={{uri: item.image}}
                     alt="lamborghini"
@@ -89,9 +95,14 @@ const History = () => {
                     <Text>Vespa Matic</Text>
                     <Text>Jan 18 2021 to Jan 21 2021</Text>
                   </View>
+                  <Checkbox value={item.id} my={1}>{item.id}</Checkbox>
                 </Box>
               )
             })}
+            <View>
+              <Text>{getSelectedId()}</Text>
+            </View>
+          </Checkbox.Group>
         </View>
       </ScrollView>
     </SafeAreaView>

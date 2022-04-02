@@ -1,53 +1,64 @@
-import React from 'react';
+import {Center, NativeBaseProvider, VStack} from 'native-base';
+import React, {useEffect, useState} from 'react';
 import {
   View,
-  // Text,
+  Text,
   StyleSheet,
   ImageBackground,
-  TouchableOpacity,
   Image,
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {NativeBaseProvider, Text, VStack, Center} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import {onLogin} from '../redux/actions/auth';
+import {onRegister} from '../redux/actions/auth';
 
-const Login = ({navigation}) => {
+const ConfirmAccount = ({navigation}) => {
   const {auth} = useSelector(state => state);
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  // const [errRegister, setErrRegister] = useState(false);
+  // const [registerMsg, setRegisterMsg] = useState();
   const dispatch = useDispatch();
-  const doLogin = async () => {
-    dispatch(onLogin(username, password));
-    await alert(auth.token);
+  const register = () => {
+    const data = {username, email, password, confirmPassword: password};
+    // if (username === null || email === null || password === null) {
+    //   setErrRegister(true);
+    //   setRegisterMsg('Please fill in all the fields');
+    // }
+    dispatch(onRegister(data));
   };
   return (
     <NativeBaseProvider>
       <SafeAreaView>
         <ImageBackground
-          source={require('../assets/bgLogin.png')}
+          source={require('../assets/bgSignup.png')}
           resizeMode="cover"
           style={styles.pageBackground}>
           <ScrollView>
             <View style={styles.fullPage}>
-              <Text bold fontSize={'4xl'} color={'white'}>
-                LET'S EXPLORE THE WORLD
-              </Text>
-              <VStack space={4} style={styles.formInput}>
-                {auth?.isError && (
-                  <Center h={39} bg={'rose.100'} rounded={'md'}>
-                    <Text fontSize={'md'} color={'danger.600'}>
-                      {auth.errMsg}
-                    </Text>
-                  </Center>
-                )}
+              <Text style={styles.textHeader}>LET’S HAVE SOME RIDE</Text>
+              <View style={styles.formInput}>
+                <VStack space={4} style={styles.formInput}>
+                  {auth.isError && (
+                    <Center h={39} bg={'rose.100'} rounded={'md'}>
+                      <Text fontSize={'md'} color={'danger.700'}>
+                        {auth.errMsg}
+                      </Text>
+                    </Center>
+                  )}
+                </VStack>
                 <Input
                   placeholder={'Username'}
                   variant={'pink'}
                   onChangeText={setUsername}
+                />
+                <Input
+                  placeholder={'Mobile phone'}
+                  variant={'pink'}
+                  onChangeText={setEmail}
                 />
                 <Input
                   placeholder={'Password'}
@@ -55,29 +66,24 @@ const Login = ({navigation}) => {
                   variant={'pink'}
                   onChangeText={setPassword}
                 />
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('ResetPassword')}>
-                  <Text style={styles.link}>Forgot password?</Text>
-                </TouchableOpacity>
-                <Button variant={'blue'} onPress={() => doLogin()}>
-                  Login
+                <Button variant={'blue'} onPress={() => register()}>
+                  Signup
                 </Button>
                 <Button>
                   <Image
                     source={require('../assets/googleIcon.png')}
                     style={styles.logo}
                   />
-                  Login with Google
+                  Signup with Google
                 </Button>
-              </VStack>
+              </View>
               <View>
                 <Text style={styles.textWhite}>
-                  Don’t have account?
+                  Already have an account?
                   <Text
-                    underline
-                    color={'white'}
-                    onPress={() => navigation.navigate('Signup')}>
-                    Sign up now
+                    style={styles.link}
+                    onPress={() => navigation.navigate('Login')}>
+                    Login now
                   </Text>
                 </Text>
               </View>
@@ -102,11 +108,16 @@ const styles = StyleSheet.create({
   pageBackground: {
     height: '100%',
   },
+  textHeader: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: 'white',
+  },
   textWhite: {
     color: 'white',
   },
   formInput: {
-    marginTop: 200,
+    marginTop: 150,
   },
   link: {
     color: 'white',
@@ -121,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default ConfirmAccount;

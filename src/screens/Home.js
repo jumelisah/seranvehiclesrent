@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   View,
+  Text,
   StyleSheet,
   // ImageBackground,
   Image,
@@ -9,12 +10,17 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {useState} from 'react/cjs/react.development';
+import Button from '../components/Button';
 import Navbar from '../components/Navbar';
 import TitleHeader from '../components/TitleHeader';
+import {onLogout} from '../redux/actions/auth';
 
 const Home = ({navigation}) => {
+  const {auth} = useSelector(state => state);
   const [user, setUser] = useState('Admin');
+  const dispatch = useDispatch();
   const data = [
     {id: 1, image: require('../assets/pic1.png')},
     {id: 2, image: require('../assets/pic2.png')},
@@ -34,6 +40,7 @@ const Home = ({navigation}) => {
   return (
     <SafeAreaView style={styles.fullPage}>
       <ScrollView>
+        <Button onPress={() => dispatch(onLogout())}>Logout</Button>
         <Image
           source={require('../assets/home.png')}
           style={styles.headerImage}

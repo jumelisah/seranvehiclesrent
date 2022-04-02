@@ -1,4 +1,5 @@
-import React from 'react';
+import {Center, NativeBaseProvider, VStack} from 'native-base';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,50 +9,89 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import {onRegister} from '../redux/actions/auth';
 
 const Signup = ({navigation}) => {
+  const {auth} = useSelector(state => state);
+  const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  // const [errRegister, setErrRegister] = useState(false);
+  // const [registerMsg, setRegisterMsg] = useState();
+  const dispatch = useDispatch();
+  const register = () => {
+    const data = {username, email, password, confirmPassword: password};
+    // if (username === null || email === null || password === null) {
+    //   setErrRegister(true);
+    //   setRegisterMsg('Please fill in all the fields');
+    // }
+    dispatch(onRegister(data));
+  };
   return (
-    <SafeAreaView>
-      <ImageBackground
-        source={require('../assets/bgSignup.png')}
-        resizeMode="cover"
-        style={styles.pageBackground}>
-        <ScrollView>
-          <View style={styles.fullPage}>
-            <Text style={styles.textHeader}>LET’S HAVE SOME RIDE</Text>
-            <View style={styles.formInput}>
-              <Input placeholder={'Username'} variant={'pink'} />
-              <Input placeholder={'Mobile phone'} variant={'pink'} />
-              <Input
-                placeholder={'Password'}
-                secureTextEntry={true}
-                variant={'pink'}
-              />
-              <Button variant={'blue'}>Signup</Button>
-              <Button>
-                <Image
-                  source={require('../assets/googleIcon.png')}
-                  style={styles.logo}
+    <NativeBaseProvider>
+      <SafeAreaView>
+        <ImageBackground
+          source={require('../assets/bgSignup.png')}
+          resizeMode="cover"
+          style={styles.pageBackground}>
+          <ScrollView>
+            <View style={styles.fullPage}>
+              <Text style={styles.textHeader}>LET’S HAVE SOME RIDE</Text>
+              <View style={styles.formInput}>
+                <VStack space={4} style={styles.formInput}>
+                  {auth.isError && (
+                    <Center h={39} bg={'rose.100'} rounded={'md'}>
+                      <Text fontSize={'md'} color={'danger.700'}>
+                        {auth.errMsg}
+                      </Text>
+                    </Center>
+                  )}
+                </VStack>
+                <Input
+                  placeholder={'Username'}
+                  variant={'pink'}
+                  onChangeText={setUsername}
                 />
-                Signup with Google
-              </Button>
-            </View>
-            <View>
-              <Text style={styles.textWhite}>
-                Already have an account?
-                <Text
-                  style={styles.link}
-                  onPress={() => navigation.navigate('Login')}>
-                  Login now
+                <Input
+                  placeholder={'Mobile phone'}
+                  variant={'pink'}
+                  onChangeText={setEmail}
+                />
+                <Input
+                  placeholder={'Password'}
+                  secureTextEntry={true}
+                  variant={'pink'}
+                  onChangeText={setPassword}
+                />
+                <Button variant={'blue'} onPress={() => register()}>
+                  Signup
+                </Button>
+                <Button>
+                  <Image
+                    source={require('../assets/googleIcon.png')}
+                    style={styles.logo}
+                  />
+                  Signup with Google
+                </Button>
+              </View>
+              <View>
+                <Text style={styles.textWhite}>
+                  Already have an account?
+                  <Text
+                    style={styles.link}
+                    onPress={() => navigation.navigate('Login')}>
+                    Login now
+                  </Text>
                 </Text>
-              </Text>
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      </ImageBackground>
-    </SafeAreaView>
+          </ScrollView>
+        </ImageBackground>
+      </SafeAreaView>
+    </NativeBaseProvider>
   );
 };
 
@@ -77,7 +117,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   formInput: {
-    marginTop: 200,
+    marginTop: 150,
   },
   link: {
     color: 'white',

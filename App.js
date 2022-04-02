@@ -1,83 +1,21 @@
-import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Login from './src/screens/Login';
-import ResetPassword from './src/screens/ResetPassword';
-import Signup from './src/screens/Signup';
-import Home from './src/screens/Home';
-import DetailSearch from './src/screens/DetailSearch';
-import AddVehicles from './src/screens/AddVehicles';
-import EditVehicle from './src/screens/EditVehicle';
-import EditProfile from './src/screens/EditProfile';
-import History from './src/screens/History';
+// import {View, Text} from 'react-native';
+import React from 'react';
+import Main from './src/screens/Main';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import reduxStore from './src/redux/store';
 
-const Stack = createNativeStackNavigator();
-const AuthStack = createNativeStackNavigator();
-
-const AuthStackScreen = () => {
+const {store, persistor} = reduxStore();
+const App = () => {
   return (
-    <AuthStack.Navigator>
-      <AuthStack.Screen
-        name="Login"
-        component={Login}
-        options={{headerShown: false}}
-      />
-      <AuthStack.Screen
-        name="Signup"
-        component={Signup}
-        options={{headerShown: false}}
-      />
-      <AuthStack.Screen
-        name="ResetPassword"
-        component={ResetPassword}
-        options={{headerShown: false}}
-      />
-    </AuthStack.Navigator>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+      {/* <> */}
+        <Main />
+        {/* </> */}
+      </PersistGate>
+    </Provider>
   );
 };
 
-const MyStack = () => {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Auth"
-          component={AuthStackScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="DetailSearch"
-          component={DetailSearch}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="AddVehicles"
-          component={AddVehicles}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="EditVehicle"
-          component={EditVehicle}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="EditProfile"
-          component={EditProfile}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="History"
-          component={History}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
-
-export default MyStack;
+export default App;
