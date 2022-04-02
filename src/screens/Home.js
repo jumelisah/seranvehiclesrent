@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -13,27 +13,39 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {useState} from 'react/cjs/react.development';
 import Button from '../components/Button';
-import Navbar from '../components/Navbar';
 import TitleHeader from '../components/TitleHeader';
-import {onLogout} from '../redux/actions/auth';
+import {getProfile, onLogout} from '../redux/actions/auth';
+import {getVehicles, getCars, getMotorbike, getBike} from '../redux/actions/vehicles';
+import CameraImg from '../assets/photo-camera.png';
 
 const Home = ({navigation}) => {
   const {auth} = useSelector(state => state);
+  const {vehicles} = useSelector(state => state);
   const [user, setUser] = useState('Admin');
   const dispatch = useDispatch();
   const data = [
-    {id: 1, image: require('../assets/pic1.png')},
+    {id: 1, name: 'Vespa matic', image: require('../assets/pic1.png')},
     {id: 2, image: require('../assets/pic2.png')},
     {id: 3, image: require('../assets/pic3.png')},
     {id: 4, image: require('../assets/pic4.png')},
   ];
+  useEffect(() => {
+    dispatch(getProfile(auth.token));
+    dispatch(getVehicles());
+  }, [auth.token, dispatch]);
+  useEffect(() => {
+    dispatch(getCars());
+    dispatch(getMotorbike());
+    dispatch(getBike());
+  }, [dispatch]);
   const renderItem = ({item}) => {
     //the app will represent each list item via a Text component
+    console.log(item.image)
     return (
       <TouchableOpacity
         style={styles.coverImage}
         onPress={() => navigation.navigate('EditVehicle')}>
-        <Image source={item.image} style={styles.listImage} />
+        <Image source={{uri: item.image}} style={styles.listImage} />
       </TouchableOpacity>
     );
   };
@@ -49,24 +61,24 @@ const Home = ({navigation}) => {
           <TitleHeader
             child={'Recommended'}
             resChild={'View more'}
-            user={user}
+            user={auth.userData.role}
             onPress={() => navigation.navigate('DetailSearch')}
             onAdd={() => navigation.navigate('AddVehicles')}
           />
           <FlatList
-            data={data} //pass in our data array
+            data={vehicles?.data} //pass in our data array
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           />
           <TitleHeader
             child={'Hot Deals'}
-            user={user}
+            user={auth.userData.role}
             resChild={'View more'}
             onPress={() => navigation.navigate('DetailSearch')}
           />
           <FlatList
-            data={data} //pass in our data array
+            data={vehicles?.cars} //pass in our data array
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -74,23 +86,11 @@ const Home = ({navigation}) => {
           <TitleHeader
             child={'Cars'}
             resChild={'View more'}
-            user={user}
+            user={auth.userData.role}
             onPress={() => navigation.navigate('DetailSearch')}
           />
           <FlatList
-            data={data} //pass in our data array
-            renderItem={renderItem}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          />
-          <TitleHeader
-            child={'Bike'}
-            resChild={'View more'}
-            user={user}
-            onPress={() => navigation.navigate('DetailSearch')}
-          />
-          <FlatList
-            data={data} //pass in our data array
+            data={vehicles?.cars} //pass in our data array
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -98,19 +98,30 @@ const Home = ({navigation}) => {
           <TitleHeader
             child={'Motorbike'}
             resChild={'View more'}
-            user={user}
+            user={auth.userData.role}
+            onPress={() => navigation.navigate('DetailSearch')}
+          />
+          <FlatList
+            data={vehicles.motorbike} //pass in our data array
+            renderItem={renderItem}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          />
+          <TitleHeader
+            child={'Bike'}
+            resChild={'View more'}
+            user={auth.userData.role}
             onPress={() => navigation.navigate('DetailSearch')}
             onAdd={() => navigation.navigate('AddVehicles')}
           />
           <FlatList
-            data={data} //pass in our data array
+            data={vehicles?.bike} //pass in our data array
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           />
         </View>
       </ScrollView>
-      <Navbar />
     </SafeAreaView>
   );
 };
@@ -130,7 +141,8 @@ const styles = StyleSheet.create({
   },
   listImage: {
     flex: 1,
-    width: '100%',
+    width: 300,
+    height: 200,
     resizeMode: 'cover',
     borderRadius: 10,
     margin: 20,

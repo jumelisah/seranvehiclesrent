@@ -38,9 +38,7 @@ export const onLogout = () => {
 export const onRegister = dataRegister => {
   return async dispatch => {
     try {
-      console.log(dataRegister);
       const {data} = await http().post('/users', qs.stringify(dataRegister));
-      console.log(data);
       dispatch({
         type: 'AUTH_REGISTER',
         payload: data,
@@ -61,10 +59,43 @@ export const accountConfirmation = confirmData => {
         '/auth/account-confirmation',
         qs.stringify(confirmData),
       );
-      console.log(data);
       dispatch({
         type: 'AUTH_CONFIRM_ACCOUNT',
         payload: data,
+      });
+    } catch (e) {
+      dispatch({
+        type: 'AUTH_ERROR',
+        payload: e.response.data.message,
+      });
+    }
+  };
+};
+
+export const getProfile = token => {
+  return async dispatch => {
+    try {
+      const {data} = await http(token).get('/profile');
+      dispatch({
+        type: 'AUTH_GET_PROFILE',
+        payload: data.result,
+      });
+    } catch (e) {
+      dispatch({
+        type: 'AUTH_ERROR',
+        payload: e.response.data.message,
+      });
+    }
+  };
+};
+
+export const editProfile = (token, userData) => {
+  return async dispatch => {
+    try {
+      const {data} = await http(token).patch('/users', qs.stringify(userData));
+      dispatch({
+        type: 'AUTH_CHANGE_PROFILE',
+        payload: data.result,
       });
     } catch (e) {
       dispatch({

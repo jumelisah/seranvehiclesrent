@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import {useState} from 'react/cjs/react.development';
 import CameraImg from '../assets/photo-camera.png';
 import Input from '../components/Input';

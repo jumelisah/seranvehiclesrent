@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 const TitleHeader = ({child, resChild, onPress, user, onAdd}) => {
   return (
     <View style={styles.title}>
-      {user === 'Admin' && (
+      {(user === 'Admin' || user === 'admin') && (
         <TouchableOpacity style={styles.btnPlus} onPress={onAdd}>
           <Text style={styles.plusBtn}>+</Text>
         </TouchableOpacity>

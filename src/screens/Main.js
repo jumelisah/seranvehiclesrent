@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Login from './Login';
 import ResetPassword from './ResetPassword';
 import Signup from './Signup';
@@ -16,6 +17,7 @@ import ConfirmAccount from './ConfirmAccount';
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const AuthStackScreen = () => {
   return (
@@ -44,19 +46,21 @@ const AuthStackScreen = () => {
   );
 };
 
+const MyTabs = () => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Search" component={DetailSearch} />
+      <Tab.Screen name="History" component={History} />
+      <Tab.Screen name="EditProfile" component={EditProfile} />
+    </Tab.Navigator>
+  );
+};
+
 const MainStackScreen = () => {
   return (
     <MainStack.Navigator>
-      <MainStack.Screen
-        name="Home"
-        component={Home}
-        options={{headerShown: false}}
-      />
-      <MainStack.Screen
-        name="DetailSearch"
-        component={DetailSearch}
-        options={{headerShown: false}}
-      />
+      <MyTabs />
       <MainStack.Screen
         name="AddVehicles"
         component={AddVehicles}
@@ -95,8 +99,8 @@ const Main = () => {
         )}
         {auth.token !== null && (
           <Stack.Screen
-            name="MainStack"
-            component={MainStackScreen}
+            name="MyTabs"
+            component={MyTabs}
             options={{headerShown: false}}
           />
         )}

@@ -1,4 +1,5 @@
 const initialState = {
+  userData: {},
   token: null,
   message: null,
   isError: false,
@@ -23,8 +24,15 @@ const auth = (state = initialState, action) => {
       state.message = action.payload.message;
       return {...state};
     }
+    case 'AUTH_GET_PROFILE': {
+      state.userData = action.payload;
+      return {...state};
+    }
+    case 'AUTH_CHANGE_PROFILE': {
+      state.userData = action.payload;
+      return {...state};
+    }
     case 'AUTH_ERROR': {
-      state.token = null;
       state.message = null;
       state.isError = true;
       state.errMsg = action.payload;

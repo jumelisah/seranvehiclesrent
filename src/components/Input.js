@@ -10,6 +10,7 @@ const Input = ({
   variant,
   searchBar,
   type,
+  name,
 }) => {
   return (
     <TextInput
@@ -29,6 +30,7 @@ const Input = ({
       placeholder={placeholder}
       keyboardType={keyboardType}
       secureTextEntry={secureTextEntry}
+      name={name}
     />
   );
 };

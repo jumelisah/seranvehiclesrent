@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -15,17 +15,33 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import Counter from '../components/Counter';
 import {NativeBaseProvider, Radio, Stack} from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
+import {editProfile, getProfile} from '../redux/actions/auth';
 
 const EditProfile = ({navigation}) => {
+  const {auth} = useSelector(state => state);
   const [picture, setPicture] = useState({photo: null});
+  const [dataUser, setDataUser] = useState({
+    name: auth.userData.name,
+    email: auth.userData?.email,
+    phone_number: auth.userData?.phone_number,
+    address: auth.userData?.address,
+    birthdate: auth.userData?.birthdate,
+    gender: auth.userData?.gender,
+  });
   const [moduleOption, setModuleOption] = useState(false);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getProfile(auth?.token));
+  }, [auth.token, dispatch]);
   const handlePhotoGallery = () => {
     const options = {
       noData: true,
     };
     launchImageLibrary(options, response => {
       if (response.assets) {
-        setPicture({photo: response.assets[0].uri});
+        setPicture({photo: response.assets[0]});
+        console.log(response);
       }
     });
     setModuleOption(false);
@@ -36,10 +52,22 @@ const EditProfile = ({navigation}) => {
     };
     launchCamera(options, response => {
       if (response.assets) {
-        setPicture({photo: response.assets[0].uri});
+        setPicture({photo: response.assets[0]});
       }
     });
     setModuleOption(false);
+  };
+  const updateProfile = () => {
+    const data = {
+      name: dataUser.name,
+      email: dataUser.email,
+      phone_number: dataUser.phone_number,
+      address: dataUser.address,
+      // birthdate: dataUser.birthdate,
+      image: picture.photo.uri,
+    };
+    console.log(dataUser);
+    dispatch(editProfile(auth.token, data));
   };
   const Example = () => {
     return (
@@ -57,10 +85,21 @@ const EditProfile = ({navigation}) => {
           marginVertical={20}
           space={4}
           w="100%">
-          <Radio value="1" colorScheme="blue" size="lg" my={1}>
+          <Radio
+            value="1"
+            colorScheme="blue"
+            size="lg"
+            my={1}
+            selected={() => setDataUser({gender: 'Male'})}>
             Male
           </Radio>
-          <Radio value="2" colorScheme="blue" size="lg" my={1}>
+          <Radio
+            value="2"
+            colorScheme="blue"
+            size="lg"
+            my={1}
+            selected={() => setDataUser({gender: 'Male'})}
+          >
             Female
           </Radio>
         </Stack>
@@ -87,7 +126,13 @@ const EditProfile = ({navigation}) => {
               <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.uploadSection}>
                   <Image
-                    source={picture.photo ? {uri: picture.photo} : CameraImg}
+                    source={
+                      picture.photo
+                        ? {uri: picture.photo.uri}
+                        : auth.userData?.image
+                        ? {uri: auth.userData.image}
+                        : {CameraImg}
+                    }
                     style={styles.uploadedImg}
                   />
                   <TouchableOpacity
@@ -99,29 +144,47 @@ const EditProfile = ({navigation}) => {
                 <Example />
                 <View>
                   <Text>Name</Text>
-                  <Input variant={'transparent'} placeholder={'Samantha Doe'} />
+                  <Input
+                    variant={'transparent'}
+                    placeholder={dataUser.name !== 'undefined' ? dataUser.name : 'Input your name'}
+                    onChangeText={text => setDataUser({name: text})}
+                  />
                   <Text>Email Address</Text>
                   <Input
                     variant={'transparent'}
-                    placeholder={'samanthadoe17@gmail.com'}
+                    placeholder={dataUser.email || 'Input yur email'}
+                    onChangeText={text => setDataUser({email: text})}
                   />
                   <Text>Phone Number</Text>
                   <Input
                     variant={'transparent'}
-                    placeholder={'+62 81348287878'}
+                    placeholder={
+                      dataUser.phone_number || 'Input your phone number'
+                    }
+                    onChangeText={text => setDataUser({phone_number: text})}
                   />
-                  <Text>Location</Text>
-                  <Input type={'line'} placeholder={'Select location'} />
-                  <Text>Category</Text>
-                  <Input type={'line'} placeholder={'Select category'} />
+                  <Text>Date of Birth</Text>
+                  <Input
+                    variant={'transparent'}
+                    placeholder={dataUser.birthdate || 'Input your birthdate'}
+                    onChangeText={text => setDataUser({birthdate: text})}
+                  />
+                  <Text>Delivery Address</Text>
+                  <Input
+                    variant={'transparent'}
+                    placeholder={dataUser.address || 'Input your address'}
+                    onChangeText={text => setDataUser({address: text})}
+                  />
                   <View>
-                    <View style={styles.inlineGroup}>
+                    {/* <View style={styles.inlineGroup}>
                       <Text style={styles.textMedium}>Available stock :</Text>
                       <View style={styles.positionEnd}>
                         <Counter num={1} />
                       </View>
-                    </View>
-                    <Button variant={'blue'}>Save Product</Button>
+                    </View> */}
+                    <Button variant={'blue'} onPress={() => updateProfile()}>
+                      Save Change
+                      </Button>
                   </View>
                 </View>
               </ScrollView>
