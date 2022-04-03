@@ -13,14 +13,13 @@ import {useState} from 'react/cjs/react.development';
 import CameraImg from '../assets/photo-camera.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import Counter from '../components/Counter';
 import {NativeBaseProvider, Radio, Stack} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {editProfile, getProfile} from '../redux/actions/auth';
 
 const EditProfile = ({navigation}) => {
   const {auth} = useSelector(state => state);
-  const [picture, setPicture] = useState({photo: null});
+  const [picture, setPicture] = useState();
   const [dataUser, setDataUser] = useState({
     name: auth.userData.name,
     email: auth.userData?.email,
@@ -40,7 +39,7 @@ const EditProfile = ({navigation}) => {
     };
     launchImageLibrary(options, response => {
       if (response.assets) {
-        setPicture({photo: response.assets[0]});
+        setPicture(response.assets[0].uri);
         console.log(response);
       }
     });
@@ -52,7 +51,7 @@ const EditProfile = ({navigation}) => {
     };
     launchCamera(options, response => {
       if (response.assets) {
-        setPicture({photo: response.assets[0]});
+        setPicture(response.assets[0].uri);
       }
     });
     setModuleOption(false);
@@ -64,7 +63,7 @@ const EditProfile = ({navigation}) => {
       phone_number: dataUser.phone_number,
       address: dataUser.address,
       // birthdate: dataUser.birthdate,
-      image: picture.photo.uri,
+      image: picture,
     };
     console.log(dataUser);
     dispatch(editProfile(auth.token, data));
@@ -127,8 +126,8 @@ const EditProfile = ({navigation}) => {
                 <View style={styles.uploadSection}>
                   <Image
                     source={
-                      picture.photo
-                        ? {uri: picture.photo.uri}
+                      picture
+                        ? {uri: picture}
                         : auth.userData?.image
                         ? {uri: auth.userData.image}
                         : {CameraImg}

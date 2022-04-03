@@ -32,6 +32,12 @@ const auth = (state = initialState, action) => {
       state.userData = action.payload;
       return {...state};
     }
+    case 'AUTH_CHANGE_PASSWORD': {
+      state.message = action.payload;
+      state.errMsg = null;
+      state.isError = false;
+      return {...state};
+    }
     case 'AUTH_ERROR': {
       state.message = null;
       state.isError = true;

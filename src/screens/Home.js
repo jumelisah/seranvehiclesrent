@@ -14,8 +14,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useState} from 'react/cjs/react.development';
 import Button from '../components/Button';
 import TitleHeader from '../components/TitleHeader';
-import {getProfile, onLogout} from '../redux/actions/auth';
-import {getVehicles, getCars, getMotorbike, getBike} from '../redux/actions/vehicles';
+import {getProfile} from '../redux/actions/auth';
+import {
+  getVehicles,
+  getCars,
+  getMotorbike,
+  getBike,
+} from '../redux/actions/vehicles';
 import CameraImg from '../assets/photo-camera.png';
 
 const Home = ({navigation}) => {
@@ -40,19 +45,20 @@ const Home = ({navigation}) => {
   }, [dispatch]);
   const renderItem = ({item}) => {
     //the app will represent each list item via a Text component
-    console.log(item.image)
     return (
       <TouchableOpacity
         style={styles.coverImage}
-        onPress={() => navigation.navigate('EditVehicle')}>
-        <Image source={{uri: item.image}} style={styles.listImage} />
+        onPress={() => navigation.navigate('EditVehicle', {id: item.id})}>
+        <Image
+          source={item.image ? {uri: item.image} : CameraImg}
+          style={styles.listImage}
+        />
       </TouchableOpacity>
     );
   };
   return (
     <SafeAreaView style={styles.fullPage}>
       <ScrollView>
-        <Button onPress={() => dispatch(onLogout())}>Logout</Button>
         <Image
           source={require('../assets/home.png')}
           style={styles.headerImage}

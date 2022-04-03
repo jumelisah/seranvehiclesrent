@@ -10,9 +10,12 @@ import DetailSearch from './DetailSearch';
 import AddVehicles from './AddVehicles';
 import EditVehicle from './EditVehicle';
 import EditProfile from './EditProfile';
+import Profile from './Profile';
 import History from './History';
+import ChangePassword from './ChangePassword'
 import {useSelector} from 'react-redux';
 import ConfirmAccount from './ConfirmAccount';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -48,11 +51,45 @@ const AuthStackScreen = () => {
 
 const MyTabs = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Search" component={DetailSearch} />
-      <Tab.Screen name="History" component={History} />
-      <Tab.Screen name="EditProfile" component={EditProfile} />
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarActiveBackgroundColor: '#9AD0EC',
+        tabBarActiveTintColor: '#1572A1',
+      }}>
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarIcon: ({focused}) => <Icon name="home" size={30} />,
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={DetailSearch}
+        options={{
+          tabBarIcon: ({focused}) => <Icon name="search" size={30} />,
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={History}
+        options={{
+          pressColor: 'red',
+          tabBarIcon: ({focused}) => <Icon name="list-alt" size={30} />,
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({focused}) => <Icon name="user" size={30} />,
+          headerShown: false,
+        }}
+      />
     </Tab.Navigator>
   );
 };
@@ -60,7 +97,11 @@ const MyTabs = () => {
 const MainStackScreen = () => {
   return (
     <MainStack.Navigator>
-      <MyTabs />
+      <MainStack.Screen
+        name="MyTabs"
+        component={MyTabs}
+        options={{headerShown: false}}
+      />
       <MainStack.Screen
         name="AddVehicles"
         component={AddVehicles}
@@ -74,6 +115,11 @@ const MainStackScreen = () => {
       <MainStack.Screen
         name="EditProfile"
         component={EditProfile}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="ChangePassword"
+        component={ChangePassword}
         options={{headerShown: false}}
       />
       <MainStack.Screen
@@ -99,8 +145,8 @@ const Main = () => {
         )}
         {auth.token !== null && (
           <Stack.Screen
-            name="MyTabs"
-            component={MyTabs}
+            name="MainStack"
+            component={MainStackScreen}
             options={{headerShown: false}}
           />
         )}

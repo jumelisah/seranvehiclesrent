@@ -105,3 +105,24 @@ export const editProfile = (token, userData) => {
     }
   };
 };
+
+export const changePassword = (token, dataPassword) => {
+  return async dispatch => {
+    try {
+      const {data} = await http(token).patch(
+        '/auth/change-password',
+        qs.stringify(dataPassword),
+      );
+      console.log(data)
+      dispatch({
+        type: 'AUTH_CHANGE_PASSWORD',
+        payload: data.message,
+      });
+    } catch (e) {
+      dispatch({
+        type: 'AUTH_ERROR',
+        payload: e.response.data.message,
+      });
+    }
+  };
+};

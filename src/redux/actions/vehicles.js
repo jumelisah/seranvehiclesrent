@@ -18,6 +18,23 @@ export const getVehicles = dataFilter => {
   };
 };
 
+export const getVehicleDetail = id => {
+  return async dispatch => {
+    try {
+      const {data} = await http().get(`/vehicles/${id}`);
+      dispatch({
+        type: 'GET_VEHICLE_DETAIL',
+        payload: data.result,
+      });
+    } catch (e) {
+      dispatch({
+        type: 'VEHICLES_ERROR',
+        payload: e.response.data.message,
+      });
+    }
+  };
+};
+
 export const getCars = dataFilter => {
   return async dispatch => {
     try {
@@ -59,6 +76,52 @@ export const getBike = dataFilter => {
       dispatch({
         type: 'GET_BIKE',
         payload: data,
+      });
+    } catch (e) {
+      dispatch({
+        type: 'VEHICLES_ERROR',
+        payload: e.response.data.message,
+      });
+    }
+  };
+};
+
+export const addVehicles = (token, dataVehicle) => {
+  return async dispatch => {
+    try {
+      const {data} = await http(token).post(
+        '/vehicles',
+        qs.stringify(dataVehicle),
+      );
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+      dispatch({
+        type: 'CLEAR_VEHICLES',
+      });
+      dispatch({
+        type: 'ADD_VEHICLES',
+        payload: data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    } catch (e) {
+      dispatch({
+        type: 'VEHICLES_ERROR',
+        payload: e.response.data.message,
+      });
+    }
+  };
+};
+
+export const deleteVehicle = (token, id) => {
+  return async dispatch => {
+    try {
+      const {data} = await http(token).delete(`/vehicles/${id}`);
+      dispatch({
+        type: 'DELETE_VEHICLE',
+        payload: data.message,
       });
     } catch (e) {
       dispatch({

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,19 +14,35 @@ import Button from '../components/Button';
 import Counter from '../components/Counter';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ModalDelete from '../components/ModalDelete';
+import {useDispatch, useSelector} from 'react-redux';
+import {deleteVehicle, getVehicleDetail} from '../redux/actions/vehicles';
 
-const EditVehicle = ({navigation}) => {
+const EditVehicle = ({navigation, route: {params}}) => {
+  const {auth} = useSelector(state => state);
+  const {vehicles} = useSelector(state => state);
+  const [price, setPrice] = useState(vehicles.vehicle.cost);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [available, setAvailable] = useState(true);
+  const dispatch = useDispatch();
   const onConfirmDelete = () => {
     setConfirmDelete(true);
+  };
+  useEffect(() => {
+    dispatch(getVehicleDetail(params.id));
+  }, [dispatch, params.id]);
+  const handleDelete = () => {
+    dispatch(deleteVehicle(auth.token, params.id));
+    navigation.navigate('Home');
   };
   return (
     <SafeAreaView>
       <View style={styles.pages}>
         <ScrollView>
           <View style={styles.topWrapper}>
-            <Image source={defaultImage} style={styles.imgStyle} />
+            <Image
+              source={{uri: vehicles.vehicle?.image} || defaultImage}
+              style={styles.imgStyle}
+            />
             <TouchableOpacity
               style={styles.headerLeft}
               onPress={() => navigation.goBack()}>
@@ -39,15 +55,15 @@ const EditVehicle = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View>
-            <Text>Vespa Matic</Text>
-            <Text>Rp. 120.000/day</Text>
-            <Text>Max for 2 person</Text>
+            <Text>{vehicles.vehicle.name}</Text>
+            <Text>Rp. {price}/day</Text>
+            <Text>Max for {vehicles.vehicle.seat} person</Text>
             <Text>No prepayment</Text>
             <Text>Available</Text>
             <View style={styles.inlineGroup}>
               <Text style={styles.textMedium}>Stock :</Text>
               <View style={styles.positionEnd}>
-                <Counter num={10} />
+                <Counter num={vehicles.vehicle.qty} />
               </View>
             </View>
             <View style={styles.inlineButton}>
@@ -75,7 +91,7 @@ const EditVehicle = ({navigation}) => {
           <View style={styles.modalFull}>
             <ModalDelete
               question={'Are you sure want to delete this item?'}
-              deleteAction={() => setConfirmDelete(false)}
+              deleteAction={handleDelete}
               cancelAction={() => setConfirmDelete(false)}
             />
           </View>
