@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,123 +8,89 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import Navbar from '../components/Navbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from '../components/Input';
 import {useState} from 'react/cjs/react.development';
-import Button from '../components/Button';
+import {searchVehicles} from '../redux/actions/vehicles';
+import {useDispatch, useSelector} from 'react-redux';
 
-const DetailSearch = ({navigation}) => {
-  const [showFilter, setShowFilter] = useState(false);
-  const data = [
-    {id: 1, name: 'Vespa Matic', image: require('../assets/img1.png')},
-    {id: 2, name: 'Vespa Matic', image: require('../assets/img1.png')},
-    {id: 3, name: 'Vespa Matic', image: require('../assets/img1.png')},
-    {id: 4, name: 'Vespa Matic', image: require('../assets/img1.png')},
-  ];
-  const filterData = [
-    {id: 1, name: 'Your Location', value: 'Sleman'},
-    {id: 2, name: 'Star Rating', value: 'Select'},
-    {id: 3, name: 'Price', value: 'Select'},
-    {id: 4, name: 'Date', value: 'Jan 18 2021'},
-    {id: 5, name: 'Type', value: 'Motorbike'},
-  ];
-  // const filterMenu = ({item}) => {
-  //   return (
-  //     <TouchableOpacity>
-  //       <View style={styles.filterList}>
-  //         <Text style={[styles.fontMedium, styles.textBold]}>{item.name}</Text>
-  //         <Text style={[styles.fontMedium, styles.positionEnd, styles.space]}>
-  //           {item.value}
-  //         </Text>
-  //         <Icon name="chevron-right" size={24} />
-  //       </View>
-  //     </TouchableOpacity>
-  //   );
-  // };
+const DetailSearch = ({navigation, route: {params}}) => {
+  const {vehicles} = useSelector(state => state);
+  const [name, setName] = useState(params.name ? params.name : '');
+  const [location, setLocation] = useState(
+    params?.location ? params.location : '',
+  );
+  const [category, setCategory] = useState(params?.category || '');
+  const [minPrice, setMinPrice] = useState(params?.minPrice || 0);
+  const [maxPrice, setMaxPrice] = useState(params?.maxPrice || 1000000);
+  const [type, setType] = useState(params?.type || '');
+  const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      searchVehicles({name, location, category, minPrice, maxPrice, type}),
+    );
+  }, [dispatch, name, location, category, minPrice, maxPrice, type]);
+  const handleSearch = () => {
+    dispatch(searchVehicles({name}, true));
+  };
+  const getMoreData = () => {
+    setPage(vehicles.page.currentPage + 1);
+    dispatch(searchVehicles({name, page}, false));
+  };
   return (
     <SafeAreaView style={styles.fullPage}>
       <View style={styles.input}>
-        <TouchableOpacity style={styles.searchIcon}>
+        <TouchableOpacity style={styles.searchIcon} onPress={handleSearch}>
           <Icon name="search" size={30} />
         </TouchableOpacity>
         <Input
-          value={'Motorbike - Sleman - Jan 21'}
+          value={name}
           variant={'blue'}
+          onChangeText={text => setName(text)}
           searchBar
         />
-        <TouchableOpacity
-          onPress={() => alert('Hello')}
-          style={styles.clearIcon}>
+        <TouchableOpacity onPress={() => setName('')} style={styles.clearIcon}>
           <Icon name="times" size={30} />
         </TouchableOpacity>
       </View>
       <TouchableOpacity
-        onPress={() => setShowFilter(!showFilter)}
+        onPress={() => navigation.navigate('FilterSearch', {name, location})}
         style={styles.filterBar}>
         <Icon name="filter" size={30} />
         <Text style={styles.textFilter}>Filter</Text>
       </TouchableOpacity>
       <ScrollView>
-        <View style={styles.content}>
-          {data.map(item => {
+        <View>
+          {vehicles.search?.map(item => {
             return (
               <View key={item.id} style={styles.searchList}>
-                <Image source={item.image} style={styles.searchListImage} />
+                <Image
+                  source={{uri: item.image}}
+                  style={styles.searchListImage}
+                />
                 <Text style={styles.location}>
-                  Sudirman, 4.1 miles from your location
+                  {item.location}, 4.1 miles from your location
                 </Text>
-                <Text>{item.name} (Max. 2 person)</Text>
+                <Text style={styles.title}>{item.name}</Text>
                 <View style={styles.pricing}>
-                  <Text>No prepayment</Text>
-                  <Text style={styles.positionEnd}>Rp. 120.000/day</Text>
+                  <Text style={styles.available}>Available</Text>
+                  <Text style={[styles.positionEnd, styles.price]}>
+                    Rp. {item.cost?.toLocaleString('id-ID')}/day
+                  </Text>
                 </View>
               </View>
             );
           })}
         </View>
+        {vehicles.page?.next !== null && (
+          <TouchableOpacity onPress={getMoreData}>
+            <View style={styles.linkMore}>
+              <Text style={styles.textMore}>Show more</Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </ScrollView>
-      <Navbar />
-      {showFilter && (
-        <View style={styles.filterModule}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.filterBar}>
-              <TouchableOpacity onPress={() => setShowFilter(!showFilter)}>
-                <Icon name="chevron-left" size={30} />
-              </TouchableOpacity>
-              <Text style={styles.textFilter}>Filter</Text>
-              <View style={[styles.positionEnd, styles.btnWidth]}>
-                <Button variant={'blue'}>Reset</Button>
-              </View>
-            </View>
-            <View>
-              {filterData.map(item => {
-                return (
-                  <TouchableOpacity key={item.id}>
-                    <View style={styles.filterList}>
-                      <Text style={[styles.fontMedium, styles.textBold]}>
-                        {item.name}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.fontMedium,
-                          styles.positionEnd,
-                          styles.space,
-                        ]}>
-                        {item.value}
-                      </Text>
-                      <Icon name="chevron-right" size={24} />
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </ScrollView>
-          <View style={styles.btnFilter}>
-            <Button variant={'blue'}>Apply</Button>
-          </View>
-        </View>
-      )}
     </SafeAreaView>
   );
 };
@@ -147,6 +113,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     left: 30,
+    zIndex: 5,
   },
   clearIcon: {
     position: 'absolute',
@@ -170,12 +137,15 @@ const styles = StyleSheet.create({
   searchList: {
     margin: 20,
     backgroundColor: 'white',
-    borderColor: 'black',
+    borderColor: 'rgba(0,0,0,0.2)',
+    borderWidth: 1,
     borderRadius: 10,
+    height: 330,
+    shadowColor: 'black',
   },
   searchListImage: {
     width: '100%',
-    maxHeight: 200,
+    height: 200,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
@@ -223,6 +193,30 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingRight: 10,
+  },
+  available: {
+    color: 'green',
+    paddingLeft: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  linkMore: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingBottom: 30,
+  },
+  textMore: {
+    fontSize: 20,
   },
 });
 

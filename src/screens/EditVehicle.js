@@ -16,6 +16,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import ModalDelete from '../components/ModalDelete';
 import {useDispatch, useSelector} from 'react-redux';
 import {deleteVehicle, getVehicleDetail} from '../redux/actions/vehicles';
+import { Stack } from 'native-base';
 
 const EditVehicle = ({navigation, route: {params}}) => {
   const {auth} = useSelector(state => state);
@@ -56,7 +57,7 @@ const EditVehicle = ({navigation, route: {params}}) => {
           </View>
           <View>
             <Text>{vehicles.vehicle.name}</Text>
-            <Text>Rp. {price}/day</Text>
+            <Text>Rp. {vehicles.vehicle.cost}/day</Text>
             <Text>Max for {vehicles.vehicle.seat} person</Text>
             <Text>No prepayment</Text>
             <Text>Available</Text>

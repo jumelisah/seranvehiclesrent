@@ -131,3 +131,28 @@ export const deleteVehicle = (token, id) => {
     }
   };
 };
+
+export const searchVehicles = (dataSearch, replace = true) => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: 'VEHICLES_CLEAR',
+      });
+      if (!dataSearch.page) {
+        dataSearch.page = 1;
+      }
+      const url = `/popular?name=${dataSearch.name}&location=${dataSearch.location}&page=${dataSearch.page}`;
+      const {data} = await http().get(url);
+      dispatch({
+        type: 'VEHICLE_SEARCH',
+        payload: data,
+        replace,
+      });
+    } catch (e) {
+      dispatch({
+        type: 'VEHICLES_ERROR',
+        payload: e.response.data.message,
+      });
+    }
+  };
+};

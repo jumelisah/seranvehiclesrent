@@ -97,8 +97,7 @@ const EditProfile = ({navigation}) => {
             colorScheme="blue"
             size="lg"
             my={1}
-            selected={() => setDataUser({gender: 'Male'})}
-          >
+            selected={() => setDataUser({gender: 'Male'})}>
             Female
           </Radio>
         </Stack>
@@ -145,7 +144,11 @@ const EditProfile = ({navigation}) => {
                   <Text>Name</Text>
                   <Input
                     variant={'transparent'}
-                    placeholder={dataUser.name !== 'undefined' ? dataUser.name : 'Input your name'}
+                    placeholder={
+                      dataUser.name !== 'undefined'
+                        ? dataUser.name
+                        : 'Input your name'
+                    }
                     onChangeText={text => setDataUser({name: text})}
                   />
                   <Text>Email Address</Text>

@@ -16,6 +16,7 @@ import ChangePassword from './ChangePassword'
 import {useSelector} from 'react-redux';
 import ConfirmAccount from './ConfirmAccount';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FilterSearch from './FilterSearch';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -123,8 +124,8 @@ const MainStackScreen = () => {
         options={{headerShown: false}}
       />
       <MainStack.Screen
-        name="History"
-        component={History}
+        name="FilterSearch"
+        component={FilterSearch}
         options={{headerShown: false}}
       />
     </MainStack.Navigator>

@@ -6,6 +6,8 @@ const initialState = {
   bike: {},
   isError: false,
   vehicle: [],
+  search: [],
+  page: {},
 };
 
 const vehicles = (state = initialState, action) => {
@@ -16,6 +18,15 @@ const vehicles = (state = initialState, action) => {
     }
     case 'GET_VEHICLE_DETAIL': {
       state.vehicle = action.payload;
+      return {...state};
+    }
+    case 'VEHICLE_SEARCH': {
+      if (action.replace === true) {
+        state.search = action.payload.result;
+      } else {
+        state.search = state.search.concat(action.payload.result);
+      }
+      state.page = action.payload.pageInfo;
       return {...state};
     }
     case 'GET_CARS': {
