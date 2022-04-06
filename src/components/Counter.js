@@ -2,23 +2,14 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {useState} from 'react/cjs/react.development';
 
-const Counter = ({num}) => {
-  const [sum, setSum] = useState(num);
-  const addNum = () => {
-    return setSum(sum + 1);
-  };
-  const minusNum = () => {
-    if (sum > 1) {
-      return setSum(sum - 1);
-    }
-  };
+const Counter = ({num, onPlus, onMinus}) => {
   return (
     <View style={styles.content}>
-      <TouchableOpacity style={styles.btnClick} onPress={minusNum}>
+      <TouchableOpacity style={styles.btnClick} onPress={onMinus}>
         <Text style={styles.boldText}>-</Text>
       </TouchableOpacity>
-      <Text style={[styles.boldText, styles.space]}>{sum}</Text>
-      <TouchableOpacity style={styles.btnClick} onPress={addNum}>
+      <Text style={[styles.boldText, styles.space]}>{num}</Text>
+      <TouchableOpacity style={styles.btnClick} onPress={onPlus}>
         <Text style={styles.boldText}>+</Text>
       </TouchableOpacity>
     </View>

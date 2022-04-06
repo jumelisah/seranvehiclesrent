@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   // ImageBackground,
   Image,
@@ -25,6 +24,7 @@ import CameraImg from '../assets/photo-camera.png';
 
 const Home = ({navigation}) => {
   const {auth} = useSelector(state => state);
+  const {pages} = useSelector(state => state);
   const {vehicles} = useSelector(state => state);
   const [user, setUser] = useState('Admin');
   const dispatch = useDispatch();
@@ -37,18 +37,25 @@ const Home = ({navigation}) => {
   useEffect(() => {
     dispatch(getProfile(auth.token));
     dispatch(getVehicles());
-  }, [auth.token, dispatch]);
-  useEffect(() => {
     dispatch(getCars());
     dispatch(getMotorbike());
     dispatch(getBike());
-  }, [dispatch]);
+  }, [dispatch, auth.token]);
   const renderItem = ({item}) => {
     //the app will represent each list item via a Text component
     return (
       <TouchableOpacity
         style={styles.coverImage}
-        onPress={() => navigation.navigate('EditVehicle', {id: item.id})}>
+        onPress={() =>
+          navigation.navigate(
+            `${
+              auth.userData.role === 'Admin'
+                ? 'Detail Vehicle Admin'
+                : 'DetailVehicle'
+            }`,
+            {id: item.id},
+          )
+        }>
         <Image
           source={item.image ? {uri: item.image} : CameraImg}
           style={styles.listImage}
@@ -68,7 +75,7 @@ const Home = ({navigation}) => {
             child={'Recommended'}
             resChild={'View more'}
             user={auth.userData.role}
-            onPress={() => navigation.navigate('DetailSearch')}
+            onPress={() => navigation.navigate('Search')}
             onAdd={() => navigation.navigate('AddVehicles')}
           />
           <FlatList

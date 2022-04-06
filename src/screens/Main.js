@@ -12,11 +12,14 @@ import EditVehicle from './EditVehicle';
 import EditProfile from './EditProfile';
 import Profile from './Profile';
 import History from './History';
-import ChangePassword from './ChangePassword'
+import ChangePassword from './ChangePassword';
 import {useSelector} from 'react-redux';
 import ConfirmAccount from './ConfirmAccount';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FilterSearch from './FilterSearch';
+import DetailVehicle from './DetailVehicle';
+import Payment from './Payment';
+import DetailVehicleAdmin from './DetailVehicleAdmin';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -104,8 +107,23 @@ const MainStackScreen = () => {
         options={{headerShown: false}}
       />
       <MainStack.Screen
+        name="DetailVehicle"
+        component={DetailVehicle}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="Payment"
+        component={Payment}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
         name="AddVehicles"
         component={AddVehicles}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="Detail Vehicle Admin"
+        component={DetailVehicleAdmin}
         options={{headerShown: false}}
       />
       <MainStack.Screen

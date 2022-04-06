@@ -1,6 +1,16 @@
 import React from 'react';
-import {View, Text, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
-import {NativeBaseProvider, Checkbox, Box, HStack, Heading, VStack, Image} from 'native-base';
+import {StyleSheet, SafeAreaView, ScrollView} from 'react-native';
+import {
+  NativeBaseProvider,
+  Checkbox,
+  Box,
+  HStack,
+  Heading,
+  VStack,
+  Image,
+  View,
+  Text,
+} from 'native-base';
 
 const History = () => {
   const data = [
@@ -12,12 +22,12 @@ const History = () => {
   const [choosenId, setChoosenId] = React.useState([1, 3]);
   const getSelectedId = () => {
     if (choosenId.length === 0) {
-      return '';
+      return '[]';
     } else {
       let arrayString = choosenId.reduce(
         (accumulator, currentValue) => accumulator + ', ' + currentValue,
       );
-      return `[ + ${arrayString} + ]`;
+      return `[ ${arrayString} ]`;
     }
   };
   const Example = () => {
@@ -61,51 +71,63 @@ const History = () => {
   };
   return (
     <NativeBaseProvider>
-    <SafeAreaView>
-      <ScrollView>
-        <Text style={styles.header}>History Order</Text>
-        <View>
+      <SafeAreaView>
+        <ScrollView>
+          <Text style={styles.header}>History Order</Text>
           <View>
-            <Example />
-            <Text>A week ago</Text>
-          </View>
-          <View>
-            <Text>A month ago</Text>
-          </View>
-        </View>
-          <View>
-          <Checkbox.Group colorScheme="green" defaultValue={choosenId} onChange={values => {
-            getSelectedId(values || []);
-          }}>
-            {data.map((item) => {
-              return (
-                <Box
-                  key={item.id}
-                  display="flex"
-                  flexDirection="row"
-                  justifyContent="space-between"
-                  w={100}>
-                  <Image
-                    source={{uri: item.image}}
-                    alt="lamborghini"
-                    height={200}
-                    width={200}
-                  />
-                  <View>
-                    <Text>Vespa Matic</Text>
-                    <Text>Jan 18 2021 to Jan 21 2021</Text>
-                  </View>
-                  <Checkbox value={item.id} my={1}>{item.id}</Checkbox>
-                </Box>
-              )
-            })}
             <View>
-              <Text>{getSelectedId()}</Text>
+              <Example />
+              <Text>A week ago</Text>
             </View>
-          </Checkbox.Group>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+            <View>
+              <Text>A month ago</Text>
+            </View>
+          </View>
+          <View>
+            <Checkbox.Group
+              colorScheme="green"
+              defaultValue={choosenId}
+              onChange={values => {
+                setChoosenId(values || []);
+              }}>
+              {data.map(item => {
+                return (
+                  <View
+                    key={item.id}
+                    display="flex"
+                    // flexDirection="row-reverse"
+                    justifyContent="space-between"
+                    w={'100%'}
+                    p={5}>
+                    <Checkbox
+                      value={item.id}
+                      my={1}
+                      id={item.id}
+                      flexDirection={'row-reverse'}
+                      width={'100%'}>
+                      <View flexDirection={'row'} alignItems={'center'}>
+                        <Image
+                          source={{uri: item.image}}
+                          alt="lamborghini"
+                          height={100}
+                          width={100}
+                        />
+                        <View>
+                          <Text>Vespa Matic</Text>
+                          <Text>Jan 18 2021 to Jan 21 2021</Text>
+                        </View>
+                      </View>
+                    </Checkbox>
+                  </View>
+                );
+              })}
+              <View>
+                <Text>{getSelectedId()}</Text>
+              </View>
+            </Checkbox.Group>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </NativeBaseProvider>
   );
 };

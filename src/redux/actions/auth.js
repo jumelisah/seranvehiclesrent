@@ -5,6 +5,9 @@ export const onLogin = (username, password) => {
   return async dispatch => {
     try {
       dispatch({
+        type: 'PAGES_LOADING',
+      });
+      dispatch({
         type: 'AUTH_CLEAR',
       });
       const dataLogin = {username, password};
@@ -13,10 +16,16 @@ export const onLogin = (username, password) => {
         type: 'AUTH_LOGIN',
         payload: data.result.token,
       });
-    } catch {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    } catch (e) {
       dispatch({
         type: 'AUTH_ERROR',
-        payload: 'Wrong password',
+        payload: e.response.data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     }
   };
@@ -72,6 +81,40 @@ export const accountConfirmation = confirmData => {
   };
 };
 
+export const forgotPassword = dataForgot => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+      dispatch({
+        type: 'AUTH_CLEAR',
+      });
+      console.log(dataForgot);
+      const {data} = await http().post(
+        '/auth/forgot-password',
+        qs.stringify(dataForgot),
+      );
+      console.log(data);
+      dispatch({
+        type: 'AUTH_FORGOT_PASSWORD',
+        payload: data,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    } catch (e) {
+      dispatch({
+        type: 'AUTH_ERROR',
+        payload: e.response.data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    }
+  };
+};
+
 export const getProfile = token => {
   return async dispatch => {
     try {
@@ -113,7 +156,6 @@ export const changePassword = (token, dataPassword) => {
         '/auth/change-password',
         qs.stringify(dataPassword),
       );
-      console.log(data)
       dispatch({
         type: 'AUTH_CHANGE_PASSWORD',
         payload: data.message,

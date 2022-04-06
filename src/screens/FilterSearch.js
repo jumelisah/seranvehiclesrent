@@ -34,6 +34,12 @@ const FilterSearch = ({navigation, route: {params}}) => {
           : 'All',
     },
   ];
+  const handleReset = () => {
+    setLocation('');
+    // setMaxPrice(1000000);
+    // setMinPrice(0);
+    // setType('');
+  };
   return (
     <NativeBaseProvider>
       <SafeAreaView>
@@ -55,7 +61,9 @@ const FilterSearch = ({navigation, route: {params}}) => {
                 </Text>
               </View>
               <View width={120}>
-                <Button variant={'blue'}>Reset</Button>
+                <Button variant={'blue'} onPress={handleReset}>
+                  Reset
+                </Button>
               </View>
             </View>
             <View>
@@ -144,9 +152,6 @@ const FilterSearch = ({navigation, route: {params}}) => {
                 navigation.navigate('Search', {
                   name,
                   location,
-                  type,
-                  minPrice,
-                  maxPrice,
                 })
               }>
               Apply

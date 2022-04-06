@@ -1,14 +1,7 @@
-import React, { useEffect } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
-import defaultImage from '../assets/pic6.png';
+import React, {useEffect} from 'react';
+import {TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FaIcon from 'react-native-vector-icons/FontAwesome5';
 import {useState} from 'react/cjs/react.development';
 import Button from '../components/Button';
 import Counter from '../components/Counter';
@@ -16,14 +9,25 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import ModalDelete from '../components/ModalDelete';
 import {useDispatch, useSelector} from 'react-redux';
 import {deleteVehicle, getVehicleDetail} from '../redux/actions/vehicles';
-import { Stack } from 'native-base';
+import {
+  Image,
+  Input,
+  NativeBaseProvider,
+  Text,
+  View,
+  VStack,
+} from 'native-base';
+import LinearGradient from 'react-native-linear-gradient';
+import Rating from '../components/Rating';
 
 const EditVehicle = ({navigation, route: {params}}) => {
   const {auth} = useSelector(state => state);
   const {vehicles} = useSelector(state => state);
-  const [price, setPrice] = useState(vehicles.vehicle.cost);
+  const [name, setName] = useState(vehicles.vehicle.name);
+  const [price, setPrice] = useState(vehicles.vehicle.cost.toString());
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [available, setAvailable] = useState(true);
+  const [qty, setQty] = useState(vehicles.vehicle.qty);
   const dispatch = useDispatch();
   const onConfirmDelete = () => {
     setConfirmDelete(true);
@@ -31,140 +35,152 @@ const EditVehicle = ({navigation, route: {params}}) => {
   useEffect(() => {
     dispatch(getVehicleDetail(params.id));
   }, [dispatch, params.id]);
+  const config = {
+    dependencies: {
+      'linear-gradient': LinearGradient,
+    },
+  };
   const handleDelete = () => {
     dispatch(deleteVehicle(auth.token, params.id));
     navigation.navigate('Home');
   };
   return (
-    <SafeAreaView>
-      <View style={styles.pages}>
-        <ScrollView>
-          <View style={styles.topWrapper}>
-            <Image
-              source={{uri: vehicles.vehicle?.image} || defaultImage}
-              style={styles.imgStyle}
-            />
-            <TouchableOpacity
-              style={styles.headerLeft}
-              onPress={() => navigation.goBack()}>
-              <Icon style={styles.textWhite} name="chevron-left" size={30} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.deleteBtn, styles.headerRight]}
-              onPress={onConfirmDelete}>
-              <Icon name="trash-o" size={18} />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Text>{vehicles.vehicle.name}</Text>
-            <Text>Rp. {vehicles.vehicle.cost}/day</Text>
-            <Text>Max for {vehicles.vehicle.seat} person</Text>
-            <Text>No prepayment</Text>
-            <Text>Available</Text>
-            <View style={styles.inlineGroup}>
-              <Text style={styles.textMedium}>Stock :</Text>
-              <View style={styles.positionEnd}>
-                <Counter num={vehicles.vehicle.qty} />
+    <NativeBaseProvider config={config}>
+      <SafeAreaView>
+        <View position={'relative'} height={'100%'}>
+          <ScrollView>
+            <View position={'relative'}>
+              <Image
+                source={{uri: vehicles.vehicle.image}}
+                alt={vehicles.vehicle.name}
+                size={'2xl'}
+                width={'100%'}
+              />
+              <View
+                position={'absolute'}
+                flexDirection={'row'}
+                width={'100%'}
+                justifyContent={'space-between'}
+                alignItems={'center'}
+                p={5}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <Icon name="chevron-left" size={30} color={'white'} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onConfirmDelete}>
+                  <View
+                    backgroundColor={'#9AD0EC'}
+                    borderRadius={'full'}
+                    width={10}
+                    height={10}
+                    justifyContent={'center'}
+                    alignItems={'center'}>
+                    <Icon name="trash-o" size={20} color={'white'} />
+                  </View>
+                </TouchableOpacity>
               </View>
+              <View>
+                <View width={250} p={5}>
+                  <Input
+                    borderWidth={0}
+                    borderBottomWidth={1}
+                    value={vehicles.vehicle.name}
+                    size={'2xl'}
+                    onChangeText={text => setName(text)}
+                  />
+                  <Input
+                    type={'number'}
+                    keyboardType={'numeric'}
+                    borderWidth={0}
+                    borderBottomWidth={1}
+                    value={price}
+                    size={'2xl'}
+                    onChangeText={text => setPrice(text)}
+                  />
+                </View>
+                <View position={'absolute'} right={0} p={5}>
+                  <Rating />
+                </View>
+              </View>
+              <VStack space={1} px={5}>
+                <Text>Max for {vehicles.vehicle.seat} person</Text>
+                <Text>No prepayment</Text>
+                <Text
+                  fontSize={'md'}
+                  fontWeight={'bold'}
+                  py={2}
+                  color={vehicles.vehicle.stock < 1 ? 'red' : 'green.600'}>
+                  {`${
+                    vehicles.vehicle.stock < 1 ? 'Not available' : 'Available'
+                  }`}
+                </Text>
+                <View py={1} flexDirection={'row'} alignItems={'center'}>
+                  <View
+                    backgroundColor={'#9AD0EC'}
+                    px={3}
+                    py={2}
+                    borderRadius={10}>
+                    <Icon name="map-marker" size={20} color={'#1572A1'} />
+                  </View>
+                  <Text pl={2} fontSize={'md'}>
+                    {vehicles.vehicle.location}
+                  </Text>
+                </View>
+                <View py={1} flexDirection={'row'} alignItems={'center'}>
+                  <View
+                    backgroundColor={'#9AD0EC'}
+                    px={3}
+                    py={2}
+                    borderRadius={10}>
+                    <FaIcon name="walking" size={20} color={'#1572A1'} />
+                  </View>
+                  <Text pl={2} fontSize={'md'}>
+                    3.2 miles from your location
+                  </Text>
+                </View>
+              </VStack>
             </View>
-            <View style={styles.inlineButton}>
-              <View style={styles.buttonPart}>
-                <Button
-                  variant={`${available ? 'blue' : ''}`}
-                  textUnactive={`${available ? '' : 'Unactive'}`}
-                  onPress={() => setAvailable(true)}>
-                  Available
-                </Button>
-              </View>
-              <View style={styles.buttonPart}>
-                <Button
-                  variant={`${!available ? 'blue' : ''}`}
-                  textUnactive={`${available ? 'Unactive' : ''}`}
-                  onPress={() => setAvailable(false)}>
-                  Full Book
-                </Button>
-              </View>
+          </ScrollView>
+          <View flexDirection={'row'} px={5} py={2}>
+            <View width={'50%'} pr={1}>
+              <Button
+                variant={`${available ? 'blue' : ''}`}
+                textUnactive={`${available ? '' : 'Unactive'}`}
+                onPress={() => setAvailable(true)}>
+                Available
+              </Button>
+            </View>
+            <View width={'50%'} pl={1}>
+              <Button
+                variant={`${!available ? 'blue' : ''}`}
+                textUnactive={`${available ? 'Unactive' : ''}`}
+                onPress={() => setAvailable(false)}>
+                Full Book
+              </Button>
+            </View>
+          </View>
+          <View px={5}>
+            <View flexDirection={'row'} justifyContent={'space-between'}>
+              <Text fontSize={'xl'} fontWeight={'bold'}>
+                Available Stock:
+              </Text>
+              <Counter
+                num={qty}
+                onPlus={() => {
+                  setQty(qty + 1);
+                }}
+                onMinus={() => {
+                  if (qty > 0) {
+                    setQty(qty - 1);
+                  }
+                }}
+              />
             </View>
             <Button variant={'dark'}>Update Changes</Button>
           </View>
-        </ScrollView>
-        {confirmDelete && (
-          <View style={styles.modalFull}>
-            <ModalDelete
-              question={'Are you sure want to delete this item?'}
-              deleteAction={handleDelete}
-              cancelAction={() => setConfirmDelete(false)}
-            />
-          </View>
-        )}
-      </View>
-    </SafeAreaView>
+        </View>
+      </SafeAreaView>
+    </NativeBaseProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  pages: {
-    position: 'relative',
-    height: '100%',
-  },
-  topWrapper: {
-    position: 'relative',
-  },
-  imgStyle: {
-    width: '100%',
-    height: 300,
-  },
-  headerLeft: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-  },
-  headerRight: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-  },
-  textWhite: {
-    color: 'white',
-  },
-  deleteBtn: {
-    backgroundColor: '#9AD0EC',
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  modalFull: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inlineGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  positionEnd: {
-    marginStart: 'auto',
-  },
-  inlineButton: {
-    flexDirection: 'row',
-    marginHorizontal: 10,
-  },
-  buttonPart: {
-    width: '50%',
-    padding: 10,
-  },
-  textMedium: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});
 
 export default EditVehicle;

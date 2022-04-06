@@ -16,9 +16,9 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const DetailSearch = ({navigation, route: {params}}) => {
   const {vehicles} = useSelector(state => state);
-  const [name, setName] = useState(params.name ? params.name : '');
+  const [name, setName] = useState(params?.name ? params?.name : '');
   const [location, setLocation] = useState(
-    params?.location ? params.location : '',
+    params?.location ? params?.location : '',
   );
   const [category, setCategory] = useState(params?.category || '');
   const [minPrice, setMinPrice] = useState(params?.minPrice || 0);
@@ -27,16 +27,15 @@ const DetailSearch = ({navigation, route: {params}}) => {
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(
-      searchVehicles({name, location, category, minPrice, maxPrice, type}),
-    );
+    console.log(location)
+    dispatch(searchVehicles({name, location: params?.location}));
   }, [dispatch, name, location, category, minPrice, maxPrice, type]);
   const handleSearch = () => {
-    dispatch(searchVehicles({name}, true));
+    dispatch(searchVehicles({name, location}, true));
   };
   const getMoreData = () => {
     setPage(vehicles.page.currentPage + 1);
-    dispatch(searchVehicles({name, page}, false));
+    dispatch(searchVehicles({name, page, location}, false));
   };
   return (
     <SafeAreaView style={styles.fullPage}>

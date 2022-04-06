@@ -24,6 +24,10 @@ const auth = (state = initialState, action) => {
       state.message = action.payload.message;
       return {...state};
     }
+    case 'AUTH_FORGOT_PASSWORD': {
+      state.message = action.payload.message;
+      return {...state};
+    }
     case 'AUTH_GET_PROFILE': {
       state.userData = action.payload;
       return {...state};
@@ -47,6 +51,7 @@ const auth = (state = initialState, action) => {
     case 'AUTH_CLEAR': {
       state.isError = false;
       state.errMsg = null;
+      state.message = null;
       return {...state};
     }
     default:

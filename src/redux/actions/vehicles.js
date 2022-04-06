@@ -38,10 +38,16 @@ export const getVehicleDetail = id => {
 export const getCars = dataFilter => {
   return async dispatch => {
     try {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
       const {data} = await http().get('/popular?category=1');
       dispatch({
         type: 'GET_CARS',
         payload: data,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
@@ -55,10 +61,16 @@ export const getCars = dataFilter => {
 export const getMotorbike = dataFilter => {
   return async dispatch => {
     try {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
       const {data} = await http().get('/popular?category=2');
       dispatch({
         type: 'GET_MOTORBIKE',
         payload: data,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
@@ -72,10 +84,16 @@ export const getMotorbike = dataFilter => {
 export const getBike = dataFilter => {
   return async dispatch => {
     try {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
       const {data} = await http().get('/popular?category=3');
       dispatch({
         type: 'GET_BIKE',
         payload: data,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
