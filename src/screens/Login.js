@@ -93,13 +93,15 @@ const Login = ({navigation, route: {params}}) => {
                     Login
                   </Button>
                   <Button>
-                    <View flexDirection={'row'} justifyContent={'center'}>
+                    <View
+                      flexDirection={'row'}
+                      justifyContent={'center'}
+                      alignItems={'center'}>
                       <Image
                         source={require('../assets/googleIcon.png')}
                         width={18}
                         height={18}
                         alt={'login with google'}
-                        pt={4}
                       />
                       <Text fontSize={20} fontWeight={'bold'} px={3}>
                         Login with Google
