@@ -26,7 +26,6 @@ const Home = ({navigation}) => {
   const {auth} = useSelector(state => state);
   const {pages} = useSelector(state => state);
   const {vehicles} = useSelector(state => state);
-  const [user, setUser] = useState('Admin');
   const dispatch = useDispatch();
   const data = [
     {id: 1, name: 'Vespa matic', image: require('../assets/pic1.png')},
@@ -49,7 +48,7 @@ const Home = ({navigation}) => {
         onPress={() =>
           navigation.navigate(
             `${
-              auth.userData.role === 'Admin'
+              auth.userData?.role === 'Admin'
                 ? 'Detail Vehicle Admin'
                 : 'DetailVehicle'
             }`,
@@ -74,7 +73,7 @@ const Home = ({navigation}) => {
           <TitleHeader
             child={'Recommended'}
             resChild={'View more'}
-            user={auth.userData.role}
+            user={auth.userData?.role}
             onPress={() => navigation.navigate('Search')}
             onAdd={() => navigation.navigate('AddVehicles')}
           />
@@ -86,7 +85,7 @@ const Home = ({navigation}) => {
           />
           <TitleHeader
             child={'Hot Deals'}
-            user={auth.userData.role}
+            user={auth.userData?.role}
             resChild={'View more'}
             onPress={() => navigation.navigate('DetailSearch')}
           />
@@ -99,7 +98,7 @@ const Home = ({navigation}) => {
           <TitleHeader
             child={'Cars'}
             resChild={'View more'}
-            user={auth.userData.role}
+            user={auth.userData?.role}
             onPress={() => navigation.navigate('DetailSearch')}
           />
           <FlatList
@@ -111,7 +110,7 @@ const Home = ({navigation}) => {
           <TitleHeader
             child={'Motorbike'}
             resChild={'View more'}
-            user={auth.userData.role}
+            user={auth.userData?.role}
             onPress={() => navigation.navigate('DetailSearch')}
           />
           <FlatList
@@ -123,7 +122,7 @@ const Home = ({navigation}) => {
           <TitleHeader
             child={'Bike'}
             resChild={'View more'}
-            user={auth.userData.role}
+            user={auth.userData?.role}
             onPress={() => navigation.navigate('DetailSearch')}
             onAdd={() => navigation.navigate('AddVehicles')}
           />

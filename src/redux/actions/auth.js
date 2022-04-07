@@ -1,4 +1,5 @@
 import qs from 'qs';
+import RNFetchBlob from 'rn-fetch-blob';
 import http from '../../helpers/http';
 
 export const onLogin = (username, password) => {
@@ -135,15 +136,39 @@ export const getProfile = token => {
 export const editProfile = (token, userData) => {
   return async dispatch => {
     try {
-      const {data} = await http(token).patch('/users', qs.stringify(userData));
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+      console.log(userData);
+      const {data} = await RNFetchBlob.fetch(
+        'PATCH',
+        'http://192.168.0.193:8000/users',
+        {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+        [
+          {
+            name: 'image',
+            filename: userData.fileName,
+            type: userData.fileType,
+            data: RNFetchBlob.wrap(userData.picture),
+          },
+        ],
+      );
+      console.log(data);
       dispatch({
         type: 'AUTH_CHANGE_PROFILE',
         payload: data.result,
       });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
     } catch (e) {
+      console.log(e);
       dispatch({
         type: 'AUTH_ERROR',
-        payload: e.response.data.message,
+        payload: e,
       });
     }
   };

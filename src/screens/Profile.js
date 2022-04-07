@@ -18,15 +18,15 @@ const Profile = ({navigation}) => {
   const {auth} = useSelector(state => state);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
+    dispatch(getProfile(auth.token));
+  }, [dispatch, auth.token]);
   return (
     <NativeBaseProvider>
       <ScrollView>
         <Box py={5} shadow={2}>
           <Center position={'relative'} mx="auto">
             <Image
-              source={{uri: auth.userData.image} || ImageDefault}
+              source={{uri: auth.userData?.image} || ImageDefault}
               size="md"
               resizeMode="cover"
               alt={'default'}
@@ -43,11 +43,11 @@ const Profile = ({navigation}) => {
           </Center>
           <Center>
             <Text fontSize={'md'}>
-              {auth.userData.name || auth.userData.username || 'No name'}
+              {auth.userData?.name || auth.userData?.username || 'No name'}
             </Text>
-            <Text fontSize={'md'}>{auth.userData.email}</Text>
+            <Text fontSize={'md'}>{auth.userData?.email}</Text>
             <Text fontSize={'md'}>
-              {auth.userData.phone_number || 'Add your phone number'}
+              {auth.userData?.phone_number || 'Add your phone number'}
             </Text>
           </Center>
         </Box>
@@ -82,7 +82,8 @@ const Profile = ({navigation}) => {
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ChangePassword')}>
             <View flexDirection={'row'} justifyContent={'space-between'} my={4}>
               <Text fontSize={'xl'} fontWeight={'bold'}>
                 Update Password

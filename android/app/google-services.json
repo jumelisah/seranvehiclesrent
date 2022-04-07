@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "849431576516",
+    "project_id": "seranvehiclesrent",
+    "storage_bucket": "seranvehiclesrent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849431576516:android:f1f222695a254d6f7dee91",
+        "android_client_info": {
+          "package_name": "com.seran.vehiclesrent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849431576516-bvsu6ik547h95ta4qj5b1jnv5k4a1u2g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.seran.vehiclesrent",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "849431576516-nci98i3aretmfpsrfvqqomij0g93nhap.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB14kuxIx7dJk78vJw3opszIXR6yZc-eVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849431576516-nci98i3aretmfpsrfvqqomij0g93nhap.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

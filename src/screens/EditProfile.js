@@ -19,9 +19,12 @@ import {editProfile, getProfile} from '../redux/actions/auth';
 
 const EditProfile = ({navigation}) => {
   const {auth} = useSelector(state => state);
+  const {pages} = useSelector(state => state);
   const [picture, setPicture] = useState();
+  const [fileName, setFileName] = useState();
+  const [fileType, setFileType] = useState();
   const [dataUser, setDataUser] = useState({
-    name: auth.userData.name,
+    name: auth.userData?.name,
     email: auth.userData?.email,
     phone_number: auth.userData?.phone_number,
     address: auth.userData?.address,
@@ -40,7 +43,12 @@ const EditProfile = ({navigation}) => {
     launchImageLibrary(options, response => {
       if (response.assets) {
         setPicture(response.assets[0].uri);
+        setFileName(response.assets[0].fileName);
+        setFileType(response.assets[0].type);
         console.log(response);
+        console.log(picture);
+        console.log(fileName);
+        console.log(fileType);
       }
     });
     setModuleOption(false);
@@ -56,17 +64,20 @@ const EditProfile = ({navigation}) => {
     });
     setModuleOption(false);
   };
-  const updateProfile = () => {
+  const updateProfile = async () => {
     const data = {
       name: dataUser.name,
       email: dataUser.email,
       phone_number: dataUser.phone_number,
       address: dataUser.address,
       // birthdate: dataUser.birthdate,
-      image: picture,
+      fileName,
+      fileType,
+      picture,
     };
     console.log(dataUser);
     dispatch(editProfile(auth.token, data));
+    await dispatch(getProfile(auth?.token));
   };
   const Example = () => {
     return (
@@ -186,7 +197,7 @@ const EditProfile = ({navigation}) => {
                     </View> */}
                     <Button variant={'blue'} onPress={() => updateProfile()}>
                       Save Change
-                      </Button>
+                    </Button>
                   </View>
                 </View>
               </ScrollView>
