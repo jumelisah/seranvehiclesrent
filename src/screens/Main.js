@@ -2,6 +2,7 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Login from './Login';
 import ResetPassword from './ResetPassword';
 import Signup from './Signup';
@@ -20,11 +21,13 @@ import FilterSearch from './FilterSearch';
 import DetailVehicle from './DetailVehicle';
 import Payment from './Payment';
 import DetailVehicleAdmin from './DetailVehicleAdmin';
+import Chat from './Chat';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Notif = createMaterialTopTabNavigator();
 
 const AuthStackScreen = () => {
   return (
@@ -40,7 +43,7 @@ const AuthStackScreen = () => {
         options={{headerShown: false}}
       />
       <AuthStack.Screen
-        name="ConfirmAccount"
+        name="Account Confirmation"
         component={ConfirmAccount}
         options={{headerShown: false}}
       />
@@ -50,6 +53,37 @@ const AuthStackScreen = () => {
         options={{headerShown: false}}
       />
     </AuthStack.Navigator>
+  );
+};
+
+const NotifTabs = () => {
+  return (
+    <Notif.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: 'black',
+        tabBarLabelStyle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+        },
+      }}>
+      <Tab.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          pressColor: 'red',
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="History Order"
+        component={History}
+        options={{
+          tabBarLabel: 'History Order',
+          pressColor: 'red',
+          headerShown: false,
+        }}
+      />
+    </Notif.Navigator>
   );
 };
 
@@ -78,8 +112,8 @@ const MyTabs = () => {
         }}
       />
       <Tab.Screen
-        name="History"
-        component={History}
+        name="Notification"
+        component={NotifTabs}
         options={{
           pressColor: 'red',
           tabBarIcon: ({focused}) => <Icon name="list-alt" size={30} />,

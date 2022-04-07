@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persistReducer} from 'redux-persist';
 import vehicles from './vehicles';
 import pages from './pages';
+import history from './history';
 
 const persisAuth = {
   key: 'auth',
@@ -15,6 +16,7 @@ const rootReducers = combineReducers({
   auth: persistReducer(persisAuth, auth),
   vehicles,
   pages,
+  history,
 });
 
 export default rootReducers;

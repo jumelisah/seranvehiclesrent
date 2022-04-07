@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 import {
   NativeBaseProvider,
@@ -11,15 +11,22 @@ import {
   View,
   Text,
 } from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
+import {getHistoryUser} from '../redux/actions/history';
 
-const History = () => {
+const History = ({navigation}) => {
+  const {auth, history} = useSelector(state => state);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getHistoryUser(auth.token));
+  }, [dispatch, auth.token]);
   const data = [
     {id: 1, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
     {id: 2, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
     {id: 3, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
     {id: 4, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
   ];
-  const [choosenId, setChoosenId] = React.useState([1, 3]);
+  const [choosenId, setChoosenId] = React.useState([]);
   const getSelectedId = () => {
     if (choosenId.length === 0) {
       return '[]';
@@ -90,7 +97,7 @@ const History = () => {
               onChange={values => {
                 setChoosenId(values || []);
               }}>
-              {data.map(item => {
+              {history.data[0].map(item => {
                 return (
                   <View
                     key={item.id}
@@ -113,7 +120,7 @@ const History = () => {
                           width={100}
                         />
                         <View>
-                          <Text>Vespa Matic</Text>
+                          <Text>{item.vehicle}</Text>
                           <Text>Jan 18 2021 to Jan 21 2021</Text>
                         </View>
                       </View>

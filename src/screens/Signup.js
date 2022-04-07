@@ -63,7 +63,7 @@ const Signup = ({navigation}) => {
                     </Center>
                   )}
                   <Text
-                        onPress={() => navigation.navigate('ConfirmAccount')}>
+                        onPress={() => navigation.navigate('Account Confirmation')}>
                         ConfirmAccount
                       </Text>
                 </VStack>

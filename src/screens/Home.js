@@ -41,7 +41,6 @@ const Home = ({navigation}) => {
     dispatch(getBike());
   }, [dispatch, auth.token]);
   const renderItem = ({item}) => {
-    //the app will represent each list item via a Text component
     return (
       <TouchableOpacity
         style={styles.coverImage}

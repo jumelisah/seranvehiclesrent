@@ -7,12 +7,14 @@ const TextInput = ({
   placeholder,
   value,
   icon,
+  iconLeft,
   keyboardType,
   variant,
 }) => {
   return (
     <Input
       type={type}
+      InputLeftElement={iconLeft}
       InputRightElement={icon}
       size={'md'}
       p={4}

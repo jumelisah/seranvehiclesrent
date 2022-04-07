@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-// const { NEXT_PUBLIC_BACKEND_URL } = process.env
-
 const http = token => {
   const headers = {};
   if (token) {
@@ -9,7 +7,7 @@ const http = token => {
   }
 
   return axios.create({
-    baseURL: 'http://192.168.0.193:8000',
+    baseURL: 'https://fw5-backend-beginner.herokuapp.com/',
     headers,
   });
 };

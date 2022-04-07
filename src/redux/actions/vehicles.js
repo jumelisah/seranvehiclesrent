@@ -154,6 +154,9 @@ export const searchVehicles = (dataSearch, replace = true) => {
   return async dispatch => {
     try {
       dispatch({
+        type: 'PAGES_LOADING',
+      });
+      dispatch({
         type: 'VEHICLES_CLEAR',
       });
       if (!dataSearch.page) {
@@ -165,6 +168,9 @@ export const searchVehicles = (dataSearch, replace = true) => {
         type: 'VEHICLE_SEARCH',
         payload: data,
         replace,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({

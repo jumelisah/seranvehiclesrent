@@ -75,7 +75,7 @@ const FilterSearch = ({navigation, route: {params}}) => {
                   <Text fontSize={'xl'}>Your Location</Text>
                   <View flexDirection={'row'} alignItems={'center'}>
                     <Text fontSize={'xl'} px={3}>
-                      {location}
+                      {location ? location : 'Select'}
                     </Text>
                     <Icon name="chevron-right" size={22} />
                   </View>

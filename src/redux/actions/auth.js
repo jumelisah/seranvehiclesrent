@@ -142,7 +142,7 @@ export const editProfile = (token, userData) => {
       console.log(userData);
       const {data} = await RNFetchBlob.fetch(
         'PATCH',
-        'http://192.168.0.193:8000/users',
+        'https://fw5-backend-beginner.herokuapp.com/users',
         {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
