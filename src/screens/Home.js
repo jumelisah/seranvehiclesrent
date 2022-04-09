@@ -23,9 +23,7 @@ import {
 import CameraImg from '../assets/photo-camera.png';
 
 const Home = ({navigation}) => {
-  const {auth} = useSelector(state => state);
-  const {pages} = useSelector(state => state);
-  const {vehicles} = useSelector(state => state);
+  const {auth, pages, vehicles} = useSelector(state => state);
   const dispatch = useDispatch();
   const data = [
     {id: 1, name: 'Vespa matic', image: require('../assets/pic1.png')},

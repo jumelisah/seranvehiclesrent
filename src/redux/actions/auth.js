@@ -142,24 +142,31 @@ export const editProfile = (token, userData) => {
       console.log(userData);
       const {data} = await RNFetchBlob.fetch(
         'PATCH',
-        'https://fw5-backend-beginner.herokuapp.com/users',
+        'https://fw5-backend-beginner.herokuapp.com/profile',
         {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
         [
-          {
-            name: 'image',
-            filename: userData.fileName,
-            type: userData.fileType,
-            data: RNFetchBlob.wrap(userData.picture),
-          },
+          userData.picture
+            ? {
+                name: 'image',
+                filename: userData.fileName,
+                type: userData.fileType,
+                data: RNFetchBlob.wrap(userData.picture),
+              }
+            : {},
+          {name: 'name', data: userData.name},
+          {name: 'phone_number', data: userData.phone_number},
+          {name: 'address', data: userData.address},
+          {name: 'gender', data: userData.gender},
+          {name: 'birthdate', data: userData.birthdate},
         ],
       );
-      console.log(data);
+      console.log(JSON.parse(data));
       dispatch({
         type: 'AUTH_CHANGE_PROFILE',
-        payload: data.result,
+        payload: JSON.parse(data),
       });
       dispatch({
         type: 'PAGES_LOADING',
@@ -177,6 +184,9 @@ export const editProfile = (token, userData) => {
 export const changePassword = (token, dataPassword) => {
   return async dispatch => {
     try {
+      dispatch({
+        type: 'AUTH_CLEAR',
+      });
       const {data} = await http(token).patch(
         '/auth/change-password',
         qs.stringify(dataPassword),

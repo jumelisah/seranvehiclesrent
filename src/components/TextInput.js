@@ -24,8 +24,9 @@ const TextInput = ({
         variant === 'transparent' ? 'warmGray.100' : 'rgb(154, 208, 236)'
       }
       borderColor={variant === 'transparent' ? 'black' : 'rgb(154, 208, 236)'}
+      borderRadius={10}
+      _focus={{borderColor: 'black'}}
       color={'black'}
-      placeholderTextColor={'black'}
       my={2}
       onChangeText={onChangeText}
       keyboardType={keyboardType}

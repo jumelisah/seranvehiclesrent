@@ -22,6 +22,7 @@ import DetailVehicle from './DetailVehicle';
 import Payment from './Payment';
 import DetailVehicleAdmin from './DetailVehicleAdmin';
 import Chat from './Chat';
+import VehicleDetail from './VehicleDetail';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -142,7 +143,7 @@ const MainStackScreen = () => {
       />
       <MainStack.Screen
         name="DetailVehicle"
-        component={DetailVehicle}
+        component={VehicleDetail}
         options={{headerShown: false}}
       />
       <MainStack.Screen

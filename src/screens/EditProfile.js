@@ -1,41 +1,42 @@
 import React, {useEffect} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useState} from 'react/cjs/react.development';
-import CameraImg from '../assets/photo-camera.png';
-import Input from '../components/Input';
 import Button from '../components/Button';
-import {NativeBaseProvider, Radio, Stack} from 'native-base';
+import {Image, NativeBaseProvider, Radio, Stack, Text, View} from 'native-base';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {useDispatch, useSelector} from 'react-redux';
 import {editProfile, getProfile} from '../redux/actions/auth';
+import TextInput from '../components/TextInput';
+import LottieView from 'lottie-react-native';
+import {ChangeDate} from '../helpers/changeDate';
 
 const EditProfile = ({navigation}) => {
-  const {auth} = useSelector(state => state);
-  const {pages} = useSelector(state => state);
+  const {auth, pages} = useSelector(state => state);
   const [picture, setPicture] = useState();
   const [fileName, setFileName] = useState();
   const [fileType, setFileType] = useState();
-  const [dataUser, setDataUser] = useState({
-    name: auth.userData?.name,
-    email: auth.userData?.email,
-    phone_number: auth.userData?.phone_number,
-    address: auth.userData?.address,
-    birthdate: auth.userData?.birthdate,
-    gender: auth.userData?.gender,
-  });
+  const [name, setName] = useState(auth.userData?.name);
+  const [email, setEmail] = useState(auth.userData?.email);
+  const [phoneNumber, setPhoneNumber] = useState(auth.userData?.phone_number);
+  const [address, setAddress] = useState(auth.userData?.address);
+  const [birthdate, setBirthdate] = useState(auth.userData?.birthdate);
+  const [gender, setGender] = useState(auth.userData?.gender);
   const [moduleOption, setModuleOption] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState(
+    new Date(auth.userData.birthdate) || new Date(),
+  );
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProfile(auth?.token));
   }, [auth.token, dispatch]);
+  const dateNow = String(date.getDate()).padStart(2, '0');
+  const monthNow = String(date.getMonth() + 1).padStart(2, '0');
+  const formatDate = auth.userData?.birthdate
+    ? `${date.getFullYear()}/${monthNow}/${dateNow}`
+    : null;
   const handlePhotoGallery = () => {
     const options = {
       noData: true,
@@ -45,10 +46,6 @@ const EditProfile = ({navigation}) => {
         setPicture(response.assets[0].uri);
         setFileName(response.assets[0].fileName);
         setFileType(response.assets[0].type);
-        console.log(response);
-        console.log(picture);
-        console.log(fileName);
-        console.log(fileType);
       }
     });
     setModuleOption(false);
@@ -60,30 +57,33 @@ const EditProfile = ({navigation}) => {
     launchCamera(options, response => {
       if (response.assets) {
         setPicture(response.assets[0].uri);
+        setFileName(response.assets[0].fileName);
+        setFileType(response.assets[0].type);
       }
     });
     setModuleOption(false);
   };
   const updateProfile = async () => {
     const data = {
-      name: dataUser.name,
-      email: dataUser.email,
-      phone_number: dataUser.phone_number,
-      address: dataUser.address,
-      // birthdate: dataUser.birthdate,
+      name,
+      email,
+      phone_number: phoneNumber,
+      address,
+      gender,
+      birthdate: ChangeDate(birthdate),
       fileName,
       fileType,
       picture,
     };
-    console.log(dataUser);
     dispatch(editProfile(auth.token, data));
-    await dispatch(getProfile(auth?.token));
+    // await dispatch(getProfile(auth?.token));
   };
-  const Example = () => {
+  const Gender = () => {
     return (
       <Radio.Group
-        name="exampleGroup"
-        defaultValue="1"
+        name="Gender Group"
+        value={gender}
+        onChange={nextValue => setGender(nextValue)}
         accessibilityLabel="Choose gender">
         <Stack
           direction={{
@@ -95,20 +95,10 @@ const EditProfile = ({navigation}) => {
           marginVertical={20}
           space={4}
           w="100%">
-          <Radio
-            value="1"
-            colorScheme="blue"
-            size="lg"
-            my={1}
-            selected={() => setDataUser({gender: 'Male'})}>
+          <Radio value="Male" colorScheme="blue" size="lg" my={1}>
             Male
           </Radio>
-          <Radio
-            value="2"
-            colorScheme="blue"
-            size="lg"
-            my={1}
-            selected={() => setDataUser({gender: 'Male'})}>
+          <Radio value="Female" colorScheme="blue" size="lg" my={1}>
             Female
           </Radio>
         </Stack>
@@ -117,212 +107,162 @@ const EditProfile = ({navigation}) => {
   };
   return (
     <NativeBaseProvider>
-      <View style={styles.pages}>
-        <View style={styles.fullPage}>
-          <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backIcon}>
-              <Icon name="chevron-left" size={30} />
+      <View
+        flexDirection={'row'}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        p={5}>
+        <View flexDirection={'row'}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon name="chevron-left" size={30} color={'black'} />
+          </TouchableOpacity>
+          <Text fontSize={'xl'} px={3} fontWeight={'bold'}>
+            Add new item
+          </Text>
+        </View>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text fontSize={'xl'} color={'warmGray.400'} fontWeight={'bold'}>
+            Cancel
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View width={100} mx={'auto'}>
+          <Image
+            source={picture ? {uri: picture} : {uri: auth.userData?.image}}
+            width={100}
+            height={100}
+            borderRadius={'full'}
+            alt={auth.userData.username}
+          />
+          <View position={'absolute'} bottom={0} right={0}>
+            <TouchableOpacity onPress={() => setModuleOption(true)}>
+              <View
+                borderRadius={'full'}
+                width={8}
+                height={8}
+                backgroundColor={'rgb(154, 208, 236)'}
+                justifyContent={'center'}
+                alignItems={'center'}>
+                <Icon name="plus" size={20} />
+              </View>
             </TouchableOpacity>
-            <Text style={styles.textHeader}>Add new item</Text>
-            <TouchableOpacity style={styles.positionEnd}>
-              <Text style={styles.textCancel}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.formSection}>
-            <View>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.uploadSection}>
-                  <Image
-                    source={
-                      picture
-                        ? {uri: picture}
-                        : auth.userData?.image
-                        ? {uri: auth.userData.image}
-                        : {CameraImg}
-                    }
-                    style={styles.uploadedImg}
-                  />
-                  <TouchableOpacity
-                    style={styles.iconPlus}
-                    onPress={() => setModuleOption(true)}>
-                    <Icon name="plus" size={20} />
-                  </TouchableOpacity>
-                </View>
-                <Example />
-                <View>
-                  <Text>Name</Text>
-                  <Input
-                    variant={'transparent'}
-                    placeholder={
-                      dataUser.name !== 'undefined'
-                        ? dataUser.name
-                        : 'Input your name'
-                    }
-                    onChangeText={text => setDataUser({name: text})}
-                  />
-                  <Text>Email Address</Text>
-                  <Input
-                    variant={'transparent'}
-                    placeholder={dataUser.email || 'Input yur email'}
-                    onChangeText={text => setDataUser({email: text})}
-                  />
-                  <Text>Phone Number</Text>
-                  <Input
-                    variant={'transparent'}
-                    placeholder={
-                      dataUser.phone_number || 'Input your phone number'
-                    }
-                    onChangeText={text => setDataUser({phone_number: text})}
-                  />
-                  <Text>Date of Birth</Text>
-                  <Input
-                    variant={'transparent'}
-                    placeholder={dataUser.birthdate || 'Input your birthdate'}
-                    onChangeText={text => setDataUser({birthdate: text})}
-                  />
-                  <Text>Delivery Address</Text>
-                  <Input
-                    variant={'transparent'}
-                    placeholder={dataUser.address || 'Input your address'}
-                    onChangeText={text => setDataUser({address: text})}
-                  />
-                  <View>
-                    {/* <View style={styles.inlineGroup}>
-                      <Text style={styles.textMedium}>Available stock :</Text>
-                      <View style={styles.positionEnd}>
-                        <Counter num={1} />
-                      </View>
-                    </View> */}
-                    <Button variant={'blue'} onPress={() => updateProfile()}>
-                      Save Change
-                    </Button>
-                  </View>
-                </View>
-              </ScrollView>
-            </View>
           </View>
         </View>
-        {moduleOption && (
-          <TouchableOpacity
-            style={styles.moduleUpload}
-            onPress={() => setModuleOption(false)}>
-            <View style={styles.pickOption}>
-              <TouchableOpacity
-                style={styles.buttonUpload}
-                onPress={handlePhotoGallery}>
-                <Icon name="picture-o" size={50} style={styles.chooseUpload} />
-                <Text style={styles.textOpt}>Gallery</Text>
+        <View px={5}>
+          <Gender />
+          <Text>Name</Text>
+          <TextInput
+            value={name}
+            variant={'transparent'}
+            placeholder={name ? name : 'Input your name'}
+            onChangeText={text => setName(text)}
+          />
+          <Text>Email Address</Text>
+          <TextInput
+            variant={'transparent'}
+            keyboardType={'email-address'}
+            value={email}
+            placeholder={email || 'Input your email'}
+            onChangeText={text => setEmail(text)}
+          />
+          <Text>Phone Number</Text>
+          <TextInput
+            variant={'transparent'}
+            keyboardType={'phone-pad'}
+            value={phoneNumber}
+            placeholder={phoneNumber || 'Input your phone number'}
+            onChangeText={text => setPhoneNumber(text)}
+          />
+          <Text>Date of Birth</Text>
+          <TextInput
+            variant={'transparent'}
+            keyboardType={'numeric'}
+            value={ChangeDate(new Date(birthdate))}
+            placeholder={'Input your birthdate'}
+            icon={
+              <TouchableOpacity onPress={() => setOpen(true)}>
+                <View mr={2}>
+                  <Icon name="times" size={30} />
+                </View>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonUpload}
-                onPress={handlePhotoCamera}>
-                <Icon name="camera" size={50} style={styles.chooseUpload} />
-                <Text style={styles.textOpt}>Camera</Text>
+            }
+          />
+          <Text>Delivery Address</Text>
+          <TextInput
+            variant={'transparent'}
+            value={address}
+            placeholder={address || 'Input your address'}
+            onChangeText={text => setAddress(text)}
+          />
+          <Button variant={'blue'} onPress={() => updateProfile()}>
+            Save Change
+          </Button>
+        </View>
+      </ScrollView>
+      {moduleOption && (
+        <View
+          position={'absolute'}
+          width={'100%'}
+          height={'100%'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          backgroundColor={'rgba(0,0,0,0.4)'}>
+          <TouchableOpacity onPress={() => setModuleOption(false)}>
+            <View
+              flexDirection={'row'}
+              backgroundColor={'white'}
+              width={250}
+              height={150}
+              justifyContent={'center'}
+              alignItems={'center'}
+              borderRadius={'md'}>
+              <TouchableOpacity onPress={handlePhotoGallery}>
+                <View p={5}>
+                  <Icon name="picture-o" size={50} color={'#1572A1'} />
+                  <Text>Gallery</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handlePhotoCamera}>
+                <View p={5}>
+                  <Icon name="camera" size={50} color={'#1572A1'} />
+                  <Text>Camera</Text>
+                </View>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
-        )}
-      </View>
+        </View>
+      )}
+      {pages.isLoading && (
+        <View
+          position={'absolute'}
+          width={'100%'}
+          height={'100%'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          backgroundColor={'rgba(0,0,0,0.4)'}>
+          <LottieView
+            source={require('../assets/98196-loading-teal-dots.json')}
+            autoPlay
+            loop
+          />
+        </View>
+      )}
+      {open && (
+        <View>
+          <DateTimePicker
+            value={new Date(birthdate) || new Date()}
+            onChange={(e, dateValue) => {
+              setBirthdate(dateValue);
+              setOpen(false);
+            }}
+            onError={() => setOpen(false)}
+            maximumDate={new Date()}
+          />
+        </View>
+      )}
     </NativeBaseProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  pages: {
-    position: 'relative',
-    height: '100%',
-  },
-  fullPage: {
-    padding: 20,
-    position: 'relative',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backIcon: {
-    marginRight: 10,
-  },
-  textHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  positionEnd: {
-    marginStart: 'auto',
-  },
-  textCancel: {
-    color: 'rgba(0,0,0,0.2)',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  formSection: {
-    marginVertical: 30,
-  },
-  uploadSection: {
-    width: 100,
-    height: 100,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    position: 'relative',
-  },
-  uploadedImg: {
-    width: 100,
-    height: 100,
-    resizeMode: 'cover',
-    borderRadius: 50,
-  },
-  iconPlus: {
-    backgroundColor: '#9AD0EC',
-    padding: 10,
-    width: 40,
-    height: 40,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    borderRadius: 20,
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-  },
-  moduleUpload: {
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    width: '100%',
-    height: '100%',
-  },
-  pickOption: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    // Width: '100%',
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: 'rgba(0,0,0,0.1)',
-  },
-  buttonUpload: {
-    padding: 50,
-    // paddingVertical: 20,
-  },
-  chooseUpload: {
-    color: '#1572A1',
-  },
-  textOpt: {
-    color: '#1572A1',
-    textAlign: 'center',
-  },
-  inlineGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  textMedium: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});
 
 export default EditProfile;

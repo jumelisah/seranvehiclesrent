@@ -17,11 +17,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import {TouchableOpacity} from 'react-native';
 import Counter from '../components/Counter';
 import Button from '../components/Button';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {ChangeDate} from '../helpers/changeDate';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const DetailVehicle = ({navigation, route: {params}}) => {
-  const {vehicles} = useSelector(state => state);
+  const {vehicles, pages} = useSelector(state => state);
   const [qty, setQty] = useState(1);
   const [love, setLove] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getVehicleDetail(params.id));
@@ -34,152 +39,230 @@ const DetailVehicle = ({navigation, route: {params}}) => {
   return (
     <NativeBaseProvider config={config}>
       <SafeAreaView>
-        <View
-          height={'100%'}
-          position={'relative'}
-          backgroundColor={'warmGray.100'}>
-          <ScrollView>
-            <View width={'100%'} position={'relative'} height={'100%'}>
-              <Image
-                source={{uri: vehicles.vehicle?.image}}
-                alt={vehicles.vehicle.name}
-                size={'2xl'}
-                width={'100%'}
-                // height={'50%'}
+        {pages.isLoading && (
+          <SkeletonPlaceholder>
+            <SkeletonPlaceholder.Item width={'100%'} height={250} />
+            <SkeletonPlaceholder.Item padding={20}>
+              <SkeletonPlaceholder.Item
+                width={250}
+                height={30}
+                marginBottom={10}
               />
-              <View
-                flexDirection={'row'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
-                position={'absolute'}
-                width={'100%'}
-                p={5}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <Icon name="chevron-left" size={30} color={'white'} />
-                </TouchableOpacity>
-                <View flexDirection={'row'} alignItems={'center'}>
-                  <Box
-                    bg={{
-                      linearGradient: {
-                        colors: ['#1572A1', '#9AD0EC'],
-                        start: [0, 0],
-                        end: [1, 0],
-                      },
-                    }}
-                    p={1}
-                    mr={2}
-                    rounded="xl"
-                    _text={{
-                      fontSize: 'sm',
-                      fontWeight: 'medium',
-                      color: 'warmGray.50',
-                      textAlign: 'center',
-                    }}>
-                    <View flexDirection={'row'}>
-                      <Text color={'white'} pr={1}>
-                        4.5
-                      </Text>
-                      <Icon name="star" size={18} color={'white'} />
-                    </View>
-                  </Box>
-                  <TouchableOpacity onPress={() => setLove(!love)}>
-                    <Icon
-                      name={`${love ? 'heart' : 'heart-o'}`}
-                      size={25}
-                      color={'white'}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View p={5} position={'relative'}>
-                <View position={'absolute'} right={0} p={5}>
-                  <TouchableOpacity>
-                    <FeIcon name="message-circle" size={30} color={'#1572A1'} />
-                  </TouchableOpacity>
-                </View>
-                <Text fontSize={'2xl'} fontWeight={'bold'}>
-                  {vehicles.vehicle.name}
-                </Text>
-                <Text fontSize={'2xl'} fontWeight={'bold'}>
-                  Rp {vehicles.vehicle?.cost}/day
-                </Text>
-                <Text fontSize={'md'} pt={3}>
-                  Max for {vehicles.vehicle.seat} person
-                </Text>
-                <Text fontSize={'md'} py={2}>
-                  No prepayment
-                </Text>
-                <Text
-                  fontSize={'md'}
-                  fontWeight={'bold'}
-                  py={2}
-                  color={vehicles.vehicle.stock < 1 ? 'red' : 'green.600'}>
-                  {`${
-                    vehicles.vehicle.stock < 1 ? 'Not available' : 'Available'
-                  }`}
-                </Text>
-                <View py={1} flexDirection={'row'} alignItems={'center'}>
-                  <View
-                    backgroundColor={'#9AD0EC'}
-                    px={3}
-                    py={2}
-                    borderRadius={10}>
-                    <Icon name="map-marker" size={20} color={'#1572A1'} />
-                  </View>
-                  <Text pl={2} fontSize={'md'}>
-                    {vehicles.vehicle.location}
-                  </Text>
-                </View>
-                <View py={1} flexDirection={'row'} alignItems={'center'}>
-                  <View
-                    backgroundColor={'#9AD0EC'}
-                    px={3}
-                    py={2}
-                    borderRadius={10}>
-                    <FaIcon name="walking" size={20} color={'#1572A1'} />
-                  </View>
-                  <Text pl={2} fontSize={'md'}>
-                    3.2 miles from your location
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </ScrollView>
+              <SkeletonPlaceholder.Item width={250} height={30} />
+            </SkeletonPlaceholder.Item>
+            <SkeletonPlaceholder.Item paddingBottom={20} paddingLeft={20}>
+              <SkeletonPlaceholder.Item
+                width={150}
+                height={15}
+                marginBottom={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={100}
+                height={15}
+                marginBottom={10}
+              />
+              <SkeletonPlaceholder.Item width={60} height={15} marginTop={10} />
+            </SkeletonPlaceholder.Item>
+            <SkeletonPlaceholder.Item paddingBottom={20} paddingLeft={20}>
+              <SkeletonPlaceholder.Item
+                width={250}
+                height={50}
+                marginBottom={10}
+              />
+              <SkeletonPlaceholder.Item
+                width={250}
+                height={50}
+                marginBottom={10}
+              />
+            </SkeletonPlaceholder.Item>
+            <SkeletonPlaceholder.Item
+              width={'100%'}
+              height={50}
+              marginBottom={10}
+            />
+            <SkeletonPlaceholder.Item
+              width={'100%'}
+              height={50}
+              marginBottom={10}
+            />
+            <SkeletonPlaceholder.Item width={'100%'} height={80} />
+          </SkeletonPlaceholder>
+        )}
+        {!pages.isLoading && (
           <View
-            width={'100%'}
-            px={5}
-            pt={5}
-            position={'absolute'}
-            bottom={0}
+            height={'100%'}
+            position={'relative'}
             backgroundColor={'warmGray.100'}>
-            <View flexDirection={'row'} justifyContent={'space-between'}>
-              <Text fontSize={'xl'} fontWeight={'bold'}>
-                Select Vehicles:
-              </Text>
-              <Counter
-                num={qty}
-                onPlus={() => {
-                  if (qty < vehicles.vehicle.qty) {
-                    setQty(qty + 1);
-                  }
-                }}
-                onMinus={() => {
-                  if (qty > 1) {
-                    setQty(qty - 1);
-                  }
-                }}
-              />
+            <ScrollView>
+              <View width={'100%'} position={'relative'} height={'100%'}>
+                <Image
+                  source={{uri: vehicles.vehicle?.image}}
+                  alt={vehicles.vehicle.name}
+                  size={'2xl'}
+                  width={'100%'}
+                  // height={'50%'}
+                />
+                <View
+                  flexDirection={'row'}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                  position={'absolute'}
+                  width={'100%'}
+                  p={5}>
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Icon name="chevron-left" size={30} color={'white'} />
+                  </TouchableOpacity>
+                  <View flexDirection={'row'} alignItems={'center'}>
+                    <Box
+                      bg={{
+                        linearGradient: {
+                          colors: ['#1572A1', '#9AD0EC'],
+                          start: [0, 0],
+                          end: [1, 0],
+                        },
+                      }}
+                      p={1}
+                      mr={2}
+                      rounded="xl"
+                      _text={{
+                        fontSize: 'sm',
+                        fontWeight: 'medium',
+                        color: 'warmGray.50',
+                        textAlign: 'center',
+                      }}>
+                      <View flexDirection={'row'}>
+                        <Text color={'white'} pr={1}>
+                          4.5
+                        </Text>
+                        <Icon name="star" size={18} color={'white'} />
+                      </View>
+                    </Box>
+                    <TouchableOpacity onPress={() => setLove(!love)}>
+                      <Icon
+                        name={`${love ? 'heart' : 'heart-o'}`}
+                        size={25}
+                        color={'white'}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View p={5} position={'relative'}>
+                  <View position={'absolute'} right={0} p={5}>
+                    <TouchableOpacity>
+                      <FeIcon
+                        name="message-circle"
+                        size={30}
+                        color={'#1572A1'}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text fontSize={'2xl'} fontWeight={'bold'}>
+                    {vehicles.vehicle.name}
+                  </Text>
+                  <Text fontSize={'2xl'} fontWeight={'bold'}>
+                    Rp {vehicles.vehicle?.cost}/day
+                  </Text>
+                  <Text fontSize={'md'} pt={3}>
+                    Max for {vehicles.vehicle.seat} person
+                  </Text>
+                  <Text fontSize={'md'} py={2}>
+                    No prepayment
+                  </Text>
+                  <Text
+                    fontSize={'md'}
+                    fontWeight={'bold'}
+                    py={2}
+                    color={vehicles.vehicle.stock < 1 ? 'red' : 'green.600'}>
+                    {`${
+                      vehicles.vehicle.stock < 1 ? 'Not available' : 'Available'
+                    }`}
+                  </Text>
+                  <View py={1} flexDirection={'row'} alignItems={'center'}>
+                    <View
+                      backgroundColor={'#9AD0EC'}
+                      px={3}
+                      py={2}
+                      borderRadius={10}>
+                      <Icon name="map-marker" size={20} color={'#1572A1'} />
+                    </View>
+                    <Text pl={2} fontSize={'md'}>
+                      {vehicles.vehicle.location}
+                    </Text>
+                  </View>
+                  <View py={1} flexDirection={'row'} alignItems={'center'}>
+                    <View
+                      backgroundColor={'#9AD0EC'}
+                      px={3}
+                      py={2}
+                      borderRadius={10}>
+                      <FaIcon name="walking" size={20} color={'#1572A1'} />
+                    </View>
+                    <Text pl={2} fontSize={'md'}>
+                      3.2 miles from your location
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
+            <View
+              width={'100%'}
+              px={5}
+              pt={5}
+              position={'absolute'}
+              bottom={0}
+              backgroundColor={'warmGray.100'}>
+              <View flexDirection={'row'} justifyContent={'space-between'}>
+                <Text fontSize={'xl'} fontWeight={'bold'}>
+                  Select Vehicles:
+                </Text>
+                <Counter
+                  num={qty}
+                  onPlus={() => {
+                    if (qty < vehicles.vehicle.qty) {
+                      setQty(qty + 1);
+                    }
+                  }}
+                  onMinus={() => {
+                    if (qty > 1) {
+                      setQty(qty - 1);
+                    }
+                  }}
+                />
+              </View>
+              <View>
+                <TouchableOpacity onPress={() => setOpen(true)}>
+                  <View borderWidth={1} borderRadius={'md'} p={3}>
+                    <Text>
+                      {date ? ChangeDate(new Date(date)) : 'Select date'}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <Button
+                variant={'dark'}
+                onPress={() =>
+                  navigation.navigate('Payment', {id: vehicles.vehicle.id, qty})
+                }>
+                Reservation
+              </Button>
             </View>
-            <Button
-              variant={'dark'}
-              onPress={() =>
-                navigation.navigate('Payment', {id: vehicles.vehicle.id, qty})
-              }>
-              Reservation
-            </Button>
           </View>
-        </View>
+        )}
       </SafeAreaView>
+      {open && (
+        <View>
+          <DateTimePicker
+            value={new Date(date) || new Date()}
+            // minimumDate={new Date(1950, 0, 1)}
+            onChange={(e, dateValue) => {
+              setDate(dateValue);
+              setOpen(false);
+            }}
+            onError={() => setOpen(false)}
+            maximumDate={new Date()}
+          />
+        </View>
+      )}
     </NativeBaseProvider>
   );
 };

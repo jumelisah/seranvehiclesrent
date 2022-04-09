@@ -21,15 +21,24 @@ export const getVehicles = dataFilter => {
 export const getVehicleDetail = id => {
   return async dispatch => {
     try {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
       const {data} = await http().get(`/vehicles/${id}`);
       dispatch({
         type: 'GET_VEHICLE_DETAIL',
         payload: data.result,
       });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
     } catch (e) {
       dispatch({
         type: 'VEHICLES_ERROR',
         payload: e.response.data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     }
   };
@@ -38,16 +47,10 @@ export const getVehicleDetail = id => {
 export const getCars = dataFilter => {
   return async dispatch => {
     try {
-      dispatch({
-        type: 'PAGES_LOADING',
-      });
       const {data} = await http().get('/popular?category=1');
       dispatch({
         type: 'GET_CARS',
         payload: data,
-      });
-      dispatch({
-        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
@@ -61,16 +64,10 @@ export const getCars = dataFilter => {
 export const getMotorbike = dataFilter => {
   return async dispatch => {
     try {
-      dispatch({
-        type: 'PAGES_LOADING',
-      });
       const {data} = await http().get('/popular?category=2');
       dispatch({
         type: 'GET_MOTORBIKE',
         payload: data,
-      });
-      dispatch({
-        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
@@ -84,16 +81,10 @@ export const getMotorbike = dataFilter => {
 export const getBike = dataFilter => {
   return async dispatch => {
     try {
-      dispatch({
-        type: 'PAGES_LOADING',
-      });
       const {data} = await http().get('/popular?category=3');
       dispatch({
         type: 'GET_BIKE',
         payload: data,
-      });
-      dispatch({
-        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
@@ -112,17 +103,11 @@ export const addVehicles = (token, dataVehicle) => {
         qs.stringify(dataVehicle),
       );
       dispatch({
-        type: 'PAGES_LOADING',
-      });
-      dispatch({
         type: 'CLEAR_VEHICLES',
       });
       dispatch({
         type: 'ADD_VEHICLES',
         payload: data.message,
-      });
-      dispatch({
-        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
@@ -154,9 +139,6 @@ export const searchVehicles = (dataSearch, replace = true) => {
   return async dispatch => {
     try {
       dispatch({
-        type: 'PAGES_LOADING',
-      });
-      dispatch({
         type: 'VEHICLES_CLEAR',
       });
       if (!dataSearch.page) {
@@ -168,9 +150,6 @@ export const searchVehicles = (dataSearch, replace = true) => {
         type: 'VEHICLE_SEARCH',
         payload: data,
         replace,
-      });
-      dispatch({
-        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({

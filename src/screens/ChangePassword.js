@@ -2,11 +2,11 @@ import React from 'react';
 import {TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useState} from 'react/cjs/react.development';
-import Input from '../components/Input';
 import Button from '../components/Button';
 import {NativeBaseProvider, Stack, View, Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {changePassword} from '../redux/actions/auth';
+import InputPassword from '../components/InputPassword';
 
 const EditProfile = ({navigation}) => {
   const {auth} = useSelector(state => state);
@@ -52,20 +52,20 @@ const EditProfile = ({navigation}) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View p={5}>
             <Text py={2}>Current password</Text>
-            <Input
-              variant={'transparent'}
+            <InputPassword
+              setVariant={'transparent'}
               placeholder={'Input your current password'}
               onChangeText={text => setPassword(text)}
             />
             <Text py={2}>New password</Text>
-            <Input
-              variant={'transparent'}
+            <InputPassword
+              setVariant={'transparent'}
               placeholder={'Input new password'}
               onChangeText={text => setNewPassword(text)}
             />
             <Text py={2}>Repeat password</Text>
-            <Input
-              variant={'transparent'}
+            <InputPassword
+              setVariant={'transparent'}
               placeholder={'Repeat new password'}
               onChangeText={text => setRepeatPassword(text)}
             />

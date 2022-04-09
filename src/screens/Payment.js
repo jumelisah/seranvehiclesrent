@@ -86,7 +86,14 @@ const Payment = ({navigation, route: {params}}) => {
         <View height={'100%'}>
           {step < 4 && (
             <View p={5} flexDirection={'row'} alignItems={'center'}>
-              <TouchableOpacity onPress={() => setStep(step - 1)}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (step > 1) {
+                    setStep(step - 1);
+                  } else {
+                    navigation.goBack();
+                  }
+                }}>
                 <Icon name={'chevron-left'} size={25} />
               </TouchableOpacity>
               <Text fontSize={'2xl'} pl={3}>
