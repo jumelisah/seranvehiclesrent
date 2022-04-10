@@ -17,6 +17,7 @@ import ChangePassword from './ChangePassword';
 import {useSelector} from 'react-redux';
 import ConfirmAccount from './ConfirmAccount';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MiIcon from 'react-native-vector-icons/MaterialIcons';
 import FilterSearch from './FilterSearch';
 import DetailVehicle from './DetailVehicle';
 import Payment from './Payment';
@@ -117,7 +118,7 @@ const MyTabs = () => {
         component={NotifTabs}
         options={{
           pressColor: 'red',
-          tabBarIcon: ({focused}) => <Icon name="list-alt" size={30} />,
+          tabBarIcon: ({focused}) => <MiIcon name="sticky-note-2" size={30} />,
           headerShown: false,
         }}
       />

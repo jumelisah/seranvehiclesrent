@@ -20,7 +20,7 @@ import Button from '../components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {getVehicleDetail} from '../redux/actions/vehicles';
 import {ChangeDate} from '../helpers/changeDate';
-import { addTransaction } from '../redux/actions/transaction';
+import {addTransaction} from '../redux/actions/transaction';
 
 const Payment = ({navigation, route: {params}}) => {
   const {auth} = useSelector(state => state);
@@ -42,7 +42,7 @@ const Payment = ({navigation, route: {params}}) => {
   useEffect(() => {
     dispatch(getVehicleDetail(params.id));
   }, [dispatch, params.id]);
-  const onReservation = () => {
+  const onReservation = async () => {
     if (lastName) {
       setRecipient(`${firstName} ${lastName}`);
     } else {
@@ -71,6 +71,7 @@ const Payment = ({navigation, route: {params}}) => {
       alert(recipient)
     } else {
       dispatch(addTransaction(auth.token, data));
+      await setStep(2);
     }
   };
   const Round = ({num}) => {

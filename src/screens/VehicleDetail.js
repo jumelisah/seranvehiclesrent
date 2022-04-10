@@ -16,7 +16,7 @@ import Counter from '../components/Counter';
 import TextInput from '../components/TextInput';
 
 const VehicleDetail = ({navigation, route: {params}}) => {
-  const {auth, pages, vehicles} = useSelector(state => state);
+  const {pages, vehicles} = useSelector(state => state);
   const [qty, setQty] = useState(1);
   const [love, setLove] = useState(false);
   const [open, setOpen] = useState(false);
@@ -38,10 +38,10 @@ const VehicleDetail = ({navigation, route: {params}}) => {
     setReturnDate(value);
     setOpen(false);
   };
-  const onReservation = async () => {
-    setReturnDate(new Date(returnDate.setDate(returnDate.getDate() + days)));
-    await alert(returnDate);
-  };
+  // const onReservation = async () => {
+  //   setReturnDate(new Date(returnDate.setDate(returnDate.getDate() + days)));
+  //   await alert(returnDate);
+  // };
   return (
     <NativeBaseProvider config={config}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -192,7 +192,7 @@ const VehicleDetail = ({navigation, route: {params}}) => {
                   <TextInput
                     placeholder={'1'}
                     value={days}
-                    onChangeText={text => setDays(text)}
+                    onChangeText={text => setDays(parseInt(text, 10))}
                     variant={'transparent'}
                     keyboardType={'numeric'}
                     icon={

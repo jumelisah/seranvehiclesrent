@@ -1,14 +1,20 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView, FlatList, TouchableOpacity} from 'react-native';
-import {NativeBaseProvider, Checkbox, Image, View, Text} from 'native-base';
+import {
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+import {NativeBaseProvider, Image, View, Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
-import {getHistoryUser} from '../redux/actions/history';
+import {deleteHistoryUser, getHistoryUser} from '../redux/actions/history';
 import {dateToString} from '../helpers/dateToString';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import EnIcon from 'react-native-vector-icons/Entypo';
+import LottieView from 'lottie-react-native';
 
 const History = ({navigation}) => {
-  const {auth, history} = useSelector(state => state);
+  const {auth, history, pages} = useSelector(state => state);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getHistoryUser(auth.token));
@@ -59,7 +65,15 @@ const History = ({navigation}) => {
             </View>
           </View>
           {choosenId === item.id && (
-            <TouchableOpacity onPress={() => alert('Halo')}>
+            <TouchableOpacity
+              onPress={async id => {
+                if (auth.userData.role === 'Admin') {
+                  alert('Halo');
+                } else {
+                  dispatch(deleteHistoryUser(auth.token, item.id));
+                  await dispatch(getHistoryUser(auth.token));
+                }
+              }}>
               <View
                 backgroundColor={'rgb(154, 208, 236)'}
                 py={2}
@@ -76,34 +90,61 @@ const History = ({navigation}) => {
   return (
     <NativeBaseProvider>
       <SafeAreaView>
-        <View p={5}>
-          <Text fontSize={'md'} color={'warmGray.900'} pb={3}>
-            Today
-          </Text>
-          <View>
-            <View
-              flexDirection={'row'}
-              justifyContent={'space-between'}
-              alignItems={'center'}
-              pb={3}>
-              <Text width={'85%'}>
-                Please finish your payment for vespa for Vespa Rental Jogja
-              </Text>
-              <EnIcon name="chevron-small-right" size={20} />
-            </View>
-            <Text width={'85%'}>
-              Your payment for a vintage bike at Jogja just confirmed
+        <View height={'100%'}>
+          <View p={5}>
+            <Text fontSize={'md'} color={'warmGray.900'} pb={3}>
+              Today
             </Text>
+            <View>
+              <View
+                flexDirection={'row'}
+                justifyContent={'space-between'}
+                alignItems={'center'}
+                pb={3}>
+                <Text width={'85%'}>
+                  Please finish your payment for vespa for Vespa Rental Jogja
+                </Text>
+                <EnIcon name="chevron-small-right" size={20} />
+              </View>
+              <Text width={'85%'}>
+                Your payment for a vintage bike at Jogja just confirmed
+              </Text>
+            </View>
           </View>
+          <FlatList
+            data={history.data}
+            renderItem={renderItem}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
-        <FlatList
-          data={history.data}
-          renderItem={renderItem}
-          showsHorizontalScrollIndicator={false}
-        />
+        {pages.isLoading && (
+          <View
+            position={'absolute'}
+            width={'100%'}
+            height={'100%'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            backgroundColor={'rgba(0,0,0,0.3)'}>
+            <LottieView
+              source={require('../assets/98196-loading-teal-dots.json')}
+              autoPlay
+              loop
+              style={styles.lottie}
+            />
+          </View>
+        )}
       </SafeAreaView>
     </NativeBaseProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  pageBackground: {
+    height: '100%',
+  },
+  lottie: {
+    width: 200,
+  },
+});
 
 export default History;

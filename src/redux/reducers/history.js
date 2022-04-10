@@ -14,6 +14,12 @@ const history = (state = initialState, action) => {
       }
       return {...state};
     }
+    case 'GET_HISTORY_USER': {
+      state.message = action.payload;
+      state.isError = false;
+      state.errMsg = null;
+      return {...state};
+    }
     case 'HISTORY_ERROR': {
       state.isError = true;
       state.errMsg = action.payload;

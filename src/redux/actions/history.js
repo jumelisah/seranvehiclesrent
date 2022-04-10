@@ -22,3 +22,27 @@ export const getHistoryUser = token => {
     }
   };
 };
+
+export const deleteHistoryUser = (token, id) => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+      const {data} = await http(token).patch(`/histories/delete/user/${id}`);
+      dispatch({
+        type: 'DELETE_HISTORY_USER',
+        payload: data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    } catch (e) {
+      console.log(e);
+      dispatch({
+        type: 'HISTORY_ERROR',
+        payload: e.response.data.message,
+      });
+    }
+  };
+};
