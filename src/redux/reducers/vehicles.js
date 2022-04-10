@@ -42,7 +42,7 @@ const vehicles = (state = initialState, action) => {
       return {...state};
     }
     case 'ADD_VEHICLES': {
-      state.message = action.payload;
+      state.message = action.payload.message;
       return {...state};
     }
     case 'DELETE_VEHICLE': {

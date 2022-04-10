@@ -23,12 +23,16 @@ import {
 } from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {addVehicles} from '../redux/actions/vehicles';
+import LottieView from 'lottie-react-native';
+import { green } from 'react-native-reanimated/src/reanimated2/Colors';
 
 const AddVehicles = ({navigation}) => {
   const {auth} = useSelector(state => state);
   const {pages} = useSelector(state => state);
   const {vehicles} = useSelector(state => state);
-  const [picture, setPicture] = useState({photo: null});
+  const [picture, setPicture] = useState();
+  const [fileName, setFileName] = useState();
+  const [fileType, setFileType] = useState();
   const [category, setCategory] = useState();
   const [type, setType] = useState();
   const [name, setName] = useState();
@@ -48,8 +52,9 @@ const AddVehicles = ({navigation}) => {
     };
     launchImageLibrary(options, response => {
       if (response.assets) {
-        setPicture({photo: response.assets[0].uri});
-        setImage(response.assets);
+        setPicture(response.assets[0].uri);
+        setFileName(response.assets[0].fileName);
+        setFileType(response.assets[0].type);
       }
     });
     setModuleOption(false);
@@ -60,13 +65,14 @@ const AddVehicles = ({navigation}) => {
     };
     launchCamera(options, response => {
       if (response.assets) {
-        setPicture({photo: response.assets[0].uri});
-        setImage(response.assets);
+        setPicture(response.assets[0].uri);
+        setFileName(response.assets[0].fileName);
+        setFileType(response.assets[0].type);
       }
     });
     setModuleOption(false);
   };
-  const addData = () => {
+  const addData = async () => {
     const data = {
       name,
       cost,
@@ -77,10 +83,12 @@ const AddVehicles = ({navigation}) => {
       image,
       seat,
       qty,
+      picture,
+      fileName,
+      fileType,
     };
-    console.log(data)
-    setModuleSave(true);
     dispatch(addVehicles(auth.token, data));
+    await setModuleSave(true);
   };
   return (
     <NativeBaseProvider>
@@ -102,7 +110,7 @@ const AddVehicles = ({navigation}) => {
               <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.uploadSection}>
                   <Image
-                    source={picture.photo ? {uri: picture.photo} : CameraImg}
+                    source={picture ? {uri: picture} : CameraImg}
                     style={styles.uploadedImg}
                   />
                   <TouchableOpacity
@@ -115,35 +123,35 @@ const AddVehicles = ({navigation}) => {
                   <Text>Name</Text>
                   <Input
                     type={'line'}
+                    value={name}
                     placeholder={'Input the product name min. 30 characters'}
                     onChangeText={text => setName(text)}
                   />
                   <Text>Price</Text>
                   <Input
                     type={'line'}
+                    value={cost}
                     placeholder={'Input the product price'}
                     onChangeText={text => setCost(text)}
                   />
                   <Text>Year</Text>
                   <Input
                     type={'line'}
+                    value={year}
                     placeholder={'Input the product year'}
                     onChangeText={text => setYear(text)}
                   />
                   <Text>Seat</Text>
                   <Input
                     type={'line'}
+                    value={seat}
                     placeholder={'Input the product seat'}
                     onChangeText={text => setSeat(text)}
-                  />
-                  <Text>Description</Text>
-                  <Input
-                    type={'line'}
-                    placeholder={'Type delivery information'}
                   />
                   <Text>Location</Text>
                   <Input
                     type={'line'}
+                    value={location}
                     placeholder={'Select location'}
                     onChangeText={text => setLocation(text)}
                   />
@@ -185,7 +193,15 @@ const AddVehicles = ({navigation}) => {
                     <View style={styles.inlineGroup}>
                       <Text style={styles.textMedium}>Available stock :</Text>
                       <View style={styles.positionEnd}>
-                        <Counter num={1} />
+                        <Counter
+                          num={qty}
+                          onPlus={() => setQty(qty + 1)}
+                          onMinus={() => {
+                            if (qty > 1) {
+                              setQty(qty - 1);
+                            }
+                          }}
+                        />
                       </View>
                     </View>
                     <Button variant={'blue'} onPress={addData}>
@@ -217,7 +233,7 @@ const AddVehicles = ({navigation}) => {
             </View>
           </TouchableOpacity>
         )}
-        {moduleSave && (
+        {!pages.isLoading && moduleSave && (
           <Stack
             position={'absolute'}
             height={'100%'}
@@ -227,35 +243,45 @@ const AddVehicles = ({navigation}) => {
             backgroundColor={'rgba(0,0,0,0.3)'}>
             <TouchableOpacity onPress={() => setModuleSave(false)}>
               <Center backgroundColor={'white'} width={250} height={200} p={4}>
-                {pages.isLoading && (
-                  <Image
-                    source={require('../assets/loading-buffering.gif')}
-                    style={{width: 50}}
-                  />
-                )}
                 {!pages.isLoading && (
                   <Text>
                     <Icon
                       name={`${
                         vehicles?.isError ? 'times-circle-o' : 'check-circle-o'
                       }`}
+                      color={`${
+                        vehicles?.isError ? 'rgba(0,0,0,0.5)' : 'green'
+                      }`}
                       size={50}
                     />
                   </Text>
                 )}
-                <Text>
-                  {`${
-                    vehicles?.message
-                      ? vehicles.message
-                      : vehicles?.errMsg
-                      ? vehicles.errMsg
-                      : 'Loading'
-                  }`}
+                <Text
+                  style={
+                    vehicles.isError ? styles.textErr : styles.textSuccess
+                  }>
+                  {`${vehicles?.message ? vehicles.message : vehicles.errMsg}`}
                 </Text>
               </Center>
             </TouchableOpacity>
           </Stack>
         )}
+        {pages.isLoading && (
+                  <View
+                    position={'absolute'}
+                    width={'100%'}
+                    height={'100%'}
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                    backgroundColor={'rgba(0,0,0,0.3)'}>
+                    <LottieView
+                      source={require('../assets/98196-loading-teal-dots.json')}
+                      autoPlay
+                      loop
+                      style={styles.lottie}
+                    />
+                  </View>
+                )}
       </View>
     </NativeBaseProvider>
   );
@@ -354,6 +380,14 @@ const styles = StyleSheet.create({
   textMedium: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  textErr: {
+    color: 'rgba(0,0,0,0.5)',
+    fontSize: 18,
+  },
+  textSuccess: {
+    color: 'green',
+    fontSize: 18,
   },
 });
 

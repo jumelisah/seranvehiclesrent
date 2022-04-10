@@ -1,5 +1,5 @@
-import qs from 'qs';
 import http from '../../helpers/http';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export const getVehicles = dataFilter => {
   return async dispatch => {
@@ -95,24 +95,53 @@ export const getBike = dataFilter => {
   };
 };
 
-export const addVehicles = (token, dataVehicle) => {
+export const addVehicles = (token, newData) => {
   return async dispatch => {
     try {
-      const {data} = await http(token).post(
-        '/vehicles',
-        qs.stringify(dataVehicle),
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+      console.log(newData);
+      const {data} = await RNFetchBlob.fetch(
+        'POST',
+        'https://fw5-backend-beginner.herokuapp.com/vehicles',
+        {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+        [
+          newData.picture
+            ? {
+                name: 'image',
+                filename: newData.fileName,
+                type: newData.fileType,
+                data: RNFetchBlob.wrap(newData.picture),
+              }
+            : {},
+          {name: 'name', data: newData.name},
+          {name: 'year', data: newData.year},
+          {name: 'cost', data: newData.cost},
+          {name: 'qty', data: newData.qty.toString()},
+          {name: 'type', data: newData.type.toString()},
+          {name: 'seat', data: newData.seat},
+          {name: 'category_id', data: newData.category_id.toString()},
+          {name: 'location', data: newData.location},
+        ],
       );
       dispatch({
         type: 'CLEAR_VEHICLES',
       });
       dispatch({
         type: 'ADD_VEHICLES',
-        payload: data.message,
+        payload: JSON.parse(data),
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
         type: 'VEHICLES_ERROR',
-        payload: e.response.data.message,
+        payload: e,
       });
     }
   };

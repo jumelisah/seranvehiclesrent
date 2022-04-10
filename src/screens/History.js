@@ -7,18 +7,28 @@ import {
 } from 'react-native';
 import {NativeBaseProvider, Image, View, Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
-import {deleteHistoryUser, getHistoryUser} from '../redux/actions/history';
+import {
+  deleteHistoryAdmin,
+  deleteHistoryUser,
+  getHistoryAdmin,
+  getHistoryUser,
+} from '../redux/actions/history';
 import {dateToString} from '../helpers/dateToString';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import EnIcon from 'react-native-vector-icons/Entypo';
+import MiIcon from 'react-native-vector-icons/MaterialIcons';
 import LottieView from 'lottie-react-native';
 
 const History = ({navigation}) => {
   const {auth, history, pages} = useSelector(state => state);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getHistoryUser(auth.token));
-  }, [dispatch, auth.token]);
+    if (auth.userData.role === 'admin') {
+      dispatch(getHistoryAdmin(auth.token));
+    } else {
+      dispatch(getHistoryUser(auth.token));
+    }
+  }, [dispatch, auth.token, auth.userData.role]);
   const [choosenId, setChoosenId] = React.useState();
   const renderItem = ({item}) => {
     const yearA = new Date(item.rent_date).getFullYear();
@@ -67,8 +77,9 @@ const History = ({navigation}) => {
           {choosenId === item.id && (
             <TouchableOpacity
               onPress={async id => {
-                if (auth.userData.role === 'Admin') {
-                  alert('Halo');
+                if (auth.userData.role === 'admin') {
+                  dispatch(deleteHistoryAdmin(auth.token, item.id));
+                  await dispatch(getHistoryAdmin(auth.token));
                 } else {
                   dispatch(deleteHistoryUser(auth.token, item.id));
                   await dispatch(getHistoryUser(auth.token));
@@ -91,7 +102,7 @@ const History = ({navigation}) => {
     <NativeBaseProvider>
       <SafeAreaView>
         <View height={'100%'}>
-          <View p={5}>
+          {/* <View p={5}>
             <Text fontSize={'md'} color={'warmGray.900'} pb={3}>
               Today
             </Text>
@@ -110,14 +121,25 @@ const History = ({navigation}) => {
                 Your payment for a vintage bike at Jogja just confirmed
               </Text>
             </View>
-          </View>
-          <FlatList
-            data={history.data}
-            renderItem={renderItem}
-            showsHorizontalScrollIndicator={false}
-          />
+          </View> */}
+          {!pages.isLoading && history.data.length > 0 && (
+            <FlatList
+              data={history.data}
+              renderItem={renderItem}
+              showsHorizontalScrollIndicator={false}
+            />
+          )}
+          {history.data.length < 1 && (
+            <View
+              flexDirection={'column'}
+              justifyContent={'center'}
+              alignItems={'center'}>
+              <Text fontSize={'2xl'}>No history</Text>
+              <MiIcon name="pedal-bike" size={200} color={'rgba(0,0,0,0.3)'} />
+            </View>
+          )}
         </View>
-        {pages.isLoading && (
+        {pages.isLoading && !history.isError && (
           <View
             position={'absolute'}
             width={'100%'}
