@@ -50,11 +50,13 @@ const vehicles = (state = initialState, action) => {
       return {...state};
     }
     case 'VEHICLES_ERROR': {
+      state.message = null;
       state.isError = true;
       state.errMsg = action.payload;
       return {...state};
     }
     case 'VEHICLES_CLEAR': {
+      state.message = null;
       state.isError = false;
       state.errMsg = null;
       return {...state};

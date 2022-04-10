@@ -14,7 +14,13 @@ import CameraImg from '../assets/photo-camera.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Counter from '../components/Counter';
-import {Center, CheckIcon, NativeBaseProvider, Select, Stack, VStack} from 'native-base';
+import {
+  Center,
+  CheckIcon,
+  NativeBaseProvider,
+  Select,
+  Stack,
+} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {addVehicles} from '../redux/actions/vehicles';
 

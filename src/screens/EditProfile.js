@@ -183,7 +183,7 @@ const EditProfile = ({navigation}) => {
             icon={
               <TouchableOpacity onPress={() => setOpen(true)}>
                 <View mr={2}>
-                  <Icon name="times" size={30} />
+                  <Icon name="calendar" size={30} />
                 </View>
               </TouchableOpacity>
             }

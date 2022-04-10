@@ -19,6 +19,8 @@ import TextInput from '../components/TextInput';
 import Button from '../components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {getVehicleDetail} from '../redux/actions/vehicles';
+import {ChangeDate} from '../helpers/changeDate';
+import { addTransaction } from '../redux/actions/transaction';
 
 const Payment = ({navigation, route: {params}}) => {
   const {auth} = useSelector(state => state);
@@ -26,10 +28,51 @@ const Payment = ({navigation, route: {params}}) => {
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('Prepayment (no tax)');
   const price = params.qty * vehicles.vehicle.cost;
+  const [rentDate, setRentDate] = useState(params.rentDate);
+  const [returnDate, setReturnDate] = useState(ChangeDate(params.returnDate));
+  const [recipient, setRecipient] = useState();
+  const [firstName, setFirstName] = useState(auth.userData.name);
+  const [lastName, setLastName] = useState();
+  const [mobilePhone, setMobilePhone] = useState(auth.userData.phone_number);
+  const [email, setEmail] = useState(auth.userData.email);
+  const [address, setAddress] = useState(auth.userData.address);
+  const [cardNumber, setCardNumber] = useState();
+  const [formError, setFormError] = useState();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getVehicleDetail(params.id));
   }, [dispatch, params.id]);
+  const onReservation = () => {
+    if (lastName) {
+      setRecipient(`${firstName} ${lastName}`);
+    } else {
+      setRecipient(firstName);
+    }
+    const data = {
+      vehicle_id: params.id,
+      rent_date: rentDate,
+      return_date: returnDate,
+      recipient,
+      phone_number: mobilePhone,
+      email,
+      address,
+      sum: params.qty,
+    };
+    if (
+      !rentDate ||
+      !returnDate ||
+      !recipient ||
+      !mobilePhone ||
+      !email ||
+      !address ||
+      !cardNumber
+    ) {
+      setFormError('Please input the fields');
+      alert(recipient)
+    } else {
+      dispatch(addTransaction(auth.token, data));
+    }
+  };
   const Round = ({num}) => {
     return (
       <Box
@@ -71,7 +114,7 @@ const Payment = ({navigation, route: {params}}) => {
         }
         backgroundColor={`${step <= num ? 'rgba(0,0,0,0.2)' : ''}`}
         width={10}
-        height={2}
+        height={1}
       />
     );
   };
@@ -127,14 +170,43 @@ const Payment = ({navigation, route: {params}}) => {
             {step === 1 && (
               <View p={5}>
                 <TextInput
+                  value={cardNumber}
                   placeholder={'ID Card number'}
                   variant={'transparent'}
+                  onChangeText={text => setCardNumber(text)}
+                  keyboardType={'numeric'}
                 />
-                <TextInput placeholder={'Name'} variant={'transparent'} />
-                <TextInput placeholder={'Last Name'} variant={'transparent'} />
                 <TextInput
+                  value={firstName}
+                  placeholder={'Name'}
+                  variant={'transparent'}
+                  onChangeText={text => setFirstName(text)}
+                />
+                <TextInput
+                  value={lastName}
+                  placeholder={'Last Name'}
+                  variant={'transparent'}
+                  onChangeText={text => setLastName(text)}
+                />
+                <TextInput
+                  value={mobilePhone}
                   placeholder={'Mobile phone (Must be active)'}
                   variant={'transparent'}
+                  onChangeText={text => setMobilePhone(text)}
+                  keyboardType={'phone-pad'}
+                />
+                <TextInput
+                  value={email}
+                  placeholder={'Email address'}
+                  variant={'transparent'}
+                  onChangeText={text => setEmail(text)}
+                  keyboardType={'email-address'}
+                />
+                <TextInput
+                  value={address}
+                  placeholder={'Location (home, office, etc.)'}
+                  variant={'transparent'}
+                  onChangeText={text => setAddress(text)}
                 />
                 <Select
                   selectedValue={paymentMethod}
@@ -143,6 +215,7 @@ const Payment = ({navigation, route: {params}}) => {
                   placeholder="Payment Type"
                   borderWidth={1}
                   borderColor={'black'}
+                  borderRadius={'xl'}
                   fontSize={'sm'}
                   selectedItem={{endIcon: <CheckIcon size="5" />}}
                   mt={1}
@@ -331,7 +404,7 @@ const Payment = ({navigation, route: {params}}) => {
           <View p={5}>
             {step === 1 && (
               <View>
-                <Button variant={'dark'} onPress={() => setStep(2)}>
+                <Button variant={'dark'} onPress={onReservation}>
                   Order Vehicle
                 </Button>
                 <Button variant={'blue'}>See Order Detail</Button>

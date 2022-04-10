@@ -10,8 +10,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {useState} from 'react/cjs/react.development';
-import Button from '../components/Button';
 import TitleHeader from '../components/TitleHeader';
 import {getProfile} from '../redux/actions/auth';
 import {
@@ -25,12 +23,6 @@ import CameraImg from '../assets/photo-camera.png';
 const Home = ({navigation}) => {
   const {auth, pages, vehicles} = useSelector(state => state);
   const dispatch = useDispatch();
-  const data = [
-    {id: 1, name: 'Vespa matic', image: require('../assets/pic1.png')},
-    {id: 2, image: require('../assets/pic2.png')},
-    {id: 3, image: require('../assets/pic3.png')},
-    {id: 4, image: require('../assets/pic4.png')},
-  ];
   useEffect(() => {
     dispatch(getProfile(auth.token));
     dispatch(getVehicles());

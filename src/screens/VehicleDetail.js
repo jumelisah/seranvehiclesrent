@@ -13,16 +13,17 @@ import {ChangeDate} from '../helpers/changeDate';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {getVehicleDetail} from '../redux/actions/vehicles';
 import Counter from '../components/Counter';
+import TextInput from '../components/TextInput';
 
 const VehicleDetail = ({navigation, route: {params}}) => {
   const {auth, pages, vehicles} = useSelector(state => state);
   const [qty, setQty] = useState(1);
   const [love, setLove] = useState(false);
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(
-    new Date(auth.userData.birthdate) || new Date(),
-  );
+  const today = new Date();
+  const [date, setDate] = useState(today.setDate(today.getDate() + 1));
   const [returnDate, setReturnDate] = useState();
+  const [days, setDays] = useState(1);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getVehicleDetail(params.id));
@@ -34,8 +35,12 @@ const VehicleDetail = ({navigation, route: {params}}) => {
   };
   const onChangeDate = (e, value) => {
     setDate(value);
-    setReturnDate(new Date(date.setDate(date.getDate() + 2)));
+    setReturnDate(value);
     setOpen(false);
+  };
+  const onReservation = async () => {
+    setReturnDate(new Date(returnDate.setDate(returnDate.getDate() + days)));
+    await alert(returnDate);
   };
   return (
     <NativeBaseProvider config={config}>
@@ -103,7 +108,7 @@ const VehicleDetail = ({navigation, route: {params}}) => {
                 {vehicles.vehicle.name}
               </Text>
               <Text fontSize={'2xl'} fontWeight={'bold'}>
-                Rp {vehicles.vehicle?.cost}/day
+                Rp {vehicles.vehicle.cost}/day
               </Text>
               <Text fontSize={'md'} pt={3}>
                 Max for {vehicles.vehicle.seat} person
@@ -167,18 +172,47 @@ const VehicleDetail = ({navigation, route: {params}}) => {
                   }}
                 />
               </View>
-              <TouchableOpacity onPress={() => setOpen(true)}>
-                <View px={3} py={4} borderWidth={1} borderRadius={10}>
-                  <Text>
-                    {date ? ChangeDate(new Date(date)) : 'Select date'}
-                  </Text>
+              <View flexDirection={'row'} width={'100%'} alignItems={'center'}>
+                <View width={'70%'} pr={3}>
+                  <TextInput
+                    variant={'transparent'}
+                    keyboardType={'numeric'}
+                    value={ChangeDate(new Date(date))}
+                    placeholder={'Select date'}
+                    icon={
+                      <TouchableOpacity onPress={() => setOpen(true)}>
+                        <View mr={2}>
+                          <Icon name="calendar" size={30} />
+                        </View>
+                      </TouchableOpacity>
+                    }
+                  />
                 </View>
-              </TouchableOpacity>
+                <View width={'30%'}>
+                  <TextInput
+                    placeholder={'1'}
+                    value={days}
+                    onChangeText={text => setDays(text)}
+                    variant={'transparent'}
+                    keyboardType={'numeric'}
+                    icon={
+                      <View pr={3}>
+                        <Text>days</Text>
+                      </View>
+                    }
+                  />
+                </View>
+              </View>
               <Button
                 variant={'dark'}
                 onPress={() =>
-                  // navigation.navigate('Payment', {id: vehicles.vehicle.id, qty})
-                  alert(returnDate)
+                  navigation.navigate('Payment', {
+                    id: vehicles.vehicle.id,
+                    qty,
+                    rentDate: ChangeDate(date),
+                    returnDate: new Date(date.setDate(date.getDate() + days)),
+                    days,
+                  })
                 }>
                 Reservation
               </Button>
@@ -238,10 +272,10 @@ const VehicleDetail = ({navigation, route: {params}}) => {
       {open && (
         <View>
           <DateTimePicker
-            value={new Date(date) || new Date()}
+            value={new Date(date) || date}
             onChange={onChangeDate}
             onError={() => setOpen(false)}
-            minimumDate={new Date()}
+            minimumDate={date}
           />
         </View>
       )}

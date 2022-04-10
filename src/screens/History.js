@@ -1,18 +1,11 @@
-import React, { useEffect } from 'react';
-import {StyleSheet, SafeAreaView, ScrollView} from 'react-native';
-import {
-  NativeBaseProvider,
-  Checkbox,
-  Box,
-  HStack,
-  Heading,
-  VStack,
-  Image,
-  View,
-  Text,
-} from 'native-base';
+import React, {useEffect} from 'react';
+import {SafeAreaView, FlatList, TouchableOpacity} from 'react-native';
+import {NativeBaseProvider, Checkbox, Image, View, Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {getHistoryUser} from '../redux/actions/history';
+import {dateToString} from '../helpers/dateToString';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import EnIcon from 'react-native-vector-icons/Entypo';
 
 const History = ({navigation}) => {
   const {auth, history} = useSelector(state => state);
@@ -20,132 +13,97 @@ const History = ({navigation}) => {
   useEffect(() => {
     dispatch(getHistoryUser(auth.token));
   }, [dispatch, auth.token]);
-  const data = [
-    {id: 1, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
-    {id: 2, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
-    {id: 3, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
-    {id: 4, image:"https://res.cloudinary.com/juumelisa/image/upload/v1648448571/SERAN/uploads/vehicles/vehicles-1648448568547.png"},
-  ];
-  const [choosenId, setChoosenId] = React.useState([]);
-  const getSelectedId = () => {
-    if (choosenId.length === 0) {
-      return '[]';
-    } else {
-      let arrayString = choosenId.reduce(
-        (accumulator, currentValue) => accumulator + ', ' + currentValue,
-      );
-      return `[ ${arrayString} ]`;
-    }
-  };
-  const Example = () => {
-    const [groupValue, setGroupValue] = React.useState([]);
-  
-    const getSelectedGroupValue = () => {
-      if (groupValue.length === 0) return "[]";
-      let arrayString = groupValue.reduce((accumulator, currentValue) => accumulator + ", " + currentValue);
-      return "[" + arrayString + "]";
-    };
-  
-    return <Box display="flex" justifyContent="space-between" alignItems="center">
-        <HStack mb={3} alignItems="baseline">
-          <Heading mt={3}>CheckboxGroup </Heading>
-        </HStack>
-        <Checkbox.Group colorScheme="green" defaultValue={groupValue} onChange={values => {
-        setGroupValue(values || []);
-      }}>
-          <Checkbox value="Item 1" my={1}>
-            Item 1
-          </Checkbox>
-          <Checkbox value="Item 2" my={1}>
-            Item 2
-          </Checkbox>
-          <Checkbox value="Item 3" my={1}>
-            Item 3
-          </Checkbox>
-          <Checkbox colorScheme="orange" isIndeterminate value="Indeterminate Item" my={1}>
-            Indeterminate Item
-          </Checkbox>
-        </Checkbox.Group>
-        <VStack mt={3}>
-          <Box>
-            <Text fontSize="md">Selected Values: </Text>
-            <Text fontSize="md" bold>
-              {getSelectedGroupValue()}
-            </Text>
-          </Box>
-        </VStack>
-      </Box>;
+  const [choosenId, setChoosenId] = React.useState();
+  const renderItem = ({item}) => {
+    const yearA = new Date(item.rent_date).getFullYear();
+    const yearB = new Date(item.return_date).getFullYear();
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          if (choosenId !== item.id) {
+            setChoosenId(item.id);
+          } else {
+            setChoosenId();
+          }
+        }}>
+        <View
+          ml={choosenId === item.id ? -50 : 5}
+          mr={5}
+          py={3}
+          flexDirection={'row'}
+          justifyContent={'space-between'}
+          alignItems={'center'}>
+          <View flexDirection={'row'}>
+            <Image
+              source={{uri: item.image}}
+              alt={item.vehicle}
+              width={120}
+              height={100}
+              borderRadius={'xl'}
+            />
+            <View ml={5}>
+              <Text fontWeight={'bold'}>{item.vehicle}</Text>
+              <Text>
+                {yearA === yearB
+                  ? `${dateToString(item.rent_date)} to ${dateToString(
+                      item.return_date,
+                    )} ${yearA}`
+                  : `${dateToString(item.rent_date)} ${yearA} to ${dateToString(
+                      item.return_date,
+                    )} ${yearB}`}
+              </Text>
+              <Text fontWeight={'bold'}>Prepayment: {item.cost}</Text>
+              <Text fontWeight={'bold'} color={'success.600'}>
+                {item.status}
+              </Text>
+            </View>
+          </View>
+          {choosenId === item.id && (
+            <TouchableOpacity onPress={() => alert('Halo')}>
+              <View
+                backgroundColor={'rgb(154, 208, 236)'}
+                py={2}
+                px={4}
+                borderRadius={'xl'}>
+                <Icon name="trash-o" size={25} />
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
   };
   return (
     <NativeBaseProvider>
       <SafeAreaView>
-        <ScrollView>
-          <Text style={styles.header}>History Order</Text>
+        <View p={5}>
+          <Text fontSize={'md'} color={'warmGray.900'} pb={3}>
+            Today
+          </Text>
           <View>
-            <View>
-              <Example />
-              <Text>A week ago</Text>
+            <View
+              flexDirection={'row'}
+              justifyContent={'space-between'}
+              alignItems={'center'}
+              pb={3}>
+              <Text width={'85%'}>
+                Please finish your payment for vespa for Vespa Rental Jogja
+              </Text>
+              <EnIcon name="chevron-small-right" size={20} />
             </View>
-            <View>
-              <Text>A month ago</Text>
-            </View>
+            <Text width={'85%'}>
+              Your payment for a vintage bike at Jogja just confirmed
+            </Text>
           </View>
-          <View>
-            <Checkbox.Group
-              colorScheme="green"
-              defaultValue={choosenId}
-              onChange={values => {
-                setChoosenId(values || []);
-              }}>
-              {history.data[0].map(item => {
-                return (
-                  <View
-                    key={item.id}
-                    display="flex"
-                    // flexDirection="row-reverse"
-                    justifyContent="space-between"
-                    w={'100%'}
-                    p={5}>
-                    <Checkbox
-                      value={item.id}
-                      my={1}
-                      id={item.id}
-                      flexDirection={'row-reverse'}
-                      width={'100%'}>
-                      <View flexDirection={'row'} alignItems={'center'}>
-                        <Image
-                          source={{uri: item.image}}
-                          alt="lamborghini"
-                          height={100}
-                          width={100}
-                        />
-                        <View>
-                          <Text>{item.vehicle}</Text>
-                          <Text>Jan 18 2021 to Jan 21 2021</Text>
-                        </View>
-                      </View>
-                    </Checkbox>
-                  </View>
-                );
-              })}
-              <View>
-                <Text>{getSelectedId()}</Text>
-              </View>
-            </Checkbox.Group>
-          </View>
-        </ScrollView>
+        </View>
+        <FlatList
+          data={history.data}
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+        />
       </SafeAreaView>
     </NativeBaseProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 40,
-  },
-});
 
 export default History;
