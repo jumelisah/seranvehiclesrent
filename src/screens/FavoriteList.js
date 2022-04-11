@@ -79,6 +79,7 @@ const FavoriteList = ({navigation}) => {
               data={favorites.data}
               renderItem={renderItem}
               showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => String(item.id)}
             />
           )}
           {favorites.data.length < 1 && (

@@ -23,7 +23,7 @@ const BikeList = ({navigation}) => {
     dispatch(getBike());
   }, [dispatch]);
   const getMoreData = () => {
-    if (vehicles.page.next !== null) {
+    if (vehicles.page?.next !== null) {
       setPage(page + 1);
       dispatch(getBike(page, false));
     }
@@ -114,7 +114,8 @@ const BikeList = ({navigation}) => {
               renderItem={renderItem}
               showsHorizontalScrollIndicator={false}
               onEndReached={getMoreData}
-              onEndReachedThreshold={0.5}
+              onEndReachedThreshold={10}
+              keyExtractor={(item, index) => item.id.toString()}
             />
           </View>
         )}
@@ -336,11 +337,5 @@ const BikeList = ({navigation}) => {
     </NativeBaseProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  loading: {
-    width: 200,
-  },
-});
 
 export default BikeList;

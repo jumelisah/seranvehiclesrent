@@ -22,8 +22,8 @@ const DetailSearch = ({navigation, route: {params}}) => {
   const [name, setName] = useState(params?.name ? params?.name : '');
   const location = params?.location || '';
   const category = params?.category || '';
-  const minPrice = params?.minPrice || 0;
-  const maxPrice = params?.maxPrice || 1000000;
+  const minPrice = params?.cost_min || 0;
+  const maxPrice = params?.cost_max || 1000000;
   const sortBy = params?.sortBy || 'id+DESC';
   const type = params?.type || '';
   const [page, setPage] = useState(1);
@@ -33,8 +33,8 @@ const DetailSearch = ({navigation, route: {params}}) => {
       searchVehicles({
         name,
         location,
-        maxPrice,
-        minPrice,
+        cost_max: maxPrice,
+        cost_min: minPrice,
         type,
         category,
         sortBy,
@@ -46,7 +46,16 @@ const DetailSearch = ({navigation, route: {params}}) => {
       setPage(vehicles.page.currentPage + 1);
       dispatch(
         searchVehicles(
-          {name, page, location, minPrice, maxPrice, type, category, sortBy},
+          {
+            name,
+            page,
+            location,
+            cost_min: minPrice,
+            cost_max: maxPrice,
+            type,
+            category,
+            sortBy,
+          },
           false,
         ),
       );
@@ -160,7 +169,13 @@ const DetailSearch = ({navigation, route: {params}}) => {
           <View>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('FilterSearch', {name, location})
+                navigation.navigate('FilterSearch', {
+                  name,
+                  location,
+                  maxPrice,
+                  minPrice,
+                  sortBy,
+                })
               }>
               <View
                 flexDirection={'row'}
@@ -183,7 +198,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
             showsHorizontalScrollIndicator={false}
             onEndReached={getMoreData}
             onEndReachedThreshold={0.5}
-            keyExtractor={(item, index) => String(index)}
+            keyExtractor={(item, index) => String(item.id)}
           />
         )}
         {!pages.isLoading && vehicles.search.length < 1 && (

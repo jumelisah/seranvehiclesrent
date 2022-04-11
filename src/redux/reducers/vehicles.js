@@ -32,6 +32,7 @@ const vehicles = (state = initialState, action) => {
     case 'GET_CARS': {
       if (action.replace === true) {
         state.cars = action.payload.result;
+        state.page = action.payload.pageInfo;
       } else {
         state.cars = state.cars.concat(action.payload.result);
       }
@@ -40,6 +41,7 @@ const vehicles = (state = initialState, action) => {
     case 'GET_MOTORBIKE': {
       if (action.replace === true) {
         state.motorbike = action.payload.result;
+        state.page = action.payload.pageInfo;
       } else {
         state.motorbike = state.motorbike.concat(action.payload.result);
       }
@@ -48,6 +50,7 @@ const vehicles = (state = initialState, action) => {
     case 'GET_BIKE': {
       if (action.replace === true) {
         state.bike = action.payload.result;
+        state.page = action.payload.pageInfo;
       } else {
         state.bike = state.bike.concat(action.payload.result);
       }
@@ -74,6 +77,13 @@ const vehicles = (state = initialState, action) => {
       return {...state};
     }
     case 'VEHICLES_CLEAR': {
+      state.message = null;
+      state.isError = false;
+      state.errMsg = null;
+      return {...state};
+    }
+    case 'VEHICLES_RESET': {
+      state.search = [];
       state.message = null;
       state.isError = false;
       state.errMsg = null;

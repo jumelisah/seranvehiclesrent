@@ -23,7 +23,7 @@ const MotorbikeList = ({navigation}) => {
     dispatch(getMotorbike());
   }, [dispatch]);
   const getMoreData = () => {
-    if (vehicles.page.next !== null) {
+    if (vehicles.page?.next !== null) {
       setPage(vehicles.page.currentPage + 1);
       dispatch(getMotorbike(page, false));
     }
@@ -115,6 +115,7 @@ const MotorbikeList = ({navigation}) => {
               showsHorizontalScrollIndicator={false}
               onEndReached={getMoreData}
               onEndReachedThreshold={0}
+              keyExtractor={(item, index) => String(item.id)}
             />
           </View>
         )}

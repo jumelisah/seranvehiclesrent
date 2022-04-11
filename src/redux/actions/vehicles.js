@@ -4,15 +4,24 @@ import RNFetchBlob from 'rn-fetch-blob';
 export const getVehicles = dataFilter => {
   return async dispatch => {
     try {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
       const {data} = await http().get('/popular');
       dispatch({
         type: 'GET_VEHICLES',
         payload: data,
       });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
     } catch (e) {
       dispatch({
         type: 'VEHICLES_ERROR',
         payload: e.response.data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     }
   };
@@ -53,7 +62,9 @@ export const getCars = (page = 1, replace = true) => {
       dispatch({
         type: 'PAGES_ISLOADING',
       });
-      const {data} = await http().get(`/popular?category=1&page=${page}`);
+      const {data} = await http().get(
+        `/popular?category=1&page=${page}&limit=10`,
+      );
       dispatch({
         type: 'GET_CARS',
         payload: data,
@@ -83,7 +94,9 @@ export const getMotorbike = (page = 1, replace = true) => {
       dispatch({
         type: 'PAGES_LOADING',
       });
-      const {data} = await http().get(`/popular?category=2&page=${page}`);
+      const {data} = await http().get(
+        `/popular?category=2&page=${page}&limit=10`,
+      );
       dispatch({
         type: 'GET_MOTORBIKE',
         payload: data,
@@ -113,7 +126,9 @@ export const getBike = (page = 1, replace = true) => {
       dispatch({
         type: 'PAGES_LOADING',
       });
-      const {data} = await http().get(`/popular?category=3&page=${page}`);
+      const {data} = await http().get(
+        `/popular?category=3&page=${page}&limit=10`,
+      );
       dispatch({
         type: 'GET_BIKE',
         payload: data,
@@ -182,6 +197,9 @@ export const addVehicles = (token, newData) => {
         type: 'VEHICLES_ERROR',
         payload: e,
       });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
     }
   };
 };
@@ -232,6 +250,9 @@ export const editVehicles = (token, id, newData) => {
         type: 'VEHICLES_ERROR',
         payload: e,
       });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
     }
   };
 };
@@ -265,16 +286,18 @@ export const deleteVehicle = (token, id) => {
 export const searchVehicles = (dataSearch, replace = true) => {
   return async dispatch => {
     try {
-      dispatch({
-        type: 'VEHICLES_CLEAR',
-      });
+      if (replace) {
+        dispatch({
+          type: 'VEHICLES_RESET',
+        });
+      }
       dispatch({
         type: 'PAGES_LOADING',
       });
       if (!dataSearch.page) {
         dataSearch.page = 1;
       }
-      const url = `/popular?sortBy=${dataSearch.sortBy}&name=${dataSearch.name}&category=${dataSearch.category}&location=${dataSearch.location}&maxPrice=${dataSearch.maxPrice}&minPrice=${dataSearch.minPrice}&limit=8&page=${dataSearch.page}`;
+      const url = `/popular?sortBy=${dataSearch.sortBy}&name=${dataSearch.name}&category=${dataSearch.category}&location=${dataSearch.location}&cost_max=${dataSearch.cost_max}&cost_min=${dataSearch.cost_min}&limit=8&page=${dataSearch.page}`;
       const {data} = await http().get(url);
       dispatch({
         type: 'VEHICLE_SEARCH',

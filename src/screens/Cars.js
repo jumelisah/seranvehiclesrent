@@ -23,7 +23,7 @@ const CarsList = ({navigation}) => {
     dispatch(getCars());
   }, [dispatch]);
   const getMoreData = () => {
-    if (vehicles.page.next !== null) {
+    if (vehicles.page?.next !== null) {
       setPage(vehicles.page.currentPage + 1);
       dispatch(getCars(vehicles.page.currentPage + 1, false));
     }
@@ -115,6 +115,7 @@ const CarsList = ({navigation}) => {
               showsHorizontalScrollIndicator={false}
               onEndReached={getMoreData}
               onEndReachedThreshold={0.5}
+              keyExtractor={(item, index) => String(item.id)}
             />
           </View>
         )}

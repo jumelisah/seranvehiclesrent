@@ -1,6 +1,16 @@
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Input, NativeBaseProvider, ScrollView, Text, View} from 'native-base';
+import {
+  ArrowForwardIcon,
+  CheckIcon,
+  ChevronRightIcon,
+  Input,
+  NativeBaseProvider,
+  ScrollView,
+  Select,
+  Text,
+  View,
+} from 'native-base';
 import {TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from '../components/Button';
@@ -9,35 +19,16 @@ const FilterSearch = ({navigation, route: {params}}) => {
   const [name, setName] = useState(params.name || '');
   const [location, setLocation] = useState(params.location || '');
   const [type, setType] = useState(params.type || '');
-  const [minPrice, setMinPrice] = useState(params.minPrice || '');
-  const [maxPrice, setMaxPrice] = useState(params.maxPrice || '');
+  const [minPrice, setMinPrice] = useState(params.minPrice || 0);
+  const [maxPrice, setMaxPrice] = useState(params.maxPrice || 10000000);
+  const [sortBy, setSortBy] = useState(params?.sortBy || 'id+DESC');
   const [showInputLocation, setShowInputLocation] = useState(false);
-  const filterData = [
-    {
-      id: 1,
-      name: 'Your Location',
-      value: location ? location : '',
-    },
-    {id: 2, name: 'Star Rating', value: 'Select'},
-    {id: 3, name: 'Price', value: 'Select'},
-    {id: 4, name: 'Date', value: 'Jan 18 2021'},
-    {
-      id: 5,
-      name: 'Type',
-      value:
-        type === 1
-          ? 'Cars'
-          : type === 2
-          ? 'Motorbike'
-          : type === 3
-          ? 'Bike'
-          : 'All',
-    },
-  ];
+  const [showInputPrice, setShowInputPrice] = useState(false);
   const handleReset = () => {
     setLocation('');
-    // setMaxPrice(1000000);
-    // setMinPrice(0);
+    setMaxPrice(1000000);
+    setMinPrice(0);
+    setSortBy('id+DESC');
     // setType('');
   };
   return (
@@ -95,7 +86,7 @@ const FilterSearch = ({navigation, route: {params}}) => {
                   </View>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowInputLocation(true)}>
+              <TouchableOpacity onPress={() => setShowInputPrice(true)}>
                 <View
                   flexDirection={'row'}
                   justifyContent={'space-between'}
@@ -109,7 +100,7 @@ const FilterSearch = ({navigation, route: {params}}) => {
                   </View>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowInputLocation(true)}>
+              <TouchableOpacity onPress={() => setShowInputPrice(true)}>
                 <View
                   flexDirection={'row'}
                   justifyContent={'space-between'}
@@ -143,6 +134,33 @@ const FilterSearch = ({navigation, route: {params}}) => {
                   </View>
                 </View>
               </TouchableOpacity>
+              <View
+                p={5}
+                flexDirection={'row'}
+                width={'100%'}
+                justifyContent={'space-between'}
+                alignItems={'center'}>
+                <Text fontSize={'xl'} width={'40%'}>
+                  Sort By
+                </Text>
+                <View width={'60%'}>
+                  <Select
+                    selectedValue={sortBy}
+                    accessibilityLabel="Sort by"
+                    placeholder="Select"
+                    textAlign={'right'}
+                    borderWidth={0}
+                    borderBottomColor={'black'}
+                    fontSize={'xl'}
+                    selectedItem={{endIcon: <CheckIcon size="10" />}}
+                    onValueChange={itemValue => setSortBy(itemValue)}>
+                    <Select.Item label="Newest" value={'id+DESC'} />
+                    <Select.Item label="Lowest price" value={'cost+ASC'} />
+                    <Select.Item label="Highest price" value={'cost+DESC'} />
+                    {/* <Select.Item label="+ Add category" value={4} /> */}
+                  </Select>
+                </View>
+              </View>
             </View>
           </ScrollView>
           <View p={5}>
@@ -152,6 +170,9 @@ const FilterSearch = ({navigation, route: {params}}) => {
                 navigation.navigate('Search', {
                   name,
                   location,
+                  cost_min: minPrice,
+                  cost_max: maxPrice,
+                  sortBy,
                 })
               }>
               Apply
@@ -181,6 +202,44 @@ const FilterSearch = ({navigation, route: {params}}) => {
                   <Button
                     variant={'blue'}
                     onPress={() => setShowInputLocation(false)}>
+                    Submit
+                  </Button>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+          {showInputPrice && (
+            <View
+              position={'absolute'}
+              backgroundColor={'rgba(0,0,0,0.2)'}
+              width={'100%'}
+              height={'100%'}
+              justifyContent={'center'}
+              alignItems={'center'}>
+              <TouchableOpacity onPress={() => setShowInputPrice(false)}>
+                <View
+                  backgroundColor={'white'}
+                  width={250}
+                  height={200}
+                  p={4}
+                  justifyContent={'center'}>
+                  <Input
+                    size={'xl'}
+                    value={minPrice}
+                    placeholder={'Minimum price'}
+                    onChangeText={text => setMinPrice(text)}
+                    keyboardType={'numeric'}
+                  />
+                  <Input
+                    size={'xl'}
+                    value={maxPrice}
+                    placeholder={'Maximum price'}
+                    onChangeText={text => setMaxPrice(text)}
+                    keyboardType={'numeric'}
+                  />
+                  <Button
+                    variant={'blue'}
+                    onPress={() => setShowInputPrice(false)}>
                     Submit
                   </Button>
                 </View>
