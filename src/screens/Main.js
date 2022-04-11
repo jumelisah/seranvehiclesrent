@@ -19,7 +19,6 @@ import ConfirmAccount from './ConfirmAccount';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MiIcon from 'react-native-vector-icons/MaterialIcons';
 import FilterSearch from './FilterSearch';
-import DetailVehicle from './DetailVehicle';
 import Payment from './Payment';
 import DetailVehicleAdmin from './DetailVehicleAdmin';
 import Chat from './Chat';
@@ -27,6 +26,7 @@ import VehicleDetail from './VehicleDetail';
 import CarsList from './Cars';
 import MotorbikeList from './Motorbike';
 import BikeList from './Bike';
+import FavoriteList from './FavoriteList';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -173,6 +173,11 @@ const MainStackScreen = () => {
       <MainStack.Screen
         name="EditProfile"
         component={EditProfile}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="My Favorites"
+        component={FavoriteList}
         options={{headerShown: false}}
       />
       <MainStack.Screen

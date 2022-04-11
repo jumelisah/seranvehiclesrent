@@ -274,7 +274,7 @@ export const searchVehicles = (dataSearch, replace = true) => {
       if (!dataSearch.page) {
         dataSearch.page = 1;
       }
-      const url = `/popular?limit=8&name=${dataSearch.name}&location=${dataSearch.location}&page=${dataSearch.page}`;
+      const url = `/popular?sortBy=${dataSearch.sortBy}&name=${dataSearch.name}&category=${dataSearch.category}&location=${dataSearch.location}&maxPrice=${dataSearch.maxPrice}&minPrice=${dataSearch.minPrice}&limit=8&page=${dataSearch.page}`;
       const {data} = await http().get(url);
       dispatch({
         type: 'VEHICLE_SEARCH',

@@ -107,19 +107,23 @@ const Home = ({navigation}) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           />
-          <TitleHeader
-            child={'Bike'}
-            resChild={'View more'}
-            user={auth.userData?.role}
-            onPress={() => navigation.navigate('Bike')}
-            onAdd={() => navigation.navigate('AddVehicles')}
-          />
-          <FlatList
-            data={vehicles?.bike} //pass in our data array
-            renderItem={renderItem}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          />
+          {vehicles.bike.length > 0 && (
+            <View>
+              <TitleHeader
+                child={'Bike'}
+                resChild={'View more'}
+                user={auth.userData?.role}
+                onPress={() => navigation.navigate('Bike')}
+                onAdd={() => navigation.navigate('AddVehicles')}
+              />
+              <FlatList
+                data={vehicles?.bike} //pass in our data array
+                renderItem={renderItem}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

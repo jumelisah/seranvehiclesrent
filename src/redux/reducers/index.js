@@ -7,9 +7,15 @@ import vehicles from './vehicles';
 import pages from './pages';
 import history from './history';
 import transactions from './transactions';
+import favorites from './favorites';
 
 const persisAuth = {
   key: 'auth',
+  storage: AsyncStorage,
+};
+
+const persisFav = {
+  key: 'favorites',
   storage: AsyncStorage,
 };
 
@@ -19,6 +25,7 @@ const rootReducers = combineReducers({
   pages,
   history,
   transactions,
+  favorites: persistReducer(persisFav, favorites),
 });
 
 export default rootReducers;

@@ -26,9 +26,10 @@ const EditVehicle = ({navigation, route: {params}}) => {
   const {vehicles} = useSelector(state => state);
   const [name, setName] = useState(vehicles.vehicle.name);
   const [price, setPrice] = useState(vehicles.vehicle.cost.toString());
+  const [location, setLocation] = useState(vehicles.vehicle.location);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [available, setAvailable] = useState(true);
-  const [qty, setQty] = useState(params.qty);
+  const [qty, setQty] = useState(vehicles.vehicle.qty || params.qty);
   const [largeImage, setLargeImage] = useState(false);
   const [picture, setPicture] = useState();
   const [fileName, setFileName] = useState();
@@ -101,6 +102,7 @@ const EditVehicle = ({navigation, route: {params}}) => {
       fileName,
       fileType,
       qty,
+      location,
       available: available ? 1 : 0,
     };
     dispatch(editVehicles(auth.token, vehicles.vehicle.id, data));
@@ -206,7 +208,7 @@ const EditVehicle = ({navigation, route: {params}}) => {
                     <Input
                       borderWidth={0}
                       borderBottomWidth={1}
-                      value={vehicles.vehicle.name}
+                      value={name}
                       size={'2xl'}
                       onChangeText={text => setName(text)}
                     />
@@ -234,13 +236,13 @@ const EditVehicle = ({navigation, route: {params}}) => {
                     color={
                       vehicles.vehicle.stock < 1 ||
                       vehicles.vehicle.available < 1
-                        ? 'red'
+                        ? 'rose.600'
                         : 'green.600'
                     }>
                     {`${
                       vehicles.vehicle.stock < 1 ||
                       vehicles.vehicle.available < 1
-                        ? 'Not available'
+                        ? 'Full Booked'
                         : 'Available'
                     }`}
                   </Text>
@@ -252,9 +254,13 @@ const EditVehicle = ({navigation, route: {params}}) => {
                       borderRadius={10}>
                       <Icon name="map-marker" size={20} color={'#1572A1'} />
                     </View>
-                    <Text pl={2} fontSize={'md'}>
-                      {vehicles.vehicle.location}
-                    </Text>
+                    <Input
+                      value={location}
+                      onChangeText={text => setLocation(text)}
+                      fontSize={'md'}
+                      borderWidth={0}
+                      borderBottomWidth={1}
+                    />
                   </View>
                   <View py={1} flexDirection={'row'} alignItems={'center'}>
                     <View

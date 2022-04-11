@@ -55,7 +55,7 @@ const Profile = ({navigation}) => {
               </Center>
             </Box>
             <Box m={4}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('My Favorites')}>
                 <View
                   flexDirection={'row'}
                   justifyContent={'space-between'}

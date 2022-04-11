@@ -16,31 +16,57 @@ import Counter from '../components/Counter';
 import TextInput from '../components/TextInput';
 
 const VehicleDetail = ({navigation, route: {params}}) => {
-  const {pages, vehicles} = useSelector(state => state);
+  const {favorites, pages, vehicles} = useSelector(state => state);
   const [qty, setQty] = useState(1);
-  const [love, setLove] = useState(false);
+  const [love, setLove] = useState(
+    favorites.isFavorite !== undefined ? true : false,
+  );
   const [open, setOpen] = useState(false);
   const today = new Date();
   const [date, setDate] = useState(today.setDate(today.getDate() + 1));
-  const [returnDate, setReturnDate] = useState();
   const [days, setDays] = useState(1);
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch({
+      type: 'GET_FAVORITES',
+      payload: favorites.data.find(item => {
+        if (item.id === params.id) {
+          return true;
+        }
+      }),
+    });
+    if (favorites.isFavorite !== undefined) {
+      setLove(true);
+    } else {
+      setLove(false);
+    }
     dispatch(getVehicleDetail(params.id));
-  }, [dispatch, params.id]);
+  }, [dispatch, params.id, favorites.data, favorites.isFavorite]);
   const config = {
     dependencies: {
       'linear-gradient': LinearGradient,
     },
   };
-  const onChangeDate = (e, value) => {
-    setDate(value);
-    setOpen(false);
-  };
   // const onReservation = async () => {
   //   setReturnDate(new Date(returnDate.setDate(returnDate.getDate() + days)));
   //   await alert(returnDate);
   // };
+  const handleFavorite = () => {
+    setLove(!love);
+    if (favorites.isFavorite === undefined) {
+      dispatch({
+        type: 'ADD_FAVORITES',
+        payload: vehicles.vehicle,
+      });
+    } else {
+      const index = favorites.data.findIndex(x => x.id === params.id);
+      console.log(index);
+      dispatch({
+        type: 'REMOVE_FAVORITES',
+        payload: index,
+      });
+    }
+  };
   return (
     <NativeBaseProvider config={config}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -88,7 +114,7 @@ const VehicleDetail = ({navigation, route: {params}}) => {
                     <Icon name="star" size={18} color={'white'} />
                   </View>
                 </Box>
-                <TouchableOpacity onPress={() => setLove(!love)}>
+                <TouchableOpacity onPress={handleFavorite}>
                   <Icon
                     name={`${love ? 'heart' : 'heart-o'}`}
                     size={25}
@@ -273,8 +299,8 @@ const VehicleDetail = ({navigation, route: {params}}) => {
           <DateTimePicker
             value={new Date(date) || date}
             onChange={(e, value) => {
-              setDate(value);
               setOpen(false);
+              setDate(value);
             }}
             onError={() => setOpen(false)}
             minimumDate={today}

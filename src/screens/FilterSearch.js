@@ -174,6 +174,7 @@ const FilterSearch = ({navigation, route: {params}}) => {
                   justifyContent={'center'}>
                   <Input
                     size={'xl'}
+                    value={location}
                     placeholder={'Location'}
                     onChangeText={text => setLocation(text)}
                   />

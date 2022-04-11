@@ -1,19 +1,21 @@
 const initialState = {
   data: [],
+  isFavorite: undefined,
+  removedElements: [],
 };
 
 const favorites = (state = initialState, action) => {
-  switch (action.payload) {
+  switch (action.type) {
     case 'GET_FAVORITES': {
-      state.data = action.payload;
+      state.isFavorite = action.payload;
       return {...state};
     }
     case 'ADD_FAVORITES': {
-      state.data = action.payload;
+      state.data = [...state.data, action.payload];
       return {...state};
     }
     case 'REMOVE_FAVORITES': {
-      state.data = action.payload;
+      state.removedElements = state.data.splice(action.payload, 1);
       return {...state};
     }
     default:

@@ -145,6 +145,7 @@ const AddVehicles = ({navigation}) => {
                     value={cost}
                     placeholder={'Input the product price'}
                     onChangeText={text => setCost(text)}
+                    keyboardType={'numeric'}
                   />
                   <Text>Year</Text>
                   <Input
@@ -152,6 +153,7 @@ const AddVehicles = ({navigation}) => {
                     value={year}
                     placeholder={'Input the product year'}
                     onChangeText={text => setYear(text)}
+                    keyboardType={'numeric'}
                   />
                   <Text>Seat</Text>
                   <Input
@@ -159,6 +161,7 @@ const AddVehicles = ({navigation}) => {
                     value={seat}
                     placeholder={'Input the product seat'}
                     onChangeText={text => setSeat(text)}
+                    keyboardType={'numeric'}
                   />
                   <Text>Location</Text>
                   <Input

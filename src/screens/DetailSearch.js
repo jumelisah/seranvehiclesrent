@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView, TouchableOpacity, StyleSheet} from 'react-native';
+import {SafeAreaView, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useState} from 'react/cjs/react.development';
 import {searchVehicles} from '../redux/actions/vehicles';
 import {useDispatch, useSelector} from 'react-redux';
+import MiIcon from 'react-native-vector-icons/MaterialIcons';
 import {
   Box,
   FlatList,
@@ -17,30 +18,38 @@ import LinearGradient from 'react-native-linear-gradient';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const DetailSearch = ({navigation, route: {params}}) => {
-  const {vehicles, pages} = useSelector(state => state);
+  const {auth, vehicles, pages} = useSelector(state => state);
   const [name, setName] = useState(params?.name ? params?.name : '');
-  const [location, setLocation] = useState(
-    params?.location ? params.location : '',
-  );
-  const [category, setCategory] = useState(params?.category || '');
-  const [minPrice, setMinPrice] = useState(params?.minPrice || 0);
-  const [maxPrice, setMaxPrice] = useState(params?.maxPrice || 1000000);
-  const [type, setType] = useState(params?.type || '');
+  const location = params?.location || '';
+  const category = params?.category || '';
+  const minPrice = params?.minPrice || 0;
+  const maxPrice = params?.maxPrice || 1000000;
+  const sortBy = params?.sortBy || 'id+DESC';
+  const type = params?.type || '';
   const [page, setPage] = useState(1);
-  const [startLoad, setStartLoad] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(searchVehicles({name, location}));
-  }, [dispatch, name, location]);
-  const handleSearch = () => {
-    setStartLoad(true);
-    dispatch(searchVehicles({name, location}, true));
-    setStartLoad(false);
-  };
+    dispatch(
+      searchVehicles({
+        name,
+        location,
+        maxPrice,
+        minPrice,
+        type,
+        category,
+        sortBy,
+      }),
+    );
+  }, [dispatch, name, location, maxPrice, minPrice, category, sortBy, type]);
   const getMoreData = () => {
     if (vehicles.page.next !== null) {
       setPage(vehicles.page.currentPage + 1);
-      dispatch(searchVehicles({name, page, location}, false));
+      dispatch(
+        searchVehicles(
+          {name, page, location, minPrice, maxPrice, type, category, sortBy},
+          false,
+        ),
+      );
     }
   };
   const config = {
@@ -51,7 +60,13 @@ const DetailSearch = ({navigation, route: {params}}) => {
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('DetailVehicle', {id: item.id})}>
+        onPress={() => {
+          if (auth.userData.role === 'User') {
+            navigation.navigate('DetailVehicle', {id: item.id});
+          } else {
+            navigation.navigate('Detail Vehicle Admin', {id: item.id});
+          }
+        }}>
         <View
           mx={5}
           pt={5}
@@ -97,7 +112,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
             <View px={5}>
               <Text fontWeight={'bold'}>{item.name}</Text>
               <Text>Max for {item.seat} person</Text>
-              <Text>2.1 km from your location</Text>
+              <Text>{item.location}</Text>
               <Text
                 fontWeight={'bold'}
                 color={item.qty > 2 ? 'green.600' : 'rose.600'}>
@@ -144,7 +159,9 @@ const DetailSearch = ({navigation, route: {params}}) => {
           />
           <View>
             <TouchableOpacity
-              onPress={() => navigation.navigate('FilterSearch', {name})}>
+              onPress={() =>
+                navigation.navigate('FilterSearch', {name, location})
+              }>
               <View
                 flexDirection={'row'}
                 alignItems={'center'}
@@ -159,14 +176,26 @@ const DetailSearch = ({navigation, route: {params}}) => {
             </TouchableOpacity>
           </View>
         </View>
-        {!pages.isLoading && vehicles.search.length > 0 && (
+        {vehicles.search.length > 0 && (
           <FlatList
             data={vehicles.search}
             renderItem={renderItem}
             showsHorizontalScrollIndicator={false}
             onEndReached={getMoreData}
             onEndReachedThreshold={0.5}
+            keyExtractor={(item, index) => String(index)}
           />
+        )}
+        {!pages.isLoading && vehicles.search.length < 1 && (
+          <View width={'100%'} height={'100%'}>
+            <View
+              flexDirection={'column'}
+              justifyContent={'center'}
+              alignItems={'center'}>
+              <Text fontSize={'2xl'}>No data</Text>
+              <MiIcon name="pedal-bike" size={200} color={'rgba(0,0,0,0.3)'} />
+            </View>
+          </View>
         )}
         {pages.isLoading && (
           <SkeletonPlaceholder>
@@ -386,11 +415,5 @@ const DetailSearch = ({navigation, route: {params}}) => {
     </NativeBaseProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  loading: {
-    width: 200,
-  },
-});
 
 export default DetailSearch;
