@@ -13,7 +13,7 @@ const Login = ({navigation, route: {params}}) => {
   const {auth} = useSelector(state => state);
   const {pages} = useSelector(state => state);
   const [username, setUsername] = React.useState(
-    params?.username ? params?.username : '',
+    params?.username ? params?.username : params?.email ? params?.email : '',
   );
   const [message, setMessage] = useState(
     params?.message ? params?.message : null,

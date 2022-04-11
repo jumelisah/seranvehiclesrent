@@ -1,5 +1,5 @@
 import React from 'react';
-import {Input, Text} from 'native-base';
+import {Input} from 'native-base';
 
 const TextInput = ({
   type,
@@ -25,8 +25,13 @@ const TextInput = ({
       }
       borderColor={variant === 'transparent' ? 'black' : 'rgb(154, 208, 236)'}
       borderRadius={10}
-      _focus={{borderColor: 'black'}}
+      _focus={{
+        borderColor: variant === 'transparent' ? 'black' : 'rgb(154, 208, 236)',
+      }}
       color={'black'}
+      placeholderTextColor={
+        variant === 'transparent' ? 'rgba(0,0,0,0.5)' : 'black'
+      }
       my={2}
       onChangeText={onChangeText}
       keyboardType={keyboardType}

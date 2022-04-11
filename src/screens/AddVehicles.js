@@ -24,7 +24,6 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {addVehicles} from '../redux/actions/vehicles';
 import LottieView from 'lottie-react-native';
-import { green } from 'react-native-reanimated/src/reanimated2/Colors';
 
 const AddVehicles = ({navigation}) => {
   const {auth} = useSelector(state => state);
@@ -36,7 +35,6 @@ const AddVehicles = ({navigation}) => {
   const [category, setCategory] = useState();
   const [type, setType] = useState();
   const [name, setName] = useState();
-  const [price, setPrice] = useState();
   const [cost, setCost] = useState();
   const [year, setYear] = useState();
   const [seat, setSeat] = useState();
@@ -44,7 +42,7 @@ const AddVehicles = ({navigation}) => {
   const [qty, setQty] = useState(1);
   const [moduleOption, setModuleOption] = useState(false);
   const [moduleSave, setModuleSave] = useState(false);
-  const [image, setImage] = useState();
+  const [largeImage, setLargeImage] = useState(false);
   const dispatch = useDispatch();
   const handlePhotoGallery = () => {
     const options = {
@@ -52,6 +50,11 @@ const AddVehicles = ({navigation}) => {
     };
     launchImageLibrary(options, response => {
       if (response.assets) {
+        if (response.assets[0].fileSize > 2097152) {
+          setLargeImage(true);
+        } else {
+          setLargeImage(false);
+        }
         setPicture(response.assets[0].uri);
         setFileName(response.assets[0].fileName);
         setFileType(response.assets[0].type);
@@ -65,6 +68,11 @@ const AddVehicles = ({navigation}) => {
     };
     launchCamera(options, response => {
       if (response.assets) {
+        if (response.assets[0].fileSize > 2097152) {
+          setLargeImage(true);
+        } else {
+          setLargeImage(false);
+        }
         setPicture(response.assets[0].uri);
         setFileName(response.assets[0].fileName);
         setFileType(response.assets[0].type);
@@ -80,7 +88,6 @@ const AddVehicles = ({navigation}) => {
       location,
       type,
       category_id: category,
-      image,
       seat,
       qty,
       picture,
@@ -119,6 +126,11 @@ const AddVehicles = ({navigation}) => {
                     <Icon name="plus" size={20} />
                   </TouchableOpacity>
                 </View>
+                {largeImage && (
+                  <Text color={'rose.600'} textAlign={'center'} py={2}>
+                    File too large. Maximal size allowed: 2MB
+                  </Text>
+                )}
                 <View>
                   <Text>Name</Text>
                   <Input
@@ -267,21 +279,21 @@ const AddVehicles = ({navigation}) => {
           </Stack>
         )}
         {pages.isLoading && (
-                  <View
-                    position={'absolute'}
-                    width={'100%'}
-                    height={'100%'}
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                    backgroundColor={'rgba(0,0,0,0.3)'}>
-                    <LottieView
-                      source={require('../assets/98196-loading-teal-dots.json')}
-                      autoPlay
-                      loop
-                      style={styles.lottie}
-                    />
-                  </View>
-                )}
+          <View
+            position={'absolute'}
+            width={'100%'}
+            height={'100%'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            backgroundColor={'rgba(0,0,0,0.3)'}>
+            <LottieView
+              source={require('../assets/98196-loading-teal-dots.json')}
+              autoPlay
+              loop
+              style={styles.lottie}
+            />
+          </View>
+        )}
       </View>
     </NativeBaseProvider>
   );

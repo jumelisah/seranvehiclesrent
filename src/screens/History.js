@@ -15,7 +15,6 @@ import {
 } from '../redux/actions/history';
 import {dateToString} from '../helpers/dateToString';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import EnIcon from 'react-native-vector-icons/Entypo';
 import MiIcon from 'react-native-vector-icons/MaterialIcons';
 import LottieView from 'lottie-react-native';
 

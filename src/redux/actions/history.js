@@ -19,6 +19,9 @@ export const getHistoryUser = token => {
         type: 'HISTORY_ERROR',
         payload: e.response.data.message,
       });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
     }
   };
 };

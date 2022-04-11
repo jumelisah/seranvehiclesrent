@@ -6,7 +6,7 @@ import {persistReducer} from 'redux-persist';
 import vehicles from './vehicles';
 import pages from './pages';
 import history from './history';
-import transatcions from './transactions';
+import transactions from './transactions';
 
 const persisAuth = {
   key: 'auth',
@@ -18,7 +18,7 @@ const rootReducers = combineReducers({
   vehicles,
   pages,
   history,
-  transatcions,
+  transactions,
 });
 
 export default rootReducers;

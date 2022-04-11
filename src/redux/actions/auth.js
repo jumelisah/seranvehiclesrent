@@ -48,15 +48,27 @@ export const onLogout = () => {
 export const onRegister = dataRegister => {
   return async dispatch => {
     try {
+      dispatch({
+        type: 'AUTH_CLEAR',
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
       const {data} = await http().post('/users', qs.stringify(dataRegister));
       dispatch({
         type: 'AUTH_REGISTER',
         payload: data,
       });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
     } catch (e) {
       dispatch({
         type: 'AUTH_ERROR',
         payload: e.response.data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     }
   };
@@ -65,6 +77,12 @@ export const onRegister = dataRegister => {
 export const accountConfirmation = confirmData => {
   return async dispatch => {
     try {
+      dispatch({
+        type: 'AUTH_CLEAR',
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
       const {data} = await http().post(
         '/auth/account-confirmation',
         qs.stringify(confirmData),
@@ -73,10 +91,16 @@ export const accountConfirmation = confirmData => {
         type: 'AUTH_CONFIRM_ACCOUNT',
         payload: data,
       });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
     } catch (e) {
       dispatch({
         type: 'AUTH_ERROR',
         payload: e.response.data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     }
   };
@@ -119,10 +143,19 @@ export const forgotPassword = dataForgot => {
 export const getProfile = token => {
   return async dispatch => {
     try {
+      dispatch({
+        type: 'AUTH_CLEAR',
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
       const {data} = await http(token).get('/profile');
       dispatch({
         type: 'AUTH_GET_PROFILE',
         payload: data.result,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
@@ -175,7 +208,7 @@ export const editProfile = (token, userData) => {
       console.log(e);
       dispatch({
         type: 'AUTH_ERROR',
-        payload: e,
+        payload: e.response.data.message,
       });
     }
   };

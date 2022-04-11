@@ -24,6 +24,9 @@ import Payment from './Payment';
 import DetailVehicleAdmin from './DetailVehicleAdmin';
 import Chat from './Chat';
 import VehicleDetail from './VehicleDetail';
+import CarsList from './Cars';
+import MotorbikeList from './Motorbike';
+import BikeList from './Bike';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -181,6 +184,21 @@ const MainStackScreen = () => {
         name="FilterSearch"
         component={FilterSearch}
         options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="Cars"
+        component={CarsList}
+        // options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="Motorbike"
+        component={MotorbikeList}
+        // options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="Bike"
+        component={BikeList}
+        // options={{headerShown: false}}
       />
     </MainStack.Navigator>
   );

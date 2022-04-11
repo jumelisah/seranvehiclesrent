@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, StyleSheet} from 'react-native';
 import {
   NativeBaseProvider,
   ScrollView,
@@ -20,10 +20,12 @@ import Button from '../components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {getVehicleDetail} from '../redux/actions/vehicles';
 import {ChangeDate} from '../helpers/changeDate';
-import {addTransaction} from '../redux/actions/transaction';
+import {addTransaction, changeTransaction} from '../redux/actions/transaction';
+import LottieView from 'lottie-react-native';
+import {dateToString} from '../helpers/dateToString';
 
 const Payment = ({navigation, route: {params}}) => {
-  const {auth} = useSelector(state => state);
+  const {auth, pages, transactions} = useSelector(state => state);
   const {vehicles} = useSelector(state => state);
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('Prepayment (no tax)');
@@ -68,7 +70,7 @@ const Payment = ({navigation, route: {params}}) => {
       !cardNumber
     ) {
       setFormError('Please input the fields');
-      alert(recipient)
+      alert(recipient);
     } else {
       dispatch(addTransaction(auth.token, data));
       await setStep(2);
@@ -147,7 +149,10 @@ const Payment = ({navigation, route: {params}}) => {
           )}
           {step === 4 && (
             <View p={5} flexDirection={'row'} alignItems={'center'}>
-              <TouchableOpacity onPress={() => navigation.navigate('History')}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('Notification', {screen: 'History'})
+                }>
                 <Icon name={'chevron-left'} size={25} />
               </TouchableOpacity>
               <Text fontSize={'2xl'} pl={3}>
@@ -237,7 +242,7 @@ const Payment = ({navigation, route: {params}}) => {
                 </Select>
               </View>
             )}
-            {step === 2 && (
+            {step === 2 && !pages.isLoading && !transactions.isError && (
               <View p={5}>
                 <Image
                   source={{uri: vehicles.vehicle.image}}
@@ -263,7 +268,19 @@ const Payment = ({navigation, route: {params}}) => {
                 </View>
               </View>
             )}
-            {step === 3 && (
+            {step === 2 && !pages.isLoading && transactions.isError && (
+              <View p={5}>
+                <Text fontSize={'xl'} color="rose.600">
+                  {transactions.errMsg}
+                </Text>
+                <TouchableOpacity onPress={() => setStep(1)}>
+                  <Text fontWeight={'bold'} fontSize={'xl'}>
+                    Back
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {step === 3 && !pages.isLoading && !transactions.isError && (
               <View p={5}>
                 <VStack space={1} alignItems={'center'} py={5}>
                   <Text fontWeight={'bold'}>Payment code:</Text>
@@ -320,7 +337,7 @@ const Payment = ({navigation, route: {params}}) => {
                 </VStack>
               </View>
             )}
-            {step === 4 && (
+            {step === 4 && !pages.isLoading && !transactions.isError && (
               <View p={5}>
                 <Text
                   textAlign={'center'}
@@ -377,10 +394,10 @@ const Payment = ({navigation, route: {params}}) => {
                   </Text>
                   <Text>{paymentMethod}</Text>
                   <Text fontSize={'md'} pt={1}>
-                    4 days
+                    {params.days} days
                   </Text>
                   <Text fontSize={'md'} pt={1}>
-                    Jan 18 2021 to Jan 22 2021
+                    {dateToString(rentDate)} to {dateToString(returnDate)} 2022
                   </Text>
                 </VStack>
                 <View py={5} borderTopWidth={1}>
@@ -411,43 +428,72 @@ const Payment = ({navigation, route: {params}}) => {
                 <Button variant={'blue'}>See Order Detail</Button>
               </View>
             )}
-            {(step === 2 || step === 3) && (
-              <View
-                py={2}
-                flexDirection={'row'}
-                justifyContent={'space-between'}
-                alignItems={'center'}
-                borderTopWidth={1}>
-                <Text fontSize={'4xl'}>
-                  Rp. {price.toLocaleString('id-ID')}
-                </Text>
-                <EnIcon
-                  name={'info-with-circle'}
-                  size={30}
-                  color={'rgba(0,0,0,0.3)'}
-                />
-              </View>
-            )}
-            {step === 2 && (
+            {(step === 2 || step === 3) &&
+              !pages.isLoading &&
+              !transactions.isError && (
+                <View
+                  py={2}
+                  flexDirection={'row'}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                  borderTopWidth={1}>
+                  <Text fontSize={'4xl'}>
+                    Rp. {price.toLocaleString('id-ID')}
+                  </Text>
+                  <EnIcon
+                    name={'info-with-circle'}
+                    size={30}
+                    color={'rgba(0,0,0,0.3)'}
+                  />
+                </View>
+              )}
+            {step === 2 && !pages.isLoading && !transactions.isError && (
               <Button variant={'dark'} onPress={() => setStep(3)}>
                 Get Payment Code
               </Button>
             )}
             {step === 3 && (
-              <Button variant={'dark'} onPress={() => setStep(4)}>
+              <Button
+                variant={'dark'}
+                onPress={() => {
+                  setStep(4);
+                  dispatch(changeTransaction(auth.token, transactions.data.id));
+                }}>
                 Finish Payment
               </Button>
             )}
-            {step === 4 && (
+            {step === 4 && !pages.isLoading && !transactions.isError && (
               <Button variant={'dark'} onPress={() => setStep(4)}>
                 Total payment: Rp. {price}
               </Button>
             )}
           </View>
+          {pages.isLoading && (
+            <View
+              position={'absolute'}
+              width={'100%'}
+              height={'100%'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              backgroundColor={'rgba(0,0,0,0.3)'}>
+              <LottieView
+                source={require('../assets/98196-loading-teal-dots.json')}
+                autoPlay
+                loop
+                style={styles.lottie}
+              />
+            </View>
+          )}
         </View>
       </SafeAreaView>
     </NativeBaseProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  lottie: {
+    width: 200,
+  },
+});
 
 export default Payment;

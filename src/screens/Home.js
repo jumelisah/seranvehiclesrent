@@ -25,25 +25,24 @@ const Home = ({navigation}) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProfile(auth.token));
+  }, [dispatch, auth.token]);
+  useEffect(() => {
     dispatch(getVehicles());
     dispatch(getCars());
     dispatch(getMotorbike());
     dispatch(getBike());
-  }, [dispatch, auth.token]);
+  }, [dispatch]);
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         style={styles.coverImage}
-        onPress={() =>
-          navigation.navigate(
-            `${
-              auth.userData?.role === 'Admin'
-                ? 'Detail Vehicle Admin'
-                : 'DetailVehicle'
-            }`,
-            {id: item.id},
-          )
-        }>
+        onPress={() => {
+          if (auth.userData.role === 'User') {
+            navigation.navigate('DetailVehicle', {id: item.id});
+          } else {
+            navigation.navigate('Detail Vehicle Admin', {id: item.id});
+          }
+        }}>
         <Image
           source={item.image ? {uri: item.image} : CameraImg}
           style={styles.listImage}
@@ -76,7 +75,7 @@ const Home = ({navigation}) => {
             child={'Hot Deals'}
             user={auth.userData?.role}
             resChild={'View more'}
-            onPress={() => navigation.navigate('DetailSearch')}
+            onPress={() => navigation.navigate('Search')}
           />
           <FlatList
             data={vehicles?.cars} //pass in our data array
@@ -88,7 +87,7 @@ const Home = ({navigation}) => {
             child={'Cars'}
             resChild={'View more'}
             user={auth.userData?.role}
-            onPress={() => navigation.navigate('DetailSearch')}
+            onPress={() => navigation.navigate('Cars')}
           />
           <FlatList
             data={vehicles?.cars} //pass in our data array
@@ -100,7 +99,7 @@ const Home = ({navigation}) => {
             child={'Motorbike'}
             resChild={'View more'}
             user={auth.userData?.role}
-            onPress={() => navigation.navigate('DetailSearch')}
+            onPress={() => navigation.navigate('Motorbike')}
           />
           <FlatList
             data={vehicles.motorbike} //pass in our data array
@@ -112,7 +111,7 @@ const Home = ({navigation}) => {
             child={'Bike'}
             resChild={'View more'}
             user={auth.userData?.role}
-            onPress={() => navigation.navigate('DetailSearch')}
+            onPress={() => navigation.navigate('Bike')}
             onAdd={() => navigation.navigate('AddVehicles')}
           />
           <FlatList

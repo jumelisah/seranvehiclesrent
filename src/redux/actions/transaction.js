@@ -7,6 +7,9 @@ export const addTransaction = (token, dataReservation) => {
       dispatch({
         type: 'PAGES_LOADING',
       });
+      dispatch({
+        type: 'TRANSACTION_CLEAR',
+      });
       console.log(dataReservation);
       const {data} = await http(token).post(
         '/histories',
@@ -23,6 +26,41 @@ export const addTransaction = (token, dataReservation) => {
       dispatch({
         type: 'TRANSACTION_ERROR',
         payload: e.response.data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    }
+  };
+};
+
+export const changeTransaction = (token, id) => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+      dispatch({
+        type: 'TRANSACTION_CLEAR',
+      });
+      const {data} = await http(token).patch(
+        `/histories/${id}`,
+        qs.stringify({status: 1}),
+      );
+      dispatch({
+        type: 'CHANGE_TRANSACTION',
+        payload: data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    } catch (e) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        payload: e.response.data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
       });
     }
   };

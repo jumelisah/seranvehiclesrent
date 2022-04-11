@@ -1,28 +1,33 @@
-import {Center, NativeBaseProvider, VStack} from 'native-base';
+import {Center, NativeBaseProvider, Text, View, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   ImageBackground,
-  Image,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import {accountConfirmation} from '../redux/actions/auth';
+import LottieView from 'lottie-react-native';
+import TextInput from '../components/TextInput';
 
 const ConfirmAccount = ({navigation}) => {
-  const {auth} = useSelector(state => state);
+  const {auth, pages} = useSelector(state => state);
   const [code, setCode] = useState();
   const [email, setEmail] = useState();
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch({
+      type: 'AUTH_CLEAR',
+    });
+  }, [dispatch]);
   const confirmAccount = () => {
     const data = {email, code};
     dispatch(accountConfirmation(data));
-  }
+  };
   return (
     <NativeBaseProvider>
       <SafeAreaView>
@@ -31,7 +36,68 @@ const ConfirmAccount = ({navigation}) => {
           resizeMode="cover"
           style={styles.pageBackground}>
           <ScrollView>
-            <View style={styles.fullPage}>
+            <View p={5}>
+              <View height={200}>
+                <Text
+                  fontWeight={'bold'}
+                  fontSize={'3xl'}
+                  color={'white'}
+                  mb={5}
+                  pb={5}>
+                  LET’S HAVE SOME RIDE
+                </Text>
+              </View>
+              {!pages.isLoading && auth.isError && (
+                <View backgroundColor={'rose.100'} p={5}>
+                  <Text color={'rose.600'}>{auth.errMsg}</Text>
+                </View>
+              )}
+              {!auth.isError && auth.message && (
+                <View backgroundColor={'success.100'} p={5}>
+                  <Text color={'success.600'}>{auth.message}</Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Login', {email})}>
+                    <Text color={'success.600'} underline>
+                      Click here to login
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              <View mt={5} pt={5}>
+                <TextInput
+                  value={email}
+                  placeholder={'Email'}
+                  onChangeText={text => setEmail(text)}
+                  keyboardType={'email-address'}
+                />
+                <TextInput
+                  value={code}
+                  placeholder={'Code confirmation'}
+                  onChangeText={text => setCode(text)}
+                  keyboardType={'numeric'}
+                />
+              </View>
+              <Button variant={'dark'} onPress={confirmAccount}>
+                Confirm Your Email
+              </Button>
+            </View>
+            {pages.isLoading && (
+              <View
+                position={'absolute'}
+                width={'100%'}
+                height={'100%'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                backgroundColor={'rgba(0,0,0,0.3)'}>
+                <LottieView
+                  source={require('../assets/98196-loading-teal-dots.json')}
+                  autoPlay
+                  loop
+                  // style={styles.lottie}
+                />
+              </View>
+            )}
+            {/* <View style={styles.fullPage}>
               <Text style={styles.textHeader}>LET’S HAVE SOME RIDE</Text>
               <View style={styles.formInput}>
                 <VStack space={4} style={styles.formInput}>
@@ -72,7 +138,7 @@ const ConfirmAccount = ({navigation}) => {
                   </Text>
                 </Text>
               </View>
-            </View>
+            </View> */}
           </ScrollView>
         </ImageBackground>
       </SafeAreaView>

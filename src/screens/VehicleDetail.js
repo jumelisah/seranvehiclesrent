@@ -35,7 +35,6 @@ const VehicleDetail = ({navigation, route: {params}}) => {
   };
   const onChangeDate = (e, value) => {
     setDate(value);
-    setReturnDate(value);
     setOpen(false);
   };
   // const onReservation = async () => {
@@ -273,9 +272,12 @@ const VehicleDetail = ({navigation, route: {params}}) => {
         <View>
           <DateTimePicker
             value={new Date(date) || date}
-            onChange={onChangeDate}
+            onChange={(e, value) => {
+              setDate(value);
+              setOpen(false);
+            }}
             onError={() => setOpen(false)}
-            minimumDate={date}
+            minimumDate={today}
           />
         </View>
       )}

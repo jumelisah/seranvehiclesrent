@@ -24,7 +24,9 @@ const EditProfile = ({navigation}) => {
   const [birthdate, setBirthdate] = useState(auth.userData?.birthdate);
   const [gender, setGender] = useState(auth.userData?.gender);
   const [moduleOption, setModuleOption] = useState(false);
+  const [moduleOpen, setModuleOpen] = useState(false);
   const [open, setOpen] = useState(false);
+  const [largeImage, setLargeImage] = useState(false);
   const [date, setDate] = useState(
     new Date(auth.userData.birthdate) || new Date(),
   );
@@ -32,17 +34,18 @@ const EditProfile = ({navigation}) => {
   useEffect(() => {
     dispatch(getProfile(auth?.token));
   }, [auth.token, dispatch]);
-  const dateNow = String(date.getDate()).padStart(2, '0');
-  const monthNow = String(date.getMonth() + 1).padStart(2, '0');
-  const formatDate = auth.userData?.birthdate
-    ? `${date.getFullYear()}/${monthNow}/${dateNow}`
-    : null;
   const handlePhotoGallery = () => {
     const options = {
       noData: true,
     };
     launchImageLibrary(options, response => {
       if (response.assets) {
+        console.log(response);
+        if (response.assets[0].fileSize > 2097152) {
+          setLargeImage(true);
+        } else {
+          setLargeImage(false);
+        }
         setPicture(response.assets[0].uri);
         setFileName(response.assets[0].fileName);
         setFileType(response.assets[0].type);
@@ -56,6 +59,11 @@ const EditProfile = ({navigation}) => {
     };
     launchCamera(options, response => {
       if (response.assets) {
+        if (response.assets[0].fileSize > 2097152) {
+          setLargeImage(true);
+        } else {
+          setLargeImage(false);
+        }
         setPicture(response.assets[0].uri);
         setFileName(response.assets[0].fileName);
         setFileType(response.assets[0].type);
@@ -63,20 +71,22 @@ const EditProfile = ({navigation}) => {
     });
     setModuleOption(false);
   };
-  const updateProfile = async () => {
+  const updateProfile = () => {
+    console.log(birthdate);
     const data = {
       name,
       email,
       phone_number: phoneNumber,
       address,
       gender,
-      birthdate: ChangeDate(birthdate),
+      birthdate: ChangeDate(new Date(birthdate)),
       fileName,
       fileType,
       picture,
     };
     dispatch(editProfile(auth.token, data));
-    // await dispatch(getProfile(auth?.token));
+    dispatch(getProfile(auth?.token));
+    setModuleOpen(true);
   };
   const Gender = () => {
     return (
@@ -117,7 +127,7 @@ const EditProfile = ({navigation}) => {
             <Icon name="chevron-left" size={30} color={'black'} />
           </TouchableOpacity>
           <Text fontSize={'xl'} px={3} fontWeight={'bold'}>
-            Add new item
+            Edit Profile
           </Text>
         </View>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -149,6 +159,11 @@ const EditProfile = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
+        {largeImage && (
+          <Text color={'rose.600'} textAlign={'center'} py={2}>
+            File too large. Maximal size allowed: 2MB
+          </Text>
+        )}
         <View px={5}>
           <Gender />
           <Text>Name</Text>
@@ -195,7 +210,13 @@ const EditProfile = ({navigation}) => {
             placeholder={address || 'Input your address'}
             onChangeText={text => setAddress(text)}
           />
-          <Button variant={'blue'} onPress={() => updateProfile()}>
+          <Button
+            variant={'blue'}
+            onPress={() => {
+              if (!largeImage) {
+                updateProfile();
+              }
+            }}>
             Save Change
           </Button>
         </View>
@@ -259,6 +280,39 @@ const EditProfile = ({navigation}) => {
             onError={() => setOpen(false)}
             maximumDate={new Date()}
           />
+        </View>
+      )}
+      {!pages.isLoading && moduleOpen && (auth.message || auth.errMsg) && (
+        <View
+          position={'absolute'}
+          width={'100%'}
+          height={'100%'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          backgroundColor={'rgba(0,0,0,0.4)'}>
+          <TouchableOpacity onPress={() => setModuleOpen(false)}>
+            <View
+              backgroundColor={'white'}
+              p={5}
+              flexDirection={'column'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              width={250}
+              height={200}
+              borderRadius={'md'}>
+              <Icon
+                name={auth.isError ? 'times' : 'check'}
+                size={50}
+                color={auth.isError ? 'red' : 'green'}
+              />
+              <Text
+                textAlign={'center'}
+                fontSize={'xl'}
+                color={auth.isError ? 'red' : 'green.600'}>
+                {auth.isError ? auth.errMsg : auth.message}
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       )}
     </NativeBaseProvider>

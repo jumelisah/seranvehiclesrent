@@ -15,6 +15,10 @@ const transactions = (state = initialState, action) => {
       state.data = action.payload;
       return {...state};
     }
+    case 'CHANGE_TRANSACTION': {
+      state.message = action.payload;
+      return {...state};
+    }
     case 'TRANSACTION_ERROR': {
       state.message = null;
       state.isError = true;

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {SafeAreaView, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useState} from 'react/cjs/react.development';
-import {searchVehicles} from '../redux/actions/vehicles';
+import {getBike} from '../redux/actions/vehicles';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   Box,
@@ -12,35 +12,20 @@ import {
   Text,
   View,
 } from 'native-base';
-import TextInput from '../components/TextInput';
 import LinearGradient from 'react-native-linear-gradient';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-const DetailSearch = ({navigation, route: {params}}) => {
+const BikeList = ({navigation}) => {
   const {vehicles, pages} = useSelector(state => state);
-  const [name, setName] = useState(params?.name ? params?.name : '');
-  const [location, setLocation] = useState(
-    params?.location ? params.location : '',
-  );
-  const [category, setCategory] = useState(params?.category || '');
-  const [minPrice, setMinPrice] = useState(params?.minPrice || 0);
-  const [maxPrice, setMaxPrice] = useState(params?.maxPrice || 1000000);
-  const [type, setType] = useState(params?.type || '');
   const [page, setPage] = useState(1);
-  const [startLoad, setStartLoad] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(searchVehicles({name, location}));
-  }, [dispatch, name, location]);
-  const handleSearch = () => {
-    setStartLoad(true);
-    dispatch(searchVehicles({name, location}, true));
-    setStartLoad(false);
-  };
+    dispatch(getBike());
+  }, [dispatch]);
   const getMoreData = () => {
     if (vehicles.page.next !== null) {
-      setPage(vehicles.page.currentPage + 1);
-      dispatch(searchVehicles({name, page, location}, false));
+      setPage(page + 1);
+      dispatch(getBike(page, false));
     }
   };
   const config = {
@@ -122,51 +107,16 @@ const DetailSearch = ({navigation, route: {params}}) => {
   return (
     <NativeBaseProvider config={config}>
       <SafeAreaView>
-        <View px={5} pt={5}>
-          <TextInput
-            placeholder={'Search here'}
-            value={name}
-            iconLeft={
-              <TouchableOpacity>
-                <View ml={2}>
-                  <Icon name="search" size={30} />
-                </View>
-              </TouchableOpacity>
-            }
-            onChangeText={text => setName(text)}
-            icon={
-              <TouchableOpacity onPress={() => setName('')}>
-                <View mr={2}>
-                  <Icon name="times" size={30} />
-                </View>
-              </TouchableOpacity>
-            }
-          />
-          <View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('FilterSearch', {name})}>
-              <View
-                flexDirection={'row'}
-                alignItems={'center'}
-                py={2}
-                borderBottomWidth={1}
-                borderBottomColor={'warmGray.300'}>
-                <Icon name="filter" size={25} />
-                <Text ml={2} fontSize={'xl'}>
-                  Filter
-                </Text>
-              </View>
-            </TouchableOpacity>
+        {!pages.isLoading && vehicles.bike.length > 0 && (
+          <View py={5}>
+            <FlatList
+              data={vehicles.bike}
+              renderItem={renderItem}
+              showsHorizontalScrollIndicator={false}
+              onEndReached={getMoreData}
+              onEndReachedThreshold={0.5}
+            />
           </View>
-        </View>
-        {!pages.isLoading && vehicles.search.length > 0 && (
-          <FlatList
-            data={vehicles.search}
-            renderItem={renderItem}
-            showsHorizontalScrollIndicator={false}
-            onEndReached={getMoreData}
-            onEndReachedThreshold={0.5}
-          />
         )}
         {pages.isLoading && (
           <SkeletonPlaceholder>
@@ -393,4 +343,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetailSearch;
+export default BikeList;

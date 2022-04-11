@@ -33,7 +33,6 @@ const auth = (state = initialState, action) => {
       return {...state};
     }
     case 'AUTH_CHANGE_PROFILE': {
-      state.userData = action.payload.result;
       state.message = action.payload.message;
       state.errMsg = null;
       state.isError = false;

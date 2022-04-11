@@ -1,26 +1,24 @@
-import {Center, NativeBaseProvider, VStack} from 'native-base';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
+import {Image, NativeBaseProvider, Text, View} from 'native-base';
 import {
-  View,
-  Text,
   StyleSheet,
   ImageBackground,
-  Image,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
+import LottieView from 'lottie-react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Button from '../components/Button';
-import Input from '../components/Input';
 import {onRegister} from '../redux/actions/auth';
+import TextInput from '../components/TextInput';
+import InputPassword from '../components/InputPassword';
 
 const Signup = ({navigation}) => {
-  const {auth} = useSelector(state => state);
+  const {auth, pages} = useSelector(state => state);
   const [username, setUsername] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  // const [errRegister, setErrRegister] = useState(false);
-  // const [registerMsg, setRegisterMsg] = useState();
   const dispatch = useDispatch();
   const register = () => {
     const data = {username, email, password, confirmPassword: password};
@@ -43,68 +41,97 @@ const Signup = ({navigation}) => {
           resizeMode="cover"
           style={styles.pageBackground}>
           <ScrollView>
-            <View style={styles.fullPage}>
-              <Text style={styles.textHeader}>LET’S HAVE SOME RIDE</Text>
-              <View style={styles.formInput}>
-                <VStack space={4} style={styles.formInput}>
-                  {auth.isError && (
-                    <Center h={39} bg={'rose.100'} rounded={'md'}>
-                      <Text fontSize={'md'} color={'danger.700'}>
-                        {auth.errMsg}
-                      </Text>
-                    </Center>
-                  )}
-                  {!auth.isError && auth.message && (
-                    <Center h={39} bg={'rose.100'} runded={'md'}>
-                      <Text fontSize={'md'} color={'danger.800'}>
-                        {auth.message}
-                      </Text>
-                      
-                    </Center>
-                  )}
-                  <Text
-                        onPress={() => navigation.navigate('Account Confirmation')}>
-                        ConfirmAccount
-                      </Text>
-                </VStack>
-                <Input
-                  placeholder={'Username'}
-                  variant={'pink'}
-                  onChangeText={setUsername}
-                />
-                <Input
-                  placeholder={'Mobile phone'}
-                  variant={'pink'}
-                  onChangeText={setEmail}
-                />
-                <Input
-                  placeholder={'Password'}
-                  secureTextEntry={true}
-                  variant={'pink'}
-                  onChangeText={setPassword}
-                />
-                <Button variant={'blue'} onPress={() => register()}>
-                  Signup
-                </Button>
-                <Button>
-                  <Image
-                    source={require('../assets/googleIcon.png')}
-                    style={styles.logo}
-                  />
-                  Signup with Google
-                </Button>
-              </View>
-              <View>
-                <Text style={styles.textWhite}>
-                  Already have an account?
-                  <Text
-                    style={styles.link}
-                    onPress={() => navigation.navigate('Login')}>
-                    Login now
-                  </Text>
+            <View p={5} mt={5}>
+              <View height={200}>
+                <Text
+                  fontWeight={'bold'}
+                  fontSize={'3xl'}
+                  color={'white'}
+                  mb={5}
+                  pb={5}>
+                  LET’S HAVE SOME RIDE
                 </Text>
               </View>
+              {!pages.isLoading && auth.isError && (
+                <View backgroundColor={'rose.100'} p={5}>
+                  <Text color={'rose.600'}>{auth.errMsg}</Text>
+                </View>
+              )}
+              {!auth.isError && auth.message && (
+                <View backgroundColor={'success.100'} p={5}>
+                  <Text color={'success.600'}>{auth.message}</Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Account Confirmation')}>
+                    <Text color={'success.600'} underline>
+                      Click here to confirm your account
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              <View mt={5} pt={5}>
+                <TextInput
+                  value={username}
+                  placeholder={'Username'}
+                  onChangeText={text => setUsername(text)}
+                />
+                <TextInput
+                  value={email}
+                  placeholder={'Email'}
+                  onChangeText={text => setEmail(text)}
+                  keyboardType={'email-address'}
+                />
+                <InputPassword
+                  // value={password}
+                  placeholder={'Password'}
+                  onChangeText={text => setPassword(text)}
+                />
+              </View>
+              <Button variant={'dark'} onPress={register}>
+                Signup
+              </Button>
+              <Button>
+                <View
+                  flexDirection={'row'}
+                  justifyContent={'center'}
+                  alignItems={'center'}>
+                  <Image
+                    source={require('../assets/googleIcon.png')}
+                    width={18}
+                    height={18}
+                    alt={'login with google'}
+                  />
+                  <Text fontSize={20} fontWeight={'bold'} px={3}>
+                    Signup with Google
+                  </Text>
+                </View>
+              </Button>
+              <View flexDirection={'row'}>
+                <Text fontSize={'md'} color={'white'}>
+                  Already have an account?
+                </Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                  <Text fontSize={'md'} pl={2} color={'white'} underline>
+                    Login now
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
+            {pages.isLoading && (
+              <View
+                position={'absolute'}
+                width={'100%'}
+                height={'100%'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                backgroundColor={'rgba(0,0,0,0.3)'}>
+                <LottieView
+                  source={require('../assets/98196-loading-teal-dots.json')}
+                  autoPlay
+                  loop
+                  // style={styles.lottie}
+                />
+              </View>
+            )}
           </ScrollView>
         </ImageBackground>
       </SafeAreaView>

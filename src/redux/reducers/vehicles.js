@@ -5,7 +5,7 @@ const initialState = {
   motorbike: {},
   bike: {},
   isError: false,
-  vehicle: [],
+  vehicle: {},
   search: [],
   page: {},
 };
@@ -30,23 +30,41 @@ const vehicles = (state = initialState, action) => {
       return {...state};
     }
     case 'GET_CARS': {
-      state.cars = action.payload.result;
+      if (action.replace === true) {
+        state.cars = action.payload.result;
+      } else {
+        state.cars = state.cars.concat(action.payload.result);
+      }
       return {...state};
     }
     case 'GET_MOTORBIKE': {
-      state.motorbike = action.payload.result;
+      if (action.replace === true) {
+        state.motorbike = action.payload.result;
+      } else {
+        state.motorbike = state.motorbike.concat(action.payload.result);
+      }
       return {...state};
     }
     case 'GET_BIKE': {
-      state.bike = action.payload.result;
+      if (action.replace === true) {
+        state.bike = action.payload.result;
+      } else {
+        state.bike = state.bike.concat(action.payload.result);
+      }
       return {...state};
     }
     case 'ADD_VEHICLES': {
       state.message = action.payload.message;
       return {...state};
     }
+    case 'EDIT_VEHICLES': {
+      state.vehicle = action.payload.result;
+      state.message = action.payload.message;
+      return {...state};
+    }
     case 'DELETE_VEHICLE': {
-      state.message = action.payload;
+      state.vehicle = action.payload.result;
+      state.message = action.payload.message;
       return {...state};
     }
     case 'VEHICLES_ERROR': {
