@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -7,7 +7,7 @@ import Button from '../components/Button';
 import {Image, NativeBaseProvider, Radio, Stack, Text, View} from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {useDispatch, useSelector} from 'react-redux';
-import {editProfile, getProfile} from '../redux/actions/auth';
+import {editProfile} from '../redux/actions/auth';
 import TextInput from '../components/TextInput';
 import LottieView from 'lottie-react-native';
 import {ChangeDate} from '../helpers/changeDate';
@@ -27,13 +27,7 @@ const EditProfile = ({navigation}) => {
   const [moduleOpen, setModuleOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [largeImage, setLargeImage] = useState(false);
-  const [date, setDate] = useState(
-    new Date(auth.userData.birthdate) || new Date(),
-  );
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getProfile(auth?.token));
-  }, [auth.token, dispatch]);
   const handlePhotoGallery = () => {
     const options = {
       noData: true,

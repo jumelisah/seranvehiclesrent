@@ -57,6 +57,7 @@ const vehicles = (state = initialState, action) => {
       return {...state};
     }
     case 'ADD_VEHICLES': {
+      // state.data = action.payload.result};
       state.message = action.payload.message;
       return {...state};
     }

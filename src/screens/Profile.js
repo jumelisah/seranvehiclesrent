@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   Box,
   Center,
@@ -11,16 +11,12 @@ import {
 import {TouchableOpacity} from 'react-native';
 import ImageDefault from '../assets/photo-camera.png';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {getProfile, onLogout} from '../redux/actions/auth';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {onLogout} from '../redux/actions/auth';
 import {useDispatch, useSelector} from 'react-redux';
 
 const Profile = ({navigation}) => {
   const {auth, pages} = useSelector(state => state);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getProfile(auth.token));
-  }, [dispatch, auth.token]);
   return (
     <NativeBaseProvider>
       <ScrollView>
@@ -55,7 +51,8 @@ const Profile = ({navigation}) => {
               </Center>
             </Box>
             <Box m={4}>
-              <TouchableOpacity onPress={() => navigation.navigate('My Favorites')}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('My Favorites')}>
                 <View
                   flexDirection={'row'}
                   justifyContent={'space-between'}
@@ -117,64 +114,6 @@ const Profile = ({navigation}) => {
               </TouchableOpacity>
             </Box>
           </View>
-        )}
-        {pages.isLoading && (
-          <SkeletonPlaceholder>
-            <SkeletonPlaceholder.Item
-              flexDirection="column"
-              alignItems="center"
-              width={'100%'}
-              marginTop={25}>
-              <SkeletonPlaceholder.Item
-                width={80}
-                height={80}
-                borderRadius={50}
-                marginBottom={5}
-              />
-              <SkeletonPlaceholder.Item
-                width={120}
-                height={20}
-                marginBottom={5}
-              />
-              <SkeletonPlaceholder.Item
-                width={150}
-                height={20}
-                marginBottom={5}
-              />
-              <SkeletonPlaceholder.Item
-                width={100}
-                height={20}
-                marginBottom={5}
-              />
-            </SkeletonPlaceholder.Item>
-            <SkeletonPlaceholder.Item marginTop={30} marginHorizontal={20}>
-              <SkeletonPlaceholder.Item
-                width={'100%'}
-                height={50}
-                marginBottom={10}
-              />
-              <SkeletonPlaceholder.Item
-                width={'100%'}
-                height={50}
-                marginBottom={10}
-              />
-              <SkeletonPlaceholder.Item
-                width={'100%'}
-                height={50}
-                marginBottom={10}
-              />
-              <SkeletonPlaceholder.Item
-                width={'100%'}
-                height={50}
-                marginBottom={10}
-              />
-              <SkeletonPlaceholder.Item
-                width={150}
-                height={50}
-                marginBottom={10}
-              />
-            </SkeletonPlaceholder.Item>
-          </SkeletonPlaceholder>
         )}
       </ScrollView>
     </NativeBaseProvider>

@@ -16,7 +16,6 @@ import {
 import TextInput from '../components/TextInput';
 import LinearGradient from 'react-native-linear-gradient';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import { NavigationRouteContext } from '@react-navigation/native';
 
 const DetailSearch = ({navigation, route: {params}}) => {
   const {auth, vehicles, pages} = useSelector(state => state);
@@ -57,12 +56,11 @@ const DetailSearch = ({navigation, route: {params}}) => {
   };
   const getMoreData = () => {
     if (vehicles.page.next !== null) {
-      setPage(page + 1);
       dispatch(
         searchVehicles(
           {
             name,
-            page,
+            page: page + 1,
             location,
             cost_min: minPrice,
             cost_max: maxPrice,
@@ -73,6 +71,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
           false,
         ),
       );
+      setPage(page + 1);
     }
   };
   const config = {

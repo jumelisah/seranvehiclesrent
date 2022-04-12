@@ -76,7 +76,7 @@ const Home = ({navigation}) => {
             onAdd={() => navigation.navigate('AddVehicles')}
           />
           <FlatList
-            data={vehicles?.data} //pass in our data array
+            data={vehicles?.data}
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
