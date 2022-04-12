@@ -8,6 +8,7 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import TitleHeader from '../components/TitleHeader';
@@ -23,6 +24,12 @@ import CameraImg from '../assets/photo-camera.png';
 const Home = ({navigation}) => {
   const {auth, pages, vehicles} = useSelector(state => state);
   const dispatch = useDispatch();
+  const handleData = () => {
+    dispatch(getVehicles());
+    dispatch(getCars());
+    dispatch(getMotorbike());
+    dispatch(getBike());
+  };
   useEffect(() => {
     dispatch(getProfile(auth.token));
   }, [dispatch, auth.token]);
@@ -37,10 +44,10 @@ const Home = ({navigation}) => {
       <TouchableOpacity
         style={styles.coverImage}
         onPress={() => {
-          if (auth.userData.role === 'User') {
-            navigation.navigate('DetailVehicle', {id: item.id});
-          } else {
+          if (auth.userData.role === 'admin') {
             navigation.navigate('Detail Vehicle Admin', {id: item.id});
+          } else {
+            navigation.navigate('DetailVehicle', {id: item.id});
           }
         }}>
         <Image
@@ -52,7 +59,10 @@ const Home = ({navigation}) => {
   };
   return (
     <SafeAreaView style={styles.fullPage}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={pages.isLoading} onRefresh={handleData} />
+        }>
         <Image
           source={require('../assets/home.png')}
           style={styles.headerImage}
@@ -71,18 +81,18 @@ const Home = ({navigation}) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           />
-          <TitleHeader
+          {/* <TitleHeader
             child={'Hot Deals'}
             user={auth.userData?.role}
             resChild={'View more'}
             onPress={() => navigation.navigate('Search')}
-          />
-          <FlatList
+          /> */}
+          {/* <FlatList
             data={vehicles?.cars} //pass in our data array
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-          />
+          /> */}
           <TitleHeader
             child={'Cars'}
             resChild={'View more'}
@@ -102,7 +112,7 @@ const Home = ({navigation}) => {
             onPress={() => navigation.navigate('Motorbike')}
           />
           <FlatList
-            data={vehicles.motorbike} //pass in our data array
+            data={vehicles?.motorbike} //pass in our data array
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}

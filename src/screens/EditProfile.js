@@ -85,7 +85,6 @@ const EditProfile = ({navigation}) => {
       picture,
     };
     dispatch(editProfile(auth.token, data));
-    dispatch(getProfile(auth?.token));
     setModuleOpen(true);
   };
   const Gender = () => {
@@ -274,8 +273,8 @@ const EditProfile = ({navigation}) => {
           <DateTimePicker
             value={new Date(birthdate) || new Date()}
             onChange={(e, dateValue) => {
-              setBirthdate(dateValue);
               setOpen(false);
+              setBirthdate(dateValue);
             }}
             onError={() => setOpen(false)}
             maximumDate={new Date()}

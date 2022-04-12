@@ -14,16 +14,19 @@ import {accountConfirmation} from '../redux/actions/auth';
 import LottieView from 'lottie-react-native';
 import TextInput from '../components/TextInput';
 
-const ConfirmAccount = ({navigation}) => {
+const ConfirmAccount = ({navigation, route: {params}}) => {
   const {auth, pages} = useSelector(state => state);
   const [code, setCode] = useState();
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState(params?.email || '');
   const dispatch = useDispatch();
   useEffect(() => {
+    if (auth.message) {
+      navigation.navigate('Login', {username: email, message: auth.message});
+    }
     dispatch({
       type: 'AUTH_CLEAR',
     });
-  }, [dispatch]);
+  }, [dispatch, navigation, email, auth.message]);
   const confirmAccount = () => {
     const data = {email, code};
     dispatch(accountConfirmation(data));
@@ -52,15 +55,9 @@ const ConfirmAccount = ({navigation}) => {
                   <Text color={'rose.600'}>{auth.errMsg}</Text>
                 </View>
               )}
-              {!auth.isError && auth.message && (
+              {!auth.isError && params.message && (
                 <View backgroundColor={'success.100'} p={5}>
-                  <Text color={'success.600'}>{auth.message}</Text>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('Login', {email})}>
-                    <Text color={'success.600'} underline>
-                      Click here to login
-                    </Text>
-                  </TouchableOpacity>
+                  <Text color={'success.600'}>{params.message}</Text>
                 </View>
               )}
               <View mt={5} pt={5}>

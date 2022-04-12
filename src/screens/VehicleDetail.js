@@ -145,10 +145,8 @@ const VehicleDetail = ({navigation, route: {params}}) => {
                 fontSize={'md'}
                 fontWeight={'bold'}
                 py={2}
-                color={vehicles.vehicle.stock < 1 ? 'red' : 'green.600'}>
-                {`${
-                  vehicles.vehicle.stock < 1 ? 'Not available' : 'Available'
-                }`}
+                color={vehicles.vehicle.qty < 1 ? 'rose.600' : 'green.600'}>
+                {`${vehicles.vehicle.qty < 1 ? 'Not available' : 'Available'}`}
               </Text>
               <View py={1} flexDirection={'row'} alignItems={'center'}>
                 <View

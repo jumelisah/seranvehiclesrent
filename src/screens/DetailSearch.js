@@ -16,6 +16,7 @@ import {
 import TextInput from '../components/TextInput';
 import LinearGradient from 'react-native-linear-gradient';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { NavigationRouteContext } from '@react-navigation/native';
 
 const DetailSearch = ({navigation, route: {params}}) => {
   const {auth, vehicles, pages} = useSelector(state => state);
@@ -41,9 +42,22 @@ const DetailSearch = ({navigation, route: {params}}) => {
       }),
     );
   }, [dispatch, name, location, maxPrice, minPrice, category, sortBy, type]);
+  const handleSearch = () => {
+    dispatch(
+      searchVehicles({
+        name,
+        location,
+        cost_max: maxPrice,
+        cost_min: minPrice,
+        type,
+        category,
+        sortBy,
+      }),
+    );
+  };
   const getMoreData = () => {
     if (vehicles.page.next !== null) {
-      setPage(vehicles.page.currentPage + 1);
+      setPage(page + 1);
       dispatch(
         searchVehicles(
           {
@@ -168,15 +182,15 @@ const DetailSearch = ({navigation, route: {params}}) => {
           />
           <View>
             <TouchableOpacity
-              onPress={() =>
+              onPress={() => {
                 navigation.navigate('FilterSearch', {
                   name,
                   location,
-                  maxPrice,
-                  minPrice,
                   sortBy,
-                })
-              }>
+                  minPrice,
+                  maxPrice,
+                });
+              }}>
               <View
                 flexDirection={'row'}
                 alignItems={'center'}
@@ -199,6 +213,8 @@ const DetailSearch = ({navigation, route: {params}}) => {
             onEndReached={getMoreData}
             onEndReachedThreshold={0.5}
             keyExtractor={(item, index) => String(item.id)}
+            refreshing={pages.isLoading}
+            onRefresh={handleSearch}
           />
         )}
         {!pages.isLoading && vehicles.search.length < 1 && (

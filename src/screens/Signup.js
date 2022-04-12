@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, NativeBaseProvider, Text, View} from 'native-base';
 import {
   StyleSheet,
@@ -20,6 +20,17 @@ const Signup = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (auth.message) {
+      navigation.navigate('Account Confirmation', {
+        message: auth.message,
+        email,
+      });
+    }
+    dispatch({
+      type: 'AUTH_CLEAR',
+    });
+  }, [auth.message, dispatch, navigation, email]);
   const register = () => {
     const data = {username, email, password, confirmPassword: password};
     // if (username === null || email === null || password === null) {

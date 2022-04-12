@@ -12,12 +12,8 @@ import TextInput from '../components/TextInput';
 const Login = ({navigation, route: {params}}) => {
   const {auth} = useSelector(state => state);
   const {pages} = useSelector(state => state);
-  const [username, setUsername] = React.useState(
-    params?.username ? params?.username : params?.email ? params?.email : '',
-  );
-  const [message, setMessage] = useState(
-    params?.message ? params?.message : null,
-  );
+  const [username, setUsername] = useState(params?.username ? params.username : '');
+  const [message, setMessage] = useState(params?.message || null);
   const [password, setPassword] = React.useState('');
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -56,10 +52,10 @@ const Login = ({navigation, route: {params}}) => {
                       </Text>
                     </View>
                   )}
-                  {message && (
+                  {params?.message && (
                     <View bg={'success.100'} rounded={'md'} p={5}>
                       <Text fontSize={'md'} color={'success.700'}>
-                        {message}
+                        {params?.message}
                       </Text>
                     </View>
                   )}

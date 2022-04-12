@@ -16,7 +16,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const MotorbikeList = ({navigation}) => {
-  const {vehicles, pages} = useSelector(state => state);
+  const {vehicles, pages, auth} = useSelector(state => state);
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -36,7 +36,13 @@ const MotorbikeList = ({navigation}) => {
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('DetailVehicle', {id: item.id})}>
+        onPress={() => {
+          if (auth.userData.role === 'admin') {
+            navigation.navigate('Detail Vehicle Admin', {id: item.id});
+          } else {
+            navigation.navigate('DetailVehicle', {id: item.id});
+          }
+        }}>
         <View
           mx={5}
           pt={5}

@@ -186,7 +186,7 @@ const AddVehicles = ({navigation}) => {
                     <Select.Item label="Car" value={1} />
                     <Select.Item label="Motrbike" value={2} />
                     <Select.Item label="Bike" value={3} />
-                    {/* <Select.Item label="+ Add category" value={4} /> */}
+                    {/* <Select.Item label="+ Add category" value={100} /> */}
                   </Select>
                   <Text>Type</Text>
                   <Select

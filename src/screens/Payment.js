@@ -69,9 +69,9 @@ const Payment = ({navigation, route: {params}}) => {
       !address ||
       !cardNumber
     ) {
-      setFormError('Please input the fields');
-      alert(recipient);
+      setFormError('Please fill in all the fields');
     } else {
+      setFormError();
       dispatch(addTransaction(auth.token, data));
       await setStep(2);
     }
@@ -175,6 +175,11 @@ const Payment = ({navigation, route: {params}}) => {
             )}
             {step === 1 && (
               <View p={5}>
+                {formError && (
+                  <View p={5} backgroundColor={'rose.100'}>
+                    <Text color={'rose.600'}>{formError}</Text>
+                  </View>
+                )}
                 <TextInput
                   value={cardNumber}
                   placeholder={'ID Card number'}

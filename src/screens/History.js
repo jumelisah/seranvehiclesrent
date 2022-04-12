@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  RefreshControl,
 } from 'react-native';
 import {NativeBaseProvider, Image, View, Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
@@ -20,6 +21,7 @@ import LottieView from 'lottie-react-native';
 
 const History = ({navigation}) => {
   const {auth, history, pages} = useSelector(state => state);
+  const [loadingIcon, setLoadingIcon] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     if (auth.userData.role === 'admin') {
@@ -121,11 +123,29 @@ const History = ({navigation}) => {
               </Text>
             </View>
           </View> */}
+          {loadingIcon && (
+            <View width={'100%'}>
+              <LottieView
+                source={require('../assets/80729-blue-loading.json')}
+                autoPlay
+                loop
+                style={styles.lottie}
+              />
+            </View>
+          )}
           {!pages.isLoading && history.data.length > 0 && (
             <FlatList
               data={history.data}
               renderItem={renderItem}
               showsHorizontalScrollIndicator={false}
+              // refreshControl={
+              //   <RefreshControl
+              //     refreshing={() => setLoadingIcon(true)}
+              //     onRefresh={() => dispatch(getHistoryUser(auth.token))}
+              //   />
+              // }
+              refreshing={loadingIcon}
+              onRefresh={() => dispatch(getHistoryUser(auth.token))}
             />
           )}
           {history.data.length < 1 && (

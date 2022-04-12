@@ -72,7 +72,7 @@ const FilterSearch = ({navigation, route: {params}}) => {
                   </View>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowInputLocation(true)}>
+              {/* <TouchableOpacity onPress={() => setShowInputLocation(true)}>
                 <View
                   flexDirection={'row'}
                   justifyContent={'space-between'}
@@ -85,7 +85,7 @@ const FilterSearch = ({navigation, route: {params}}) => {
                     <Icon name="chevron-right" size={22} />
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity onPress={() => setShowInputPrice(true)}>
                 <View
                   flexDirection={'row'}
@@ -100,7 +100,7 @@ const FilterSearch = ({navigation, route: {params}}) => {
                   </View>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowInputPrice(true)}>
+              {/* <TouchableOpacity onPress={() => setShowInputPrice(true)}>
                 <View
                   flexDirection={'row'}
                   justifyContent={'space-between'}
@@ -113,8 +113,8 @@ const FilterSearch = ({navigation, route: {params}}) => {
                     <Icon name="chevron-right" size={22} />
                   </View>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowInputLocation(true)}>
+              </TouchableOpacity> */}
+              {/* <TouchableOpacity onPress={() => setShowInputLocation(true)}>
                 <View
                   flexDirection={'row'}
                   justifyContent={'space-between'}
@@ -133,7 +133,7 @@ const FilterSearch = ({navigation, route: {params}}) => {
                     <Icon name="chevron-right" size={22} />
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <View
                 p={5}
                 flexDirection={'row'}
