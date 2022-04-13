@@ -85,7 +85,7 @@ const DetailVehicleAdmin = ({navigation, route: {params}}) => {
               <SkeletonPlaceholder.Item width={'100%'} height={80} />
             </SkeletonPlaceholder>
           )}
-          {!pages.isLoading && (
+          {!pages.isLoading && vehicles.vehicle.cost && (
             <ScrollView>
               <View width={'100%'} position={'relative'} height={'100%'}>
                 <Image
@@ -114,7 +114,7 @@ const DetailVehicleAdmin = ({navigation, route: {params}}) => {
                     {vehicles.vehicle.name}
                   </Text>
                   <Text fontSize={'2xl'} fontWeight={'bold'}>
-                    {changeCurrency(vehicles.vehicle?.cost)}/day
+                    {changeCurrency(vehicles.vehicle.cost)}/day
                   </Text>
                   <Text fontSize={'md'} pt={3}>
                     Max for {vehicles.vehicle.seat} person

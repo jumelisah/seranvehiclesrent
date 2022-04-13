@@ -1,6 +1,6 @@
 import axios from 'axios';
-// http://192.168.0.193:8000/
-// https://fw5-backend-beginner.herokuapp.com/
+// http://192.168.0.193:8000
+// https://fw5-backend-beginner.herokuapp.com
 const http = token => {
   const headers = {};
   if (token) {
@@ -8,7 +8,7 @@ const http = token => {
   }
 
   return axios.create({
-    baseURL: 'https://fw5-backend-beginner.herokuapp.com/',
+    baseURL: 'https://fw5-backend-beginner.herokuapp.com',
     headers,
   });
 };

@@ -1,9 +1,8 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FaIcon from 'react-native-vector-icons/FontAwesome5';
 import FeIcon from 'react-native-vector-icons/Feather';
-import {useState} from 'react/cjs/react.development';
 import LinearGradient from 'react-native-linear-gradient';
 import Button from '../components/Button';
 import {Image, NativeBaseProvider, Text, View, Box} from 'native-base';
@@ -235,8 +234,8 @@ const VehicleDetail = ({navigation, route: {params}}) => {
                   navigation.navigate('Payment', {
                     id: vehicles.vehicle.id,
                     qty,
-                    rentDate: ChangeDate(date),
-                    returnDate: new Date(date.setDate(date.getDate() + days)),
+                    rentDate: date,
+                    returnDate: date,
                     days,
                   })
                 }>

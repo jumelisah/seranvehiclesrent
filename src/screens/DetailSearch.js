@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useState} from 'react/cjs/react.development';
 import {searchVehicles} from '../redux/actions/vehicles';
 import {useDispatch, useSelector} from 'react-redux';
 import MiIcon from 'react-native-vector-icons/MaterialIcons';

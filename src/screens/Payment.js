@@ -23,6 +23,7 @@ import {ChangeDate} from '../helpers/changeDate';
 import {addTransaction, changeTransaction} from '../redux/actions/transaction';
 import LottieView from 'lottie-react-native';
 import {dateToString} from '../helpers/dateToString';
+import PushNotification from 'react-native-push-notification';
 
 const Payment = ({navigation, route: {params}}) => {
   const {auth, pages, transactions} = useSelector(state => state);
@@ -30,8 +31,16 @@ const Payment = ({navigation, route: {params}}) => {
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('Prepayment (no tax)');
   const price = params.qty * vehicles.vehicle.cost;
-  const [rentDate, setRentDate] = useState(params.rentDate);
-  const [returnDate, setReturnDate] = useState(ChangeDate(params.returnDate));
+  const [rentDate, setRentDate] = useState(ChangeDate(params.rentDate));
+  const [returnDate, setReturnDate] = useState(
+    ChangeDate(
+      new Date(
+        new Date(params.returnDate).setDate(
+          new Date(params.returnDate).getDate() + parseInt(params.days, 10),
+        ),
+      ),
+    ),
+  );
   const [recipient, setRecipient] = useState();
   const [firstName, setFirstName] = useState(auth.userData.name);
   const [lastName, setLastName] = useState();
@@ -42,8 +51,16 @@ const Payment = ({navigation, route: {params}}) => {
   const [formError, setFormError] = useState();
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log(returnDate);
     dispatch(getVehicleDetail(params.id));
-  }, [dispatch, params.id]);
+  }, [dispatch, params.id, returnDate]);
+  const paymentNotif = () => {
+    PushNotification.localNotification({
+      channelId: 'payment',
+      title: 'Payment Notification',
+      message: `Hi, ${auth.userData.name}! Thank you for hiring our services. Make sure to finish your payment within 2 hours so we can proceed your order`,
+    });
+  };
   const onReservation = async () => {
     if (lastName) {
       setRecipient(`${firstName} ${lastName}`);
@@ -453,7 +470,12 @@ const Payment = ({navigation, route: {params}}) => {
                 </View>
               )}
             {step === 2 && !pages.isLoading && !transactions.isError && (
-              <Button variant={'dark'} onPress={() => setStep(3)}>
+              <Button
+                variant={'dark'}
+                onPress={() => {
+                  paymentNotif();
+                  setStep(3);
+                }}>
                 Get Payment Code
               </Button>
             )}

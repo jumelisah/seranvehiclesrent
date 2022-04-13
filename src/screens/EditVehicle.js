@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FaIcon from 'react-native-vector-icons/FontAwesome5';
-import {useState} from 'react/cjs/react.development';
 import Button from '../components/Button';
 import Counter from '../components/Counter';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -25,7 +24,7 @@ const EditVehicle = ({navigation, route: {params}}) => {
   const {auth, pages} = useSelector(state => state);
   const {vehicles} = useSelector(state => state);
   const [name, setName] = useState(vehicles.vehicle.name);
-  const [price, setPrice] = useState(vehicles.vehicle.cost.toString());
+  const [price, setPrice] = useState(String(vehicles.vehicle.cost));
   const [location, setLocation] = useState(vehicles.vehicle.location);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [available, setAvailable] = useState(true);

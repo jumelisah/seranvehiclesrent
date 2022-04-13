@@ -91,15 +91,7 @@ const History = ({navigation}) => {
               borderRadius={'md'}>
               <View>
                 <TouchableOpacity
-                  onPress={id => {
-                    if (auth.userData.role === 'admin') {
-                      dispatch(deleteHistoryAdmin(auth.token, item.id));
-                      setChoosenId();
-                    } else {
-                      dispatch(deleteHistoryUser(auth.token, item.id));
-                      setChoosenId();
-                    }
-                  }}>
+                  onPress={() => navigation.navigate('Transaction Detail')}>
                   <View
                     flexDirection={'row'}
                     alignItems={'center'}
@@ -107,8 +99,10 @@ const History = ({navigation}) => {
                     px={4}
                     borderRadius={'xl'}
                     borderBottomWidth={0.2}>
-                    <MiIcon name="cancel" size={25} />
-                    <Text pl={3}>Cancel transaction</Text>
+                    <View width={28}>
+                      <Icon name="info-circle" size={25} />
+                    </View>
+                    <Text>Transaction detail</Text>
                   </View>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -127,8 +121,10 @@ const History = ({navigation}) => {
                     py={2}
                     px={4}
                     borderRadius={'xl'}>
-                    <Icon name="trash-o" size={25} />
-                    <Text pl={3}>Delete history</Text>
+                    <View width={28}>
+                      <Icon name="trash-o" size={25} />
+                    </View>
+                    <Text>Delete history</Text>
                   </View>
                 </TouchableOpacity>
               </View>

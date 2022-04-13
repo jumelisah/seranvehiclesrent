@@ -210,6 +210,9 @@ export const editProfile = (token, userData) => {
         type: 'AUTH_ERROR',
         payload: e.response.data.message,
       });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
     }
   };
 };

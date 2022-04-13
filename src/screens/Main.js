@@ -27,6 +27,7 @@ import CarsList from './Cars';
 import MotorbikeList from './Motorbike';
 import BikeList from './Bike';
 import FavoriteList from './FavoriteList';
+import TransactionDetail from './TransactionDetail';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -153,6 +154,11 @@ const MainStackScreen = () => {
       <MainStack.Screen
         name="Payment"
         component={Payment}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="Transaction Detail"
+        component={TransactionDetail}
         options={{headerShown: false}}
       />
       <MainStack.Screen
