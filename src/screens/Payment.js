@@ -31,7 +31,9 @@ const Payment = ({navigation, route: {params}}) => {
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('Prepayment (no tax)');
   const price = params.qty * vehicles.vehicle.cost;
-  const [rentDate, setRentDate] = useState(ChangeDate(params.rentDate));
+  const [rentDate, setRentDate] = useState(
+    ChangeDate(new Date(params.rentDate)),
+  );
   const [returnDate, setReturnDate] = useState(
     ChangeDate(
       new Date(
@@ -41,7 +43,7 @@ const Payment = ({navigation, route: {params}}) => {
       ),
     ),
   );
-  const [recipient, setRecipient] = useState();
+  const [recipient, setRecipient] = useState(auth.userData.name);
   const [firstName, setFirstName] = useState(auth.userData.name);
   const [lastName, setLastName] = useState();
   const [mobilePhone, setMobilePhone] = useState(auth.userData.phone_number);
@@ -483,8 +485,8 @@ const Payment = ({navigation, route: {params}}) => {
               <Button
                 variant={'dark'}
                 onPress={() => {
-                  setStep(4);
                   dispatch(changeTransaction(auth.token, transactions.data.id));
+                  setStep(4);
                 }}>
                 Finish Payment
               </Button>

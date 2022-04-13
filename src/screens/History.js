@@ -39,7 +39,7 @@ const History = ({navigation}) => {
     const yearA = new Date(item.rent_date).getFullYear();
     const yearB = new Date(item.return_date).getFullYear();
     return (
-      <View p={5}>
+      <View px={5} pt={5}>
         <View
           py={3}
           flexDirection={'row'}
