@@ -78,6 +78,7 @@ const vehicles = (state = initialState, action) => {
       return {...state};
     }
     case 'VEHICLES_CLEAR': {
+      state.vehicle = {};
       state.message = null;
       state.isError = false;
       state.errMsg = null;

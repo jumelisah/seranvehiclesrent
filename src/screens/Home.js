@@ -68,19 +68,23 @@ const Home = ({navigation}) => {
           style={styles.headerImage}
         />
         <View style={styles.content}>
-          <TitleHeader
-            child={'Recommended'}
-            resChild={'View more'}
-            user={auth.userData?.role}
-            onPress={() => navigation.navigate('Search')}
-            onAdd={() => navigation.navigate('AddVehicles')}
-          />
-          <FlatList
-            data={vehicles?.data}
-            renderItem={renderItem}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          />
+          {vehicles.data.length > 0 && (
+            <View>
+              <TitleHeader
+                child={'Recommended'}
+                resChild={'View more'}
+                user={auth.userData?.role}
+                onPress={() => navigation.navigate('Search')}
+                onAdd={() => navigation.navigate('AddVehicles')}
+              />
+              <FlatList
+                data={vehicles?.data}
+                renderItem={renderItem}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          )}
           {/* <TitleHeader
             child={'Hot Deals'}
             user={auth.userData?.role}
@@ -105,18 +109,22 @@ const Home = ({navigation}) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           />
-          <TitleHeader
-            child={'Motorbike'}
-            resChild={'View more'}
-            user={auth.userData?.role}
-            onPress={() => navigation.navigate('Motorbike')}
-          />
-          <FlatList
-            data={vehicles?.motorbike} //pass in our data array
-            renderItem={renderItem}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          />
+          {vehicles.motorbike.length > 0 && (
+            <View>
+              <TitleHeader
+                child={'Motorbike'}
+                resChild={'View more'}
+                user={auth.userData?.role}
+                onPress={() => navigation.navigate('Motorbike')}
+              />
+              <FlatList
+                data={vehicles?.motorbike} //pass in our data array
+                renderItem={renderItem}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          )}
           {vehicles.bike.length > 0 && (
             <View>
               <TitleHeader

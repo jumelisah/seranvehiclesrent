@@ -16,6 +16,8 @@ import {
 import TextInput from '../components/TextInput';
 import LinearGradient from 'react-native-linear-gradient';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import defaultImg from '../assets/photo-camera.png';
+import Loading from '../components/Loading';
 
 const DetailSearch = ({navigation, route: {params}}) => {
   const {auth, vehicles, pages} = useSelector(state => state);
@@ -26,7 +28,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
   const maxPrice = params?.cost_max || 1000000;
   const sortBy = params?.sortBy || 'id+DESC';
   const type = params?.type || '';
-  const [page, setPage] = useState(1);
+  const [imgSrc, setImgSrc] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(
@@ -60,7 +62,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
         searchVehicles(
           {
             name,
-            page: page + 1,
+            page: vehicles.page.currentPage + 1,
             location,
             cost_min: minPrice,
             cost_max: maxPrice,
@@ -71,7 +73,6 @@ const DetailSearch = ({navigation, route: {params}}) => {
           false,
         ),
       );
-      setPage(page + 1);
     }
   };
   const config = {
@@ -79,14 +80,27 @@ const DetailSearch = ({navigation, route: {params}}) => {
       'linear-gradient': LinearGradient,
     },
   };
+  const handleErrImg = () => {
+    setImgSrc(!imgSrc);
+  };
+  const handleLoad = () => {
+    return (
+      <View>
+        <Text>loading ...</Text>
+      </View>
+    );
+  };
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          if (auth.userData.role === 'User') {
-            navigation.navigate('DetailVehicle', {id: item.id});
-          } else {
+          if (
+            auth.userData.role === 'admin' ||
+            auth.userData.role === 'Admin'
+          ) {
             navigation.navigate('Detail Vehicle Admin', {id: item.id});
+          } else {
+            navigation.navigate('DetailVehicle', {id: item.id});
           }
         }}>
         <View
@@ -103,6 +117,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
                 width={120}
                 height={100}
                 borderRadius={'xl'}
+                defaultSource={require('../assets/photo-camera.png')}
               />
               <View height={20} position={'absolute'} right={-20} top={-15}>
                 <Box
@@ -214,6 +229,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
             keyExtractor={(item, index) => String(item.id)}
             refreshing={pages.isLoading}
             onRefresh={handleSearch}
+            // ListFooterComponent={handleLoad}
           />
         )}
         {!pages.isLoading && vehicles.search.length < 1 && (

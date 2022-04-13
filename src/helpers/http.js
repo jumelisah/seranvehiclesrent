@@ -8,7 +8,7 @@ const http = token => {
   }
 
   return axios.create({
-    baseURL: 'http://192.168.0.193:8000/',
+    baseURL: 'https://fw5-backend-beginner.herokuapp.com/',
     headers,
   });
 };

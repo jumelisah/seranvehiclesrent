@@ -33,6 +33,9 @@ export const getVehicleDetail = id => {
       dispatch({
         type: 'PAGES_LOADING',
       });
+      dispatch({
+        type: 'VEHICLES_CLEAR',
+      });
       const {data} = await http().get(`/vehicles/${id}`);
       dispatch({
         type: 'GET_VEHICLE_DETAIL',

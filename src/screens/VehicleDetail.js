@@ -24,9 +24,12 @@ const VehicleDetail = ({navigation, route: {params}}) => {
   const [open, setOpen] = useState(false);
   const today = new Date();
   const [date, setDate] = useState(today.setDate(today.getDate() + 1));
-  const [days, setDays] = useState(1);
+  const [days, setDays] = useState('1');
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch({
+      type: 'VEHICLES_CLEAR',
+    });
     dispatch({
       type: 'GET_FAVORITES',
       payload: favorites.data.find(item => {
@@ -35,11 +38,11 @@ const VehicleDetail = ({navigation, route: {params}}) => {
         }
       }),
     });
-    if (favorites.isFavorite !== undefined) {
-      setLove(true);
-    } else {
-      setLove(false);
-    }
+    // if (favorites.isFavorite !== undefined) {
+    //   setLove(true);
+    // } else {
+    //   setLove(false);
+    // }
     dispatch(getVehicleDetail(params.id));
   }, [dispatch, params.id, favorites.data, favorites.isFavorite]);
   const config = {
@@ -70,10 +73,10 @@ const VehicleDetail = ({navigation, route: {params}}) => {
   return (
     <NativeBaseProvider config={config}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {!pages.isLoading && (
+        {!pages.isLoading && vehicles.vehicle.id && (
           <View width={'100%'} position={'relative'} height={'100%'}>
             <Image
-              source={{uri: vehicles.vehicle?.image}}
+              source={{uri: vehicles.vehicle.image}}
               alt={vehicles.vehicle.name}
               size={'2xl'}
               width={'100%'}

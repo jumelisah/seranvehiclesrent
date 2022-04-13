@@ -31,43 +31,36 @@ const FavoriteList = ({navigation}) => {
   const [choosenId, setChoosenId] = React.useState();
   const renderItem = ({item}) => {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          if (choosenId !== item.id) {
-            setChoosenId(item.id);
-          } else {
-            setChoosenId();
-          }
-        }}>
-        <View
-          ml={choosenId === item.id ? -50 : 5}
-          mr={5}
-          py={3}
-          flexDirection={'row'}
-          justifyContent={'space-between'}
-          alignItems={'center'}>
-          <View flexDirection={'row'}>
-            <Image
-              source={{uri: item.image}}
-              alt={item.vehicle}
-              width={120}
-              height={100}
-              borderRadius={'xl'}
-            />
-            <View ml={5}>
-              <Text fontWeight={'bold'}>{item.name}</Text>
-              <Text fontWeight={'bold'}>Cost: {item.cost}</Text>
-              <Text
-                fontWeight={'bold'}
-                color={item.available === 1 ? 'success.600' : 'rose.600'}>
-                {item.available === 1 ? 'Available' : 'Not available'}
-              </Text>
-              <Text>{item.location}</Text>
-            </View>
+      <View
+        ml={choosenId === item.id ? -50 : 5}
+        mr={5}
+        py={3}
+        flexDirection={'row'}
+        justifyContent={'space-between'}
+        alignItems={'center'}>
+        <View flexDirection={'row'}>
+          <Image
+            source={{uri: item.image}}
+            alt={item.name}
+            width={120}
+            height={100}
+            borderRadius={'xl'}
+          />
+          <View ml={5}>
+            <Text fontWeight={'bold'}>{item.name}</Text>
+            <Text fontWeight={'bold'}>Cost: {item.cost}</Text>
+            <Text
+              fontWeight={'bold'}
+              color={item.available === 1 ? 'success.600' : 'rose.600'}>
+              {item.available === 1 ? 'Available' : 'Not available'}
+            </Text>
+            <Text>{item.location}</Text>
           </View>
-          <Icon name="heart" size={25} />
         </View>
-      </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon name="heart" size={25} color={'red'} />
+        </TouchableOpacity>
+      </View>
     );
   };
   return (

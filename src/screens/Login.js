@@ -12,7 +12,7 @@ import TextInput from '../components/TextInput';
 const Login = ({navigation, route: {params}}) => {
   const {auth} = useSelector(state => state);
   const {pages} = useSelector(state => state);
-  const [username, setUsername] = useState(params?.username ? params.username : '');
+  const [username, setUsername] = useState('');
   const [message, setMessage] = useState(params?.message || null);
   const [password, setPassword] = React.useState('');
   const dispatch = useDispatch();
