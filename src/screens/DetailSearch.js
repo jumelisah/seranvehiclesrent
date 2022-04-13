@@ -17,7 +17,7 @@ import TextInput from '../components/TextInput';
 import LinearGradient from 'react-native-linear-gradient';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import defaultImg from '../assets/photo-camera.png';
-import Loading from '../components/Loading';
+import changeCurrency from '../helpers/changeCurrency';
 
 const DetailSearch = ({navigation, route: {params}}) => {
   const {auth, vehicles, pages} = useSelector(state => state);
@@ -28,7 +28,6 @@ const DetailSearch = ({navigation, route: {params}}) => {
   const maxPrice = params?.cost_max || 1000000;
   const sortBy = params?.sortBy || 'id+DESC';
   const type = params?.type || '';
-  const [imgSrc, setImgSrc] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(
@@ -80,16 +79,6 @@ const DetailSearch = ({navigation, route: {params}}) => {
       'linear-gradient': LinearGradient,
     },
   };
-  const handleErrImg = () => {
-    setImgSrc(!imgSrc);
-  };
-  const handleLoad = () => {
-    return (
-      <View>
-        <Text>loading ...</Text>
-      </View>
-    );
-  };
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -117,7 +106,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
                 width={120}
                 height={100}
                 borderRadius={'xl'}
-                defaultSource={require('../assets/photo-camera.png')}
+                defaultSource={defaultImg}
               />
               <View height={20} position={'absolute'} right={-20} top={-15}>
                 <Box
@@ -159,9 +148,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
                   ? `${item.qty} vehicles left`
                   : 'Not available'}
               </Text>
-              <Text fontWeight={'bold'}>
-                Rp. {item.cost.toLocaleString('id-ID')}/day
-              </Text>
+              <Text fontWeight={'bold'}>{changeCurrency(item.cost)}/day</Text>
               <Text fontWeight={'bold'} color={'success.600'}>
                 {item.status}
               </Text>

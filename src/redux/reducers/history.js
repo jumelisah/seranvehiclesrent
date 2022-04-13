@@ -3,6 +3,7 @@ const initialState = {
   message: null,
   isError: false,
   errMsg: null,
+  removedHistory: [],
 };
 
 const history = (state = initialState, action) => {
@@ -27,6 +28,10 @@ const history = (state = initialState, action) => {
     }
     case 'HISTORY_CLEAR': {
       state = initialState;
+      return {...state};
+    }
+    case 'REMOVE_HISTORY': {
+      state.removedHistory = state.data.splice(action.payload, 1);
       return {...state};
     }
     default:

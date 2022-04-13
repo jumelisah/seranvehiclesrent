@@ -11,6 +11,7 @@ import Counter from '../components/Counter';
 import Button from '../components/Button';
 import Rating from '../components/Rating';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import changeCurrency from '../helpers/changeCurrency';
 
 const DetailVehicleAdmin = ({navigation, route: {params}}) => {
   const {vehicles, pages} = useSelector(state => state);
@@ -113,7 +114,7 @@ const DetailVehicleAdmin = ({navigation, route: {params}}) => {
                     {vehicles.vehicle.name}
                   </Text>
                   <Text fontSize={'2xl'} fontWeight={'bold'}>
-                    Rp {vehicles.vehicle?.cost}/day
+                    {changeCurrency(vehicles.vehicle?.cost)}/day
                   </Text>
                   <Text fontSize={'md'} pt={3}>
                     Max for {vehicles.vehicle.seat} person

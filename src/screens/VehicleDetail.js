@@ -14,6 +14,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {getVehicleDetail} from '../redux/actions/vehicles';
 import Counter from '../components/Counter';
 import TextInput from '../components/TextInput';
+import changeCurrency from '../helpers/changeCurrency';
 
 const VehicleDetail = ({navigation, route: {params}}) => {
   const {favorites, pages, vehicles} = useSelector(state => state);
@@ -63,7 +64,6 @@ const VehicleDetail = ({navigation, route: {params}}) => {
       });
     } else {
       const index = favorites.data.findIndex(x => x.id === params.id);
-      console.log(index);
       dispatch({
         type: 'REMOVE_FAVORITES',
         payload: index,
@@ -136,7 +136,7 @@ const VehicleDetail = ({navigation, route: {params}}) => {
                 {vehicles.vehicle.name}
               </Text>
               <Text fontSize={'2xl'} fontWeight={'bold'}>
-                Rp {vehicles.vehicle.cost}/day
+                {changeCurrency(vehicles.vehicle.cost)}/day
               </Text>
               <Text fontSize={'md'} pt={3}>
                 Max for {vehicles.vehicle.seat} person

@@ -17,35 +17,30 @@ import {
 import {dateToString} from '../helpers/dateToString';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MiIcon from 'react-native-vector-icons/MaterialIcons';
+import EnIcon from 'react-native-vector-icons/Entypo';
 import LottieView from 'lottie-react-native';
+import changeCurrency from '../helpers/changeCurrency';
 
 const History = ({navigation}) => {
   const {auth, history, pages} = useSelector(state => state);
   const [loadingIcon, setLoadingIcon] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (auth.userData.role === 'admin') {
-      dispatch(getHistoryAdmin(auth.token));
-    } else {
-      dispatch(getHistoryUser(auth.token));
+    if (history.data.length < 1) {
+      if (auth.userData.role === 'admin') {
+        dispatch(getHistoryAdmin(auth.token));
+      } else {
+        dispatch(getHistoryUser(auth.token));
+      }
     }
-  }, [dispatch, auth.token, auth.userData.role]);
+  }, [dispatch, auth.token, auth.userData.role, history.data]);
   const [choosenId, setChoosenId] = React.useState();
   const renderItem = ({item}) => {
     const yearA = new Date(item.rent_date).getFullYear();
     const yearB = new Date(item.return_date).getFullYear();
     return (
-      <TouchableOpacity
-        onPress={() => {
-          if (choosenId !== item.id) {
-            setChoosenId(item.id);
-          } else {
-            setChoosenId();
-          }
-        }}>
+      <View p={5}>
         <View
-          ml={choosenId === item.id ? -50 : 5}
-          mr={5}
           py={3}
           flexDirection={'row'}
           justifyContent={'space-between'}
@@ -58,7 +53,7 @@ const History = ({navigation}) => {
               height={100}
               borderRadius={'xl'}
             />
-            <View ml={5}>
+            <View ml={3}>
               <Text fontWeight={'bold'}>{item.vehicle}</Text>
               <Text>
                 {yearA === yearB
@@ -69,34 +64,78 @@ const History = ({navigation}) => {
                       item.return_date,
                     )} ${yearB}`}
               </Text>
-              <Text fontWeight={'bold'}>Prepayment: {item.cost}</Text>
+              <Text fontWeight={'bold'}>
+                Prepayment: {changeCurrency(item.cost)}
+              </Text>
               <Text fontWeight={'bold'} color={'success.600'}>
                 {item.status}
               </Text>
             </View>
           </View>
+          <TouchableOpacity
+            onPress={() => {
+              if (choosenId !== item.id) {
+                setChoosenId(item.id);
+              } else {
+                setChoosenId();
+              }
+            }}>
+            <EnIcon name="dots-three-vertical" size={25} />
+          </TouchableOpacity>
           {choosenId === item.id && (
-            <TouchableOpacity
-              onPress={async id => {
-                if (auth.userData.role === 'admin') {
-                  dispatch(deleteHistoryAdmin(auth.token, item.id));
-                  await dispatch(getHistoryAdmin(auth.token));
-                } else {
-                  dispatch(deleteHistoryUser(auth.token, item.id));
-                  await dispatch(getHistoryUser(auth.token));
-                }
-              }}>
-              <View
-                backgroundColor={'rgb(154, 208, 236)'}
-                py={2}
-                px={4}
-                borderRadius={'xl'}>
-                <Icon name="trash-o" size={25} />
+            <View
+              position={'absolute'}
+              bottom={0}
+              right={5}
+              backgroundColor={'white'}
+              borderRadius={'md'}>
+              <View>
+                <TouchableOpacity
+                  onPress={async id => {
+                    if (auth.userData.role === 'admin') {
+                      dispatch(deleteHistoryAdmin(auth.token, item.id));
+                      await dispatch(getHistoryAdmin(auth.token));
+                    } else {
+                      dispatch(deleteHistoryUser(auth.token, item.id));
+                      await dispatch(getHistoryUser(auth.token));
+                    }
+                  }}>
+                  <View
+                    flexDirection={'row'}
+                    alignItems={'center'}
+                    py={2}
+                    px={4}
+                    borderRadius={'xl'}
+                    borderBottomWidth={0.2}>
+                    <MiIcon name="cancel" size={25} />
+                    <Text pl={3}>Cancel transaction</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={async id => {
+                    if (auth.userData.role === 'admin') {
+                      dispatch(deleteHistoryAdmin(auth.token, item.id));
+                      await dispatch(getHistoryAdmin(auth.token));
+                    } else {
+                      dispatch(deleteHistoryUser(auth.token, item.id));
+                      await dispatch(getHistoryUser(auth.token));
+                    }
+                  }}>
+                  <View
+                    flexDirection={'row'}
+                    alignItems={'center'}
+                    py={2}
+                    px={4}
+                    borderRadius={'xl'}>
+                    <Icon name="trash-o" size={25} />
+                    <Text pl={3}>Delete history</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
+            </View>
           )}
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
   return (

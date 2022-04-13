@@ -97,18 +97,22 @@ const Home = ({navigation}) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           /> */}
-          <TitleHeader
-            child={'Cars'}
-            resChild={'View more'}
-            user={auth.userData?.role}
-            onPress={() => navigation.navigate('Cars')}
-          />
-          <FlatList
-            data={vehicles?.cars} //pass in our data array
-            renderItem={renderItem}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          />
+          {vehicles.cars.length > 0 && (
+            <View>
+              <TitleHeader
+                child={'Cars'}
+                resChild={'View more'}
+                user={auth.userData?.role}
+                onPress={() => navigation.navigate('Cars')}
+              />
+              <FlatList
+                data={vehicles?.cars} //pass in our data array
+                renderItem={renderItem}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          )}
           {vehicles.motorbike.length > 0 && (
             <View>
               <TitleHeader

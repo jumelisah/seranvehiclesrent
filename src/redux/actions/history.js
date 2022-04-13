@@ -53,7 +53,7 @@ export const deleteHistoryUser = (token, id) => {
   return async dispatch => {
     try {
       dispatch({
-        type: 'PAGES_LOADING',
+        type: 'REMOVE_HISTORY',
       });
       dispatch({
         type: 'HISTORY_CLEAR',
@@ -62,9 +62,6 @@ export const deleteHistoryUser = (token, id) => {
       dispatch({
         type: 'DELETE_HISTORY_USER',
         payload: data.message,
-      });
-      dispatch({
-        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
@@ -79,7 +76,7 @@ export const deleteHistoryAdmin = (token, id) => {
   return async dispatch => {
     try {
       dispatch({
-        type: 'PAGES_LOADING',
+        type: 'REMOVE_HISTORY',
       });
       dispatch({
         type: 'HISTORY_CLEAR',
@@ -88,9 +85,6 @@ export const deleteHistoryAdmin = (token, id) => {
       dispatch({
         type: 'DELETE_HISTORY_USER',
         payload: data.message,
-      });
-      dispatch({
-        type: 'PAGES_LOADING',
       });
     } catch (e) {
       dispatch({
