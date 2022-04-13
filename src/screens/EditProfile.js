@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {useState} from 'react/cjs/react.development';
 import Button from '../components/Button';
 import {Image, NativeBaseProvider, Radio, Stack, Text, View} from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
