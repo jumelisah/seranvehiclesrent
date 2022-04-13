@@ -12,7 +12,6 @@ const favorites = (state = initialState, action) => {
     }
     case 'ADD_FAVORITES': {
       state.data = [...state.data, action.payload];
-      state.data = state.data.reverse();
       return {...state};
     }
     case 'REMOVE_FAVORITES': {

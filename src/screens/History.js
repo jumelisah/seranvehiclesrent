@@ -91,13 +91,13 @@ const History = ({navigation}) => {
               borderRadius={'md'}>
               <View>
                 <TouchableOpacity
-                  onPress={async id => {
+                  onPress={id => {
                     if (auth.userData.role === 'admin') {
                       dispatch(deleteHistoryAdmin(auth.token, item.id));
-                      await dispatch(getHistoryAdmin(auth.token));
+                      setChoosenId();
                     } else {
                       dispatch(deleteHistoryUser(auth.token, item.id));
-                      await dispatch(getHistoryUser(auth.token));
+                      setChoosenId();
                     }
                   }}>
                   <View
