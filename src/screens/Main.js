@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -28,6 +28,7 @@ import MotorbikeList from './Motorbike';
 import BikeList from './Bike';
 import FavoriteList from './FavoriteList';
 import TransactionDetail from './TransactionDetail';
+import SplashScreen from 'react-native-splash-screen'
 
 const Stack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -217,6 +218,9 @@ const MainStackScreen = () => {
 
 const Main = () => {
   const {auth} = useSelector(state => state);
+  // useEffect(() => {
+  //   SplashScreen.hide();
+  // });
   return (
     <NavigationContainer>
       <Stack.Navigator>

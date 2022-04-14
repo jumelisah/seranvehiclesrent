@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res"
+    "build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "splash-screen": "react-native link react-native-splash-screen"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.3",
@@ -40,6 +41,7 @@
     "react-native-screens": "^3.13.1",
     "react-native-skeleton-content-nonexpo": "^1.0.13",
     "react-native-skeleton-placeholder": "^5.0.0",
+    "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^12.3.0",
     "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^9.1.0",
