@@ -31,9 +31,11 @@ const Payment = ({navigation, route: {params}}) => {
   const [step, setStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('Prepayment (no tax)');
   const price = params.qty * vehicles.vehicle.cost;
+  // eslint-disable-next-line no-unused-vars
   const [rentDate, setRentDate] = useState(
     ChangeDate(new Date(params.rentDate)),
   );
+  // eslint-disable-next-line no-unused-vars
   const [returnDate, setReturnDate] = useState(
     ChangeDate(
       new Date(

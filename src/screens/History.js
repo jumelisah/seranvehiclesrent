@@ -4,7 +4,6 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  RefreshControl,
 } from 'react-native';
 import {NativeBaseProvider, Image, View, Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
@@ -20,6 +19,7 @@ import MiIcon from 'react-native-vector-icons/MaterialIcons';
 import EnIcon from 'react-native-vector-icons/Entypo';
 import LottieView from 'lottie-react-native';
 import changeCurrency from '../helpers/changeCurrency';
+import defaultImg from '../assets/photo-camera.png';
 
 const History = ({navigation}) => {
   const {auth, history, pages} = useSelector(state => state);
@@ -52,6 +52,7 @@ const History = ({navigation}) => {
               width={120}
               height={100}
               borderRadius={'xl'}
+              onError={e => (e.target.source = {defaultImg})}
             />
             <View ml={3}>
               <Text fontWeight={'bold'}>{item.vehicle}</Text>

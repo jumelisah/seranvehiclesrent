@@ -106,6 +106,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
                 height={100}
                 borderRadius={'xl'}
                 defaultSource={defaultImg}
+                onError={e => (e.target.source = {defaultImg})}
               />
               <View height={20} position={'absolute'} right={-20} top={-15}>
                 <Box

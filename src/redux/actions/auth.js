@@ -1,7 +1,7 @@
 import qs from 'qs';
 import RNFetchBlob from 'rn-fetch-blob';
 import http from '../../helpers/http';
-
+import {BACKEND_URL} from '@env';
 export const onLogin = (username, password) => {
   return async dispatch => {
     try {
@@ -120,7 +120,6 @@ export const forgotPassword = dataForgot => {
         '/auth/forgot-password',
         qs.stringify(dataForgot),
       );
-      console.log(data);
       dispatch({
         type: 'AUTH_FORGOT_PASSWORD',
         payload: data,
@@ -172,31 +171,30 @@ export const editProfile = (token, userData) => {
       dispatch({
         type: 'PAGES_LOADING',
       });
-      console.log(userData);
+      const profileData = [];
+      for (let x in userData) {
+        if (x !== 'picture' && x !== 'fileName' && x !== 'fileType') {
+          profileData.push({name: x, data: userData[x]});
+        }
+      }
+      if (userData.picture !== undefined) {
+        profileData.push({
+          name: 'image',
+          filename: userData.fileName,
+          type: userData.fileType,
+          data: RNFetchBlob.wrap(userData.picture),
+        });
+      }
       const {data} = await RNFetchBlob.fetch(
         'PATCH',
-        'https://fw5-backend-beginner.herokuapp.com/profile',
+        `${BACKEND_URL}/profile`,
         {
+          Accept: 'application/json, text/plain, */*',
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
-        [
-          userData.picture
-            ? {
-                name: 'image',
-                filename: userData.fileName,
-                type: userData.fileType,
-                data: RNFetchBlob.wrap(userData.picture),
-              }
-            : {},
-          {name: 'name', data: userData.name},
-          {name: 'phone_number', data: userData.phone_number},
-          {name: 'address', data: userData.address},
-          {name: 'gender', data: userData.gender},
-          {name: 'birthdate', data: userData.birthdate},
-        ],
+        profileData,
       );
-      console.log(JSON.parse(data));
       dispatch({
         type: 'AUTH_CHANGE_PROFILE',
         payload: JSON.parse(data),

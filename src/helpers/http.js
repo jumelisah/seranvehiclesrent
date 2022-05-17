@@ -1,6 +1,5 @@
 import axios from 'axios';
-// http://192.168.0.193:8000
-// https://fw5-backend-beginner.herokuapp.com
+import {BACKEND_URL} from '@env';
 const http = token => {
   const headers = {};
   if (token) {
@@ -8,7 +7,7 @@ const http = token => {
   }
 
   return axios.create({
-    baseURL: 'https://fw5-backend-beginner.herokuapp.com',
+    baseURL: BACKEND_URL,
     headers,
   });
 };

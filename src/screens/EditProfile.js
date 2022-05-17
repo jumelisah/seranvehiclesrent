@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -27,6 +27,14 @@ const EditProfile = ({navigation}) => {
   const [open, setOpen] = useState(false);
   const [largeImage, setLargeImage] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (pages.isLoading) {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    }
+  });
   const handlePhotoGallery = () => {
     const options = {
       noData: true,

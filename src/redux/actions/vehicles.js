@@ -1,5 +1,6 @@
 import http from '../../helpers/http';
 import RNFetchBlob from 'rn-fetch-blob';
+import {BACKEND_URL} from '@env';
 
 export const getVehicles = dataFilter => {
   return async dispatch => {
@@ -161,32 +162,33 @@ export const addVehicles = (token, newData) => {
       dispatch({
         type: 'PAGES_LOADING',
       });
-      console.log(newData);
+      const vehicleData = [];
+      for (let x in newData) {
+        if (
+          data[x] &&
+          x !== 'picture' &&
+          x !== 'fileName' &&
+          x !== 'fileType'
+        ) {
+          vehicleData.push({name: x, data: newData[x]});
+        }
+      }
+      if (newData.picture) {
+        vehicleData.push({
+          name: 'image',
+          filename: newData.fileName,
+          type: newData.fileType,
+          data: RNFetchBlob.wrap(newData.picture),
+        });
+      }
       const {data} = await RNFetchBlob.fetch(
         'POST',
-        'https://fw5-backend-beginner.herokuapp.com/vehicles',
+        `${BACKEND_URL}/vehicles`,
         {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
-        [
-          newData.picture
-            ? {
-                name: 'image',
-                filename: newData.fileName,
-                type: newData.fileType,
-                data: RNFetchBlob.wrap(newData.picture),
-              }
-            : {},
-          {name: 'name', data: newData.name},
-          {name: 'year', data: newData.year},
-          {name: 'cost', data: newData.cost},
-          {name: 'qty', data: newData.qty.toString()},
-          {name: 'type', data: newData.type.toString()},
-          {name: 'seat', data: newData.seat},
-          {name: 'category_id', data: newData.category_id.toString()},
-          {name: 'location', data: newData.location},
-        ],
+        vehicleData,
       );
       dispatch({
         type: 'ADD_VEHICLES',
@@ -216,30 +218,33 @@ export const editVehicles = (token, id, newData) => {
       dispatch({
         type: 'PAGES_LOADING',
       });
-      console.log(newData);
+      const vehicleData = [];
+      for (let x in newData) {
+        if (
+          data[x] &&
+          x !== 'picture' &&
+          x !== 'fileName' &&
+          x !== 'fileType'
+        ) {
+          vehicleData.push({name: x, data: newData[x]});
+        }
+      }
+      if (newData.picture) {
+        vehicleData.push({
+          name: 'image',
+          filename: newData.fileName,
+          type: newData.fileType,
+          data: RNFetchBlob.wrap(newData.picture),
+        });
+      }
       const {data} = await RNFetchBlob.fetch(
         'PATCH',
-        `https://fw5-backend-beginner.herokuapp.com/vehicles/${id}`,
+        `${BACKEND_URL}/vehicles/${id}`,
         {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
-        [
-          newData.picture
-            ? {
-                name: 'image',
-                filename: newData.fileName,
-                type: newData.fileType,
-                data: RNFetchBlob.wrap(newData.picture),
-              }
-            : {},
-          {name: 'name', data: newData.name},
-          {name: 'cost', data: newData.cost},
-          {name: 'qty', data: newData.qty.toString()},
-          {name: 'seat', data: newData.seat},
-          {name: 'location', data: newData.location},
-          {name: 'available', data: newData.available.toString()},
-        ],
+        vehicleData,
       );
       dispatch({
         type: 'EDIT_VEHICLES',
