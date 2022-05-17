@@ -174,7 +174,7 @@ export const editProfile = (token, userData) => {
       const profileData = [];
       for (let x in userData) {
         if (x !== 'picture' && x !== 'fileName' && x !== 'fileType') {
-          profileData.push({name: x, data: userData[x]});
+          profileData.push({name: x, data: String(userData[x])});
         }
       }
       if (userData.picture !== undefined) {

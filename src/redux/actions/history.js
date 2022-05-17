@@ -49,6 +49,32 @@ export const getHistoryAdmin = token => {
   };
 };
 
+export const getHistoryDetail = (token, id) => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+      const {data} = await http(token).get(`/histories/${id}`);
+      dispatch({
+        type: 'GET_HISTORY_DETAIL',
+        payload: data,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    } catch (e) {
+      dispatch({
+        type: 'HISTORY_ERROR',
+        payload: e.response.data.message,
+      });
+      dispatch({
+        type: 'PAGES_LOADING',
+      });
+    }
+  };
+};
+
 export const deleteHistoryUser = (token, id) => {
   return async dispatch => {
     try {

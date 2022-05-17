@@ -170,7 +170,7 @@ const EditVehicle = ({navigation, route: {params}}) => {
                 <TouchableOpacity onPress={() => setModuleOption(true)}>
                   <Image
                     source={{uri: picture ? picture : vehicles.vehicle.image}}
-                    alt={vehicles.vehicle.name}
+                    alt={vehicles.vehicle.name || 'Detail'}
                     size={'2xl'}
                     width={'100%'}
                   />

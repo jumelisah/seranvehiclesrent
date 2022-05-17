@@ -92,7 +92,9 @@ const History = ({navigation}) => {
               borderRadius={'md'}>
               <View>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Transaction Detail')}>
+                  onPress={() =>
+                    navigation.navigate('Transaction Detail', {id: item.id})
+                  }>
                   <View
                     flexDirection={'row'}
                     alignItems={'center'}

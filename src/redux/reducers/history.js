@@ -1,5 +1,6 @@
 const initialState = {
   data: [],
+  detail: {},
   message: null,
   isError: false,
   errMsg: null,
@@ -15,8 +16,9 @@ const history = (state = initialState, action) => {
       }
       return {...state};
     }
-    case 'GET_HISTORY_USER': {
-      state.message = action.payload;
+    case 'GET_HISTORY_DETAIL': {
+      state.detail = action.payload.result;
+      state.message = action.payload.message;
       state.isError = false;
       state.errMsg = null;
       return {...state};

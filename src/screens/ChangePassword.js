@@ -7,9 +7,10 @@ import {NativeBaseProvider, Stack, View, Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {changePassword} from '../redux/actions/auth';
 import InputPassword from '../components/InputPassword';
+import LottieView from 'lottie-react-native';
 
 const EditProfile = ({navigation}) => {
-  const {auth} = useSelector(state => state);
+  const {auth, pages} = useSelector(state => state);
   const [password, setPassword] = useState();
   const [newPassword, setNewPassword] = useState();
   const [repeatPassword, setRepeatPassword] = useState();
@@ -18,14 +19,13 @@ const EditProfile = ({navigation}) => {
   const [errorInput, setErrorInput] = useState(false);
   const dispatch = useDispatch();
   const handleChangePassword = () => {
+    setWrongInput();
     if (!password) {
       setWrongInput('Please input the password');
     } else if (!newPassword || newPassword.length < 6) {
       setWrongInput('Please input password with 6 characters or more');
-      setErrorInput(true);
     } else {
       setWrongInput();
-      setErrorInput(false);
     }
     const data = {password, newPassword, repeatPassword};
     dispatch(changePassword(auth.token, data));
@@ -92,14 +92,10 @@ const EditProfile = ({navigation}) => {
                 alignItems={'center'}
                 justifyContent={'center'}
                 px={3}>
-                <Text color={'red.700'} pt={6}>
+                <Text color={auth.isError ? 'red.700' : 'success.500'} pt={6}>
                   <Icon
                     name={`${
-                      auth.isError
-                        ? 'times-circle-o'
-                        : errorInput
-                        ? 'times-circle-o'
-                        : 'check-circle-o'
+                      auth.isError ? 'times-circle-o' : 'check-circle-o'
                     }`}
                     size={50}
                   />
@@ -118,103 +114,32 @@ const EditProfile = ({navigation}) => {
           </View>
         )}
       </Stack>
+      {pages.isLoading && (
+        <View
+          position={'absolute'}
+          width={'100%'}
+          height={'100%'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          backgroundColor={'rgba(0,0,0,0.3)'}>
+          <LottieView
+            source={require('../assets/98196-loading-teal-dots.json')}
+            autoPlay
+            loop
+            style={styles.lottie}
+          />
+        </View>
+      )}
     </NativeBaseProvider>
   );
 };
 
 const styles = StyleSheet.create({
-  pages: {
-    position: 'relative',
-    height: '100%',
-  },
-  fullPage: {
-    padding: 20,
-    position: 'relative',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backIcon: {
-    marginRight: 10,
-  },
-  textHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
   positionEnd: {
     marginStart: 'auto',
   },
-  textCancel: {
-    color: 'rgba(0,0,0,0.2)',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  formSection: {
-    marginVertical: 30,
-  },
-  uploadSection: {
-    width: 100,
-    height: 100,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    position: 'relative',
-  },
-  uploadedImg: {
-    width: 100,
-    height: 100,
-    resizeMode: 'cover',
-    borderRadius: 50,
-  },
-  iconPlus: {
-    backgroundColor: '#9AD0EC',
-    padding: 10,
-    width: 40,
-    height: 40,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    borderRadius: 20,
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-  },
-  moduleUpload: {
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    width: '100%',
-    height: '100%',
-  },
-  pickOption: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    // Width: '100%',
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: 'rgba(0,0,0,0.1)',
-  },
-  buttonUpload: {
-    padding: 50,
-    // paddingVertical: 20,
-  },
-  chooseUpload: {
-    color: '#1572A1',
-  },
-  textOpt: {
-    color: '#1572A1',
-    textAlign: 'center',
-  },
-  inlineGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  textMedium: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  lottie: {
+    width: 200,
   },
 });
 
