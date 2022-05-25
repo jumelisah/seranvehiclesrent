@@ -12,7 +12,6 @@ const ImageTbn = ({source}) => {
   }, [source]);
   const onErrorSource = () => {
     setImageSrc(ImageDefault);
-    console.log('this image error,');
   };
   return (
     <View width={120}>

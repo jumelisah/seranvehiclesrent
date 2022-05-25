@@ -41,7 +41,6 @@ const EditProfile = ({navigation}) => {
     };
     launchImageLibrary(options, response => {
       if (response.assets) {
-        console.log(response);
         if (response.assets[0].fileSize > 2097152) {
           setLargeImage(true);
         } else {
@@ -73,7 +72,6 @@ const EditProfile = ({navigation}) => {
     setModuleOption(false);
   };
   const updateProfile = () => {
-    console.log(birthdate);
     const data = {
       name,
       email,

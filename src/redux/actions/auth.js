@@ -115,7 +115,6 @@ export const forgotPassword = dataForgot => {
       dispatch({
         type: 'AUTH_CLEAR',
       });
-      console.log(dataForgot);
       const {data} = await http().post(
         '/auth/forgot-password',
         qs.stringify(dataForgot),
@@ -203,7 +202,6 @@ export const editProfile = (token, userData) => {
         type: 'PAGES_LOADING',
       });
     } catch (e) {
-      console.log(e);
       dispatch({
         type: 'AUTH_ERROR',
         payload: e.response.data.message,

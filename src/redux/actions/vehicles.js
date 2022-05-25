@@ -218,9 +218,7 @@ export const editVehicles = (token, id, newData) => {
       dispatch({
         type: 'PAGES_LOADING',
       });
-      console.log(newData);
       const vehicleData = [];
-      console.log(`2: ${vehicleData}`);
       for (let x in newData) {
         if (
           newData[x] &&
@@ -228,14 +226,10 @@ export const editVehicles = (token, id, newData) => {
           x !== 'fileName' &&
           x !== 'fileType'
         ) {
-          console.log(`${x}: ${newData[x]}`);
           vehicleData.push({name: x, data: String(newData[x])});
         }
-        console.log(`${x}: ${newData[x]}`);
       }
-      console.log(vehicleData);
       if (newData.picture !== undefined) {
-        console.log(newData.picture);
         vehicleData.push({
           name: 'image',
           filename: newData.fileName,
@@ -243,7 +237,6 @@ export const editVehicles = (token, id, newData) => {
           data: RNFetchBlob.wrap(newData.picture),
         });
       }
-      console.log(vehicleData);
       const {data} = await RNFetchBlob.fetch(
         'PATCH',
         `${BACKEND_URL}/vehicles/${id}`,
@@ -254,7 +247,6 @@ export const editVehicles = (token, id, newData) => {
         },
         vehicleData,
       );
-      console.log(data);
       dispatch({
         type: 'EDIT_VEHICLES',
         payload: JSON.parse(data),

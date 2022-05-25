@@ -55,7 +55,6 @@ const EditVehicle = ({navigation, route: {params}}) => {
     };
     launchImageLibrary(options, response => {
       if (response.assets) {
-        console.log(response);
         if (response.assets[0].fileSize > 2097152) {
           setLargeImage(true);
         } else {
@@ -93,7 +92,6 @@ const EditVehicle = ({navigation, route: {params}}) => {
     setModuleOption(false);
   };
   const handleUpdate = () => {
-    console.log(available);
     const data = {
       name,
       cost: price,

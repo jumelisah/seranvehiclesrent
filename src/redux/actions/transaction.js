@@ -10,7 +10,6 @@ export const addTransaction = (token, dataReservation) => {
       dispatch({
         type: 'TRANSACTION_CLEAR',
       });
-      console.log(dataReservation);
       const {data} = await http(token).post(
         '/histories',
         qs.stringify(dataReservation),
