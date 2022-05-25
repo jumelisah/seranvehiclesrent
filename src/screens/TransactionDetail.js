@@ -4,6 +4,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getHistoryDetail} from '../redux/actions/history';
 import {dateDifference, twoDates} from '../helpers/changeDate';
 import Button from '../components/Button';
+import {TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const TransactionDetail = ({navigation, route: {params}}) => {
   const {history, auth} = useSelector(state => state);
@@ -15,6 +17,14 @@ const TransactionDetail = ({navigation, route: {params}}) => {
   }, [auth.token, dispatch, params.id]);
   return (
     <NativeBaseProvider>
+      <View p={5} flexDirection={'row'} alignItems={'center'}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="chevron-left" size={24} color={'black'} />
+        </TouchableOpacity>
+        <Text fontSize={'xl'} fontWeight={'bold'} marginLeft={3}>
+          Reservation detail
+        </Text>
+      </View>
       <View p={5}>
         <Image
           source={{uri: history.detail.image}}

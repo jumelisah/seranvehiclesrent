@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {NativeBaseProvider, Image, View, Text} from 'native-base';
+import {NativeBaseProvider, View, Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   deleteHistoryAdmin,
@@ -20,6 +20,7 @@ import EnIcon from 'react-native-vector-icons/Entypo';
 import LottieView from 'lottie-react-native';
 import changeCurrency from '../helpers/changeCurrency';
 import defaultImg from '../assets/photo-camera.png';
+import ImageTbn from '../components/ImageTbn';
 
 const History = ({navigation}) => {
   const {auth, history, pages} = useSelector(state => state);
@@ -46,14 +47,7 @@ const History = ({navigation}) => {
           justifyContent={'space-between'}
           alignItems={'center'}>
           <View flexDirection={'row'}>
-            <Image
-              source={{uri: item.image}}
-              alt={item.vehicle}
-              width={120}
-              height={100}
-              borderRadius={'xl'}
-              onError={e => (e.target.source = {defaultImg})}
-            />
+            <ImageTbn source={item.image} />
             <View ml={3}>
               <Text fontWeight={'bold'}>{item.vehicle}</Text>
               <Text>

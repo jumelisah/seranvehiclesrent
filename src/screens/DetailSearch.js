@@ -4,19 +4,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {searchVehicles} from '../redux/actions/vehicles';
 import {useDispatch, useSelector} from 'react-redux';
 import MiIcon from 'react-native-vector-icons/MaterialIcons';
-import {
-  Box,
-  FlatList,
-  Image,
-  NativeBaseProvider,
-  Text,
-  View,
-} from 'native-base';
+import {Box, FlatList, NativeBaseProvider, Text, View} from 'native-base';
 import TextInput from '../components/TextInput';
 import LinearGradient from 'react-native-linear-gradient';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import defaultImg from '../assets/photo-camera.png';
 import changeCurrency from '../helpers/changeCurrency';
+import ImageTbn from '../components/ImageTbn';
 
 const DetailSearch = ({navigation, route: {params}}) => {
   const {auth, vehicles, pages} = useSelector(state => state);
@@ -99,15 +92,7 @@ const DetailSearch = ({navigation, route: {params}}) => {
           alignItems={'center'}>
           <View flexDirection={'row'}>
             <View>
-              <Image
-                source={{uri: item.image}}
-                alt={item.name}
-                width={120}
-                height={100}
-                borderRadius={'xl'}
-                defaultSource={defaultImg}
-                onError={e => (e.target.source = {defaultImg})}
-              />
+              <ImageTbn source={item.image} />
               <View height={20} position={'absolute'} right={-20} top={-15}>
                 <Box
                   bg={{
