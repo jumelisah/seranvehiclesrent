@@ -19,7 +19,6 @@ import MiIcon from 'react-native-vector-icons/MaterialIcons';
 import EnIcon from 'react-native-vector-icons/Entypo';
 import LottieView from 'lottie-react-native';
 import changeCurrency from '../helpers/changeCurrency';
-import defaultImg from '../assets/photo-camera.png';
 import ImageTbn from '../components/ImageTbn';
 
 const History = ({navigation}) => {
